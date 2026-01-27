@@ -1,3 +1,3 @@
-## Contributeurs - Alice Dupont, Bob Martin
+## Contributeurs - Alice Dupont
 # site_stages
 Projet collaboratif Web4all
