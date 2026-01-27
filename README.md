@@ -1,3 +1,6 @@
+## Contributeurs - Alexis Bananini, Loïs Chimpansini, Yasmine Capuccini
+# site_stages
+Projet collaboratif Web4all
 ## Contributeurs - Yasimini, Alexini, Loïsini
 # site_stages
 ##Je comprends pas ce qu'il faut faire du coup je met ça.
