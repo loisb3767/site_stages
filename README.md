@@ -1,2 +1,2 @@
-## Contributeurs - Alexis Bananini, Loïs Chimpansini, Yasmine Capuccini
+## Contributeurs - Alexis Girard, Yasmine Hepmutlu, Mohamed Laaraj, Loïs Bellavance
 # Site Stages
