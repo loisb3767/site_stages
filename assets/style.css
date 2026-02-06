@@ -1,6 +1,20 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
 body {
     background-color: #f3f3f3;
+    color: #000;
     font-family: Helvetica;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex:1;
 }
 
 footer {
@@ -18,7 +32,7 @@ footer {
 }
 
 .navbar{
-    margin:0.8 0 0 0rem;
+    margin:0.8rem 0 0 0;
     background-color: #000000;
     color: #ffffff;
     font-family:"Century Gothic";
@@ -51,10 +65,15 @@ footer {
     align-items: center;
 }
 
+.sep, .current {
+    font-weight: bold;
+}
+
 .breadcrumb :link, .breadcrumb :visited {
     color: #000000;
     text-decoration: none;
 }
+
 
 .logreg {
     display: flex;
@@ -70,6 +89,13 @@ footer {
 .register:link, .register:visited {
     color: #fff;
 }
+
+.breadcrumb a:hover {
+    text-shadow: 0 0 1px currentColor;
+    text-decoration: underline;
+}
+
+
 
 
 /* -------------- */
@@ -189,9 +215,9 @@ tr:hover{
 
 .search-bar input {
     width: 100%;
-    padding: 12px;
+    padding: 0.8rem;
     border: 2px solid black;
-    border-radius: 25px;
+    border-radius: 1.5rem;
     font-size: 14px;
     text-align: center;
 }
