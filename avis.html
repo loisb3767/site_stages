@@ -30,58 +30,48 @@
 	 </header>
 	 
 	 <main>
-	 
-	   <section>
-	   
-			<h1 class="text-center">Votre avis nous intéresse</h1>
-			
-			<p>Vous avez une remarque à nous faire concernant nos services ou l'un des produits achetés via notre site ? Utilisez simplement ce formulaire en nous fournissant le maximum d'informations afin de répondre au mieux à votre demande.</p>
+		<section>
+			<h1 class="text-center">Votre expérience nous intéresse</h1>
+			<p>Vous avez effectué un stage via notre plateforme ? Partagez votre avis sur l'entreprise ou sur notre service pour aider d'autres étudiants dans leurs recherches.</p>
 			
 			<article>
-			
-				<h2>Description</h2>
-				
+				<h2>Détails de l'avis</h2>
 				<form>
-					<label>Nom complet*<input name="fullname" type="text" value="" size="50" required ></label>
+					<label>Nom complet*<input name="fullname" type="text" size="50" required></label>
+					<label>Courriel académique*<input name="email" type="email" size="30" required></label>
 					
-					<label>Courriel*<input name="email" type="email" size="30" value="" required ></label>
-					
-					<label>Objet de votre demande&nbsp;&nbsp;
+					<label>Objet de l'avis
 						<select name="subject">
-							<option>Produit acheté</option>
-							<option>Service commercial</option>
-							<option>Service technique</option>
-							<option>Autres</option>				  
+							<option>Retour sur un stage effectué</option>
+							<option>Utilisation de la plateforme</option>
+							<option>Accompagnement et coaching</option>
+							<option>Signaler un problème avec une offre</option>
 						</select>
 					</label>
 					
+					<label>Domaine du stage</label>
+					<label><input type="checkbox" name="category" value="it">Informatique</label>
+					<label><input type="checkbox" name="category" value="marketing">Marketing / Comm</label>
+					<label><input type="checkbox" name="category" value="finance">Finance / Gestion</label>
+					<label><input type="checkbox" name="category" value="rh">Ressources Humaines</label>
+					<label><input type="checkbox" name="category" value="eng">Ingénierie</label>
 					
-					      
-					<label>Catégorie.s concernée.s</label>
-					<label><input type="checkbox" name="category" value="property">Immobilier</label>
-					<label><input type="checkbox" name="category" value="cars">Véhicules</label>      
-					<label><input type="checkbox" name="category" value="clothes">Vêtements</label>      
-					<label><input type="checkbox" name="category" value="multimedia">Multimedia</label>      
-					<label><input type="checkbox" name="category" value="household">Maison</label>      
-					<label><input type="checkbox" name="category" value="hobbies">Loisirs</label>
-					<label><input type="checkbox" name="category" value="services">Services</label>
+					<label>Attestation ou photo du lieu (optionnel)
+						<input type="file" accept="image/jpeg,image/png,application/pdf"></label>
 					
+					<label>Recommanderiez-vous ce stage ?</label>
+					<input type="radio" name="satisfaction" value="yes" checked> Oui
+					<input type="radio" name="satisfaction" value="no"> Non
 					
-					<label>Photo du produit défectueux
-						<input type="file" accept="image/jpeg,image/png"></label>
+					<label>Commentaires et conseils pour les futurs stagiaires
+						<textarea name="feedbacks" rows="5" cols="100"></textarea></label>
 					
-					
-					<label>Je suis satisfait</label>&nbsp;<input type="radio" name="satisfaction" value="yes" checked="checked">Oui&nbsp;<input type="radio" name="satisfaction" value="no">Non
-					<em><small>En cas d'insatisfaction veuillez nous en fournir la raison.</small></em>
-					
-					
-					<label>Commentaires<textarea name="feedbacks" rows="5" cols="100" ></textarea></label>
-					
-					<button type="submit">Envoyer</button>&nbsp;<input type="reset" value="Effacer" >
+					<button type="submit">Publier l'avis</button>
+					<input type="reset" value="Effacer">
 				</form>
-			</article>					
-	   </section>
-	</main> 
+			</article>
+		</section>
+	</main>
 	 <footer>
 		<p>&copy;2026 - Tous droits réservés -	JGT</P>
 		<a href="mentionslégales.html">Mentions légales</a>&nbsp;
