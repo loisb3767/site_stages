@@ -18,7 +18,7 @@ footer {
 }
 
 .navbar{
-    margin:0.8rem 0.25rem;
+    margin:0.8 0 0 0rem;
     background-color: #000000;
     color: #ffffff;
     font-family:"Century Gothic";
@@ -41,6 +41,19 @@ footer {
     color: #ff8800;
     font-weight: bold;
 }
+/* Breadcrumb */
+.breadcrumb {
+    font-size: 0.9em;
+    padding: 0.5rem;
+    background-color: #b3b3b3;
+}
+
+.breadcrumb :link, .breadcrumb :visited {
+    color: #000000;
+    text-decoration: none;
+}
+
+/* -------------- */
 
 ul a:not(:last-child)::after{
     content: " - ";
@@ -54,23 +67,23 @@ td {
 }
 
 tr:nth-child(even){
-    background-color: #000000;
-    color: #ff8800;
+    background-color: #000;
+    color: #f80;
 }
 tr:nth-child(odd){
-    background-color: #ff8800;
-    color: #000000;
+    background-color: #f80;
+    color: #000;
 }
 
 th {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #000;
+    color: #fff;
     padding: 0.25rem;
 }
 
 tr:hover{
-    background-color: #00ffff;
-    color: #ff0000;
+    background-color: #0ff;
+    color: #f00;
 }
 
 
@@ -100,6 +113,104 @@ tr:hover{
     border-bottom: 1% solid #ccc;
     padding-bottom: 5%;
 }
+/* Style compétences checkbox */
+.offers-page {
+    display: flex;
+    gap: 2%;
+    padding: 2%;
+    align-items: stretch;
+}
+
+
+.sidebar {
+    width: 20%;
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 1rem;
+    padding: 1rem;
+
+    position: sticky;
+    top: 1rem;
+}
+
+.sidebar-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.specialites {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.specialites li {
+    break-inside: avoid;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.specialites input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.offers-content {
+    flex: 1;
+}
+
+
+.search-bar {
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid black;
+    border-radius: 25px;
+    font-size: 14px;
+    text-align: center;
+}
+/* --------------------- */
+/* Style pour les offres */
+.offer-card {
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 25px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.offer-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.offer-card .resume {
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.competence-bar {
+    background-color: #333;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.offer-card :link, .offer-card :visited {
+    color: #f80;
+    text-decoration: none;
+    font-size: 0.7rem;
+}
+/* ----------*/
 
 form {
     color:#F80;
@@ -153,7 +264,7 @@ button[type="submit"]:hover {
 
 button[type="submit"] {
     background-color: #f80;
-    color: white;
+    color: #fff;
 }
 
 input[type="reset"] {
@@ -206,7 +317,7 @@ input[type="radio"], input[type="checkbox"]{
 
 input[type="file"]::file-selector-button{
     background-color: #f80;
-    color: white;
+    color: #fff;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
