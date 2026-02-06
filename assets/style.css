@@ -1,0 +1,226 @@
+body {
+    background-color: #f3f3f3;
+    font-family: Helvetica;
+}
+
+footer {
+    background-color: #000000;
+    color:#ffffff;
+    font-style: italic;
+    margin-top: 2.5rem;
+    font-size: 0.8em;
+    text-align:center;
+    padding: 1rem
+}
+
+.text-center {
+    text-align: center;
+}
+
+.navbar{
+    margin:0.8rem 0.25rem;
+    background-color: #000000;
+    color: #ffffff;
+    font-family:"Century Gothic";
+    padding: 1rem;
+}
+
+.navbar :link{
+    color: #ffffff;
+    text-decoration: none;
+}
+.navbar :visited{
+    color: #ffffff;
+    text-decoration: none;
+}
+.navbar :hover{
+    font-weight: bold;
+    text-decoration: underline;
+}
+.active-page{
+    color: #ff8800;
+    font-weight: bold;
+}
+
+ul a:not(:last-child)::after{
+    content: " - ";
+}
+
+table {
+    border-collapse: collapse;
+}
+td {
+    text-align: left;
+}
+
+tr:nth-child(even){
+    background-color: #000000;
+    color: #ff8800;
+}
+tr:nth-child(odd){
+    background-color: #ff8800;
+    color: #000000;
+}
+
+th {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0.25rem;
+}
+
+tr:hover{
+    background-color: #00ffff;
+    color: #ff0000;
+}
+
+
+.propos{
+    max-width: 100%;
+}
+.propos_title {
+    text-align: center;
+    padding: 1%;
+    margin-bottom: 1%;
+}
+.propos_line{
+    display: flex;
+    gap: 2%;
+}
+.propos_block {
+    flex: 1;
+    border: 0.12rem solid #444;
+    padding: 0.15%;
+    text-align: justify;
+}
+.propos_bottom {
+    width: 100%;
+}
+.propos_block h2 {
+    margin-top: 0;
+    border-bottom: 1% solid #ccc;
+    padding-bottom: 5%;
+}
+
+form {
+    color:#F80;
+    max-width: 75%;
+    margin: auto;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    font-size: 0.8rem;
+    width: 100%;
+    box-sizing:  border-box;
+    margin-top: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    background-color: #e6f0ff;
+    box-shadow: 0 0 0 0.1rem #000;
+}
+
+select {
+    cursor: pointer;
+}
+
+textarea {
+    resize: none;
+}
+
+button[type="submit"], input[type="reset"] {
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #e67600;
+}
+
+button[type="submit"] {
+    background-color: #f80;
+    color: white;
+}
+
+input[type="reset"] {
+    background-color: #fff;
+    color: #333;
+}
+
+input[type="reset"]:hover {
+    background-color: #b3b3b3;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: auto;
+    margin-right: 0.5rem;
+    margin-bottom: 0.7rem;
+}
+
+form p {
+    margin-top: 0.7rem;
+    margin-bottom: 0.3rem;
+}
+
+form label input[type="checkbox"],
+form label input[type="radio"] {
+    margin-top: 0;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #f80;
+    background-color: #fff;
+    box-shadow: 0 0 0 0.1rem rgba(255,136,0,0.15);
+}
+
+.titreBox {
+    color: #f80
+}
+
+input[type="radio"], input[type="checkbox"]{
+    accent-color:#f80;
+}
+
+input[type="file"]::file-selector-button{
+    background-color: #f80;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    margin-right: 0.6rem;
+    transition: 0.3s;
+}
+input[type="file"]::file-selector-button:hover{
+    background-color: #e67600;
+}
+
+input[type="file"] {
+    background-color: #fafafa;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 0.06rem solid #ddd;
+}
