@@ -48,7 +48,7 @@ footer {
     text-decoration: none;
 }
 .navbar :hover{
-    font-weight: bold;
+    text-shadow: 0 0 1px currentColor;
     text-decoration: underline;
 }
 .active-page{
