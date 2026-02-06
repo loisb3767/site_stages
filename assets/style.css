@@ -8,7 +8,7 @@ body {
     background-color: #f3f3f3;
     color: #000;
     font-family: Helvetica;
-    min-height: 100vh;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
 }
