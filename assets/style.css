@@ -42,9 +42,18 @@ footer a:active {
     text-shadow: 0 0 1px currentColor;
 }
 
+header {
+    display: flex;
+    align-items: center;
+}
+
 .logo {
-    width: 100%;
-    height: auto;
+    transform: scale(0.65);
+    margin-right: auto;
+}
+
+.logo img {
+    height: 5rem;
 }
 
 .text-center {
@@ -52,10 +61,13 @@ footer a:active {
 }
 .navbar{
     margin:0.8rem 0 0 0;
-    background-color: #000000;
-    color: #ffffff;
+    color: #000;
     font-family:"Century Gothic";
     padding: 1rem;
+
+    display:flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .navbar :link, .navbar :visited{
@@ -94,14 +106,19 @@ footer a:active {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
+    align-items: center;
     color: #000;
+    margin-left: 30px;
+}
+
+.logreg a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
 }
 
 .login:link, .login:visited {
-    color: #f80;
-}
-
-.register:link, .register:visited {
     color: #fff;
 }
 
@@ -110,7 +127,33 @@ footer a:active {
     text-decoration: underline;
 }
 
+.login {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
 
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+
+    padding: 0.8rem 1.6rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.login img{
+    width: 20px;
+    height: 20px;
+}
+.login:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background-color: #e67600;
+    color: #fff;
+}
 
 
 /* -------------- */
@@ -394,4 +437,22 @@ input[type="file"] {
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: 0.06rem solid #ddd;
+}
+
+
+button[type="login"]{
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button[type="login"]:hover {
+    background-color: #e67600;
+}
+
+button[type="login"] {
+    background-color: #f80;
+    color: #fff;
 }
