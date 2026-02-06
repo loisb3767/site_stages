@@ -41,6 +41,12 @@ footer a:active {
     color: #f80;
     text-shadow: 0 0 1px currentColor;
 }
+
+.logo {
+    width: 100%;
+    height: auto;
+}
+
 .text-center {
     text-align: center;
 }
