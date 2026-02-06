@@ -8,7 +8,7 @@ body {
     background-color: #f3f3f3;
     color: #000;
     font-family: Helvetica;
-    min-height: 100vh;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
 }
@@ -27,10 +27,23 @@ footer {
     padding: 1rem
 }
 
+footer a:link, footer a:visited {
+    color: currentColor;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-shadow: 0 0 1px currentColor;
+    text-decoration: underline;
+}
+
+footer a:active {
+    color: #f80;
+    text-shadow: 0 0 1px currentColor;
+}
 .text-center {
     text-align: center;
 }
-
 .navbar{
     margin:0.8rem 0 0 0;
     background-color: #000000;
@@ -39,12 +52,8 @@ footer {
     padding: 1rem;
 }
 
-.navbar :link{
-    color: #ffffff;
-    text-decoration: none;
-}
-.navbar :visited{
-    color: #ffffff;
+.navbar :link, .navbar :visited{
+    color: currentColor;
     text-decoration: none;
 }
 .navbar :hover{
