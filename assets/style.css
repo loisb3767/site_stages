@@ -1,30 +1,32 @@
-html, body {
+html{
     margin: 0;
     padding: 0;
-    height: 100%;
+    height: auto;
 }
 
 body {
     background-color: #f3f3f3;
     color: #000;
     font-family: Helvetica;
-    max-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
 }
 
 main {
-    flex:1;
+    flex: 1;
 }
 
 footer {
     background-color: #000;
     color:#fff;
     font-style: italic;
-    margin-top: 2.5rem;
     font-size: 0.8em;
     text-align:center;
-    padding: 1rem
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
 }
 
 footer a:link, footer a:visited {
@@ -48,12 +50,13 @@ header {
 }
 
 .logo {
-    transform: scale(0.65);
+
     margin-right: auto;
 }
 
 .logo img {
-    height: 5rem;
+    height: 3rem;
+    width: auto;
 }
 
 .text-center {
@@ -464,18 +467,18 @@ button[type="login"] {
     background: none;
     border: none;
     cursor: pointer;
+    
     width: 44px;
     height: 44px;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6px;
 }
 .menu-toggle .bar {
-    display: flex;
-    flex-direction: column;
-    width: 22px;
+    display: block;
+    width: 24px;
     height: 2px;
-    background: #000000;
+    background: #000;
     margin: 4px 0;
     transition: transform .3s ease, opacity .25s ease;
 }
@@ -534,13 +537,17 @@ body.menu-open {
     overflow: hidden;
 }
 
-.menu-toggle.open .bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.menu-toggle.open .bar:nth-child(1) { transform: translateY(10px) rotate(45deg); }
 .menu-toggle.open .bar:nth-child(2) { opacity: 0; }
-.menu-toggle.open .bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+.menu-toggle.open .bar:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
 
 @media (max-width: 768px) {
     .navbar { display: none; }
     .menu-toggle { display: flex; margin-left: auto; }
     .logreg { margin-left: 0; }
-    header { align-items: center; gap: 8px; padding: 0 1rem; }
+    header { justify-content: center; padding: 0 1rem; }
+    .logo img { height: 2.5rem; }
+    .login { padding: 0.6rem 1rem; font-size: 0.8rem; }
 }
+
+
