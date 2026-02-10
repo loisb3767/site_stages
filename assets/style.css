@@ -10,7 +10,7 @@
     --font-family: Helvetica, Arial, sans-serif;
     --secondary-text-color: #fff;
     --secondary-text-color-rgb: 255, 255, 255;
-    --light: #d8ecff4f;
+    --light: color-mix(in srgb, #d8ecff 30%, var(--background-color) 70%);
     --light-rgb: 255, 255, 255;
 }
 
