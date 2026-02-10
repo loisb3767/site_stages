@@ -11,12 +11,15 @@ document.addEventListener('DOMContentLoaded', function() {
   toggle.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span>';
   header.appendChild(toggle);
 
-  // Menu navbar sur Mobile
+    // Menu navbar sur Mobile — inclure la search-bar de l'en-tête si présente
   var mobile = document.createElement('nav');
   mobile.className = 'mobile-menu';
   mobile.setAttribute('aria-hidden', 'true');
-  mobile.innerHTML = '<button class="mobile-nav-close" aria-label="Fermer le menu">&times;</button><div class="mobile-nav-content">' + nav.innerHTML + '</div>';
-  document.body.appendChild(mobile);
+  var headerSearch = document.querySelector('header .search-bar');
+  var searchHTML = headerSearch ? headerSearch.outerHTML : '';
+  mobile.innerHTML = '<button class="mobile-nav-close" aria-label="Fermer le menu">&times;</button><div class="mobile-nav-content">' + searchHTML + nav.innerHTML + '</div>';document.body.appendChild(mobile);
+
+  
 
   var overlay = document.createElement('div');
   overlay.className = 'mobile-overlay';

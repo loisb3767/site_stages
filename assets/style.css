@@ -1,3 +1,20 @@
+:root {
+    --primary-color: #00a5cf;
+    --primary-color-rgb: 0, 165, 207;
+    --secondary-color: #004e64;
+    --secondary-color-rgb: 0, 78, 100;
+    --background-color: #f7f9f9;
+    --background-color-rgb: 243, 245, 245;
+    --text-color: #081c30;
+    --text-color-rgb: 8, 28, 48;
+    --font-family: Helvetica, Arial, sans-serif;
+    --secondary-text-color: #fff;
+    --secondary-text-color-rgb: 255, 255, 255;
+    --light: #d8ecff4f;
+    --light-rgb: 255, 255, 255;
+}
+
+
 html{
     margin: 0;
     padding: 0;
@@ -5,12 +22,13 @@ html{
 }
 
 body {
-    background-color: #f3f3f3;
-    color: #000;
-    font-family: Helvetica;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
+    margin: 1rem 0 0 0;
 }
 
 main {
@@ -18,8 +36,8 @@ main {
 }
 
 footer {
-    background-color: #000;
-    color:#fff;
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
     font-style: italic;
     font-size: 0.8em;
     text-align:center;
@@ -40,37 +58,104 @@ footer a:hover {
 }
 
 footer a:active {
-    color: #f80;
+    color: var(--primary-color);
     text-shadow: 0 0 1px currentColor;
 }
 
 header {
     display: flex;
     align-items: center;
+    
+    box-shadow: 
+        0 1px 1px rgba(var(--secondary-color-rgb), 0.12),
+        0 2px 2px rgba(var(--secondary-color-rgb), 0.12),
+        0 4px 4px rgba(var(--secondary-color-rgb), 0.12),
+        0 8px 8px rgba(var(--secondary-color-rgb), 0.12);
+        
+    padding: 0.5rem 1rem;
 }
 
 .logo {
-
-    margin-right: auto;
+    margin-right: 1rem;
 }
 
 .logo img {
-    height: 3rem;
+    height: 2rem;
     width: auto;
+    display:block;
+}
+
+.left-group {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
 }
 
 .text-center {
     text-align: center;
 }
 .navbar{
-    margin:0.8rem 0 0 0;
-    color: #000;
+    color: var(--text-color);
     font-family:"Century Gothic";
-    padding: 1rem;
+    padding: 1rem 0;
 
     display:flex;
     align-items: center;
     gap: 1rem;
+}
+
+header .search-bar {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+    position: relative;
+}
+
+header .search-bar input {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 99rem;
+    font-size: 0.95rem;
+    width: 35rem;
+    height: 2.2rem;
+    box-sizing: border-box;
+    transition: 0.2s ease;
+    padding-right: 2.6rem;
+}
+
+header .search-bar input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(var(--primary-color-rgb), 0.5);
+}
+
+header .search-bar .search-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-60%);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+}
+
+header .search-bar .search-btn:hover {
+    color: var(--primary-color);
+}
+
+header .search-bar .search-btn svg {
+    width: 1rem;
+    height: 1rem;
+    display: block;
+    fill: currentColor;
 }
 
 .navbar :link, .navbar :visited{
@@ -82,35 +167,17 @@ header {
     text-decoration: underline;
 }
 .active-page{
-    color: #ff8800;
-    font-weight: bold;
-}
-/* Breadcrumb */
-.breadcrumb {
-    font-size: 0.9em;
-    padding: 0.5rem;
-    background-color: #b3b3b3;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.sep, .current {
+    color: var(--primary-color);
     font-weight: bold;
 }
 
-.breadcrumb :link, .breadcrumb :visited {
-    color: #000000;
-    text-decoration: none;
-}
-
-
+/* Connection */
 .logreg {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
     align-items: center;
-    color: #000;
+    color: var(--secondary-text-color);
     margin-left: 30px;
 }
 
@@ -122,7 +189,7 @@ header {
 }
 
 .login:link, .login:visited {
-    color: #fff;
+    color: var(--secondary-text-color);
 }
 
 .breadcrumb a:hover {
@@ -135,8 +202,8 @@ header {
     align-items: center;
     gap: 0.6rem;
 
-    background-color: #000;
-    color: #fff;
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
     text-decoration: none;
 
     padding: 0.8rem 1.6rem;
@@ -154,62 +221,30 @@ header {
 }
 .login:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    background-color: #e67600;
-    color: #fff;
+    box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.5);
+    background-color: var(--primary-color);
+    color: var(--text-color);
 }
 
 
 /* -------------- */
-
-ul a:not(:last-child)::after{
-    content: " - ";
-}
-
-table {
-    border-collapse: collapse;
-}
-td {
-    text-align: left;
-}
-
-tr:nth-child(even){
-    background-color: #000;
-    color: #f80;
-}
-tr:nth-child(odd){
-    background-color: #f80;
-    color: #000;
-}
-
-th {
-    background-color: #000;
-    color: #fff;
-    padding: 0.25rem;
-}
-
-tr:hover{
-    background-color: #0ff;
-    color: #f00;
-}
-
 
 .propos{
     max-width: 100%;
 }
 .propos_title {
     text-align: center;
-    padding: 1%;
-    margin-bottom: 1%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
 }
 .propos_line{
     display: flex;
-    gap: 2%;
+    gap: 1rem;
 }
 .propos_block {
     flex: 1;
-    border: 0.12rem solid #444;
-    padding: 0.15%;
+    border: 1px solid var(--secondary-color);
+    padding: 0.5rem;
     text-align: justify;
 }
 .propos_bottom {
@@ -217,22 +252,22 @@ tr:hover{
 }
 .propos_block h2 {
     margin-top: 0;
-    border-bottom: 1% solid #ccc;
-    padding-bottom: 5%;
+    border-bottom: 0.05rem solid color-mix(in srgb, var(--secondary-color), #000 10%);
+    padding-bottom: 1rem;
 }
+
 /* Style compétences checkbox */
 .offers-page {
     display: flex;
-    gap: 2%;
-    padding: 2%;
+    gap: 1rem;
+    padding: 1rem;
     align-items: stretch;
 }
 
-
 .sidebar {
     width: 20%;
-    background-color: #fff;
-    border: 2px solid #000;
+    background-color: var(--light);
+    border: 2px solid var(--secondary-color);
     border-radius: 1rem;
     padding: 1rem;
 
@@ -271,14 +306,14 @@ tr:hover{
 }
 
 
-.search-bar {
+.offers-content .search-bar {
     margin-bottom: 20px;
 }
 
-.search-bar input {
+.offers-content .search-bar input {
     width: 100%;
     padding: 0.8rem;
-    border: 2px solid black;
+    border: 2px solid var(--secondary-color);
     border-radius: 1.5rem;
     font-size: 14px;
     text-align: center;
@@ -286,8 +321,8 @@ tr:hover{
 /* --------------------- */
 /* Style pour les offres */
 .offer-card {
-    background-color: white;
-    border: 2px solid black;
+    background-color: var(--light);
+    border: 2px solid var(--secondary-color);
     border-radius: 25px;
     padding: 20px;
     margin-bottom: 15px;
@@ -304,8 +339,8 @@ tr:hover{
 }
 
 .competence-bar {
-    background-color: #333;
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
     padding: 8px 15px;
     border-radius: 5px;
     display: inline-block;
@@ -313,14 +348,14 @@ tr:hover{
 }
 
 .offer-card :link, .offer-card :visited {
-    color: #f80;
+    color: var(--primary-color);
     text-decoration: none;
     font-size: 0.7rem;
 }
 /* ----------*/
 
 form {
-    color:#F80;
+    color:var(--primary-color);
     max-width: 75%;
     margin: auto;
 }
@@ -333,7 +368,7 @@ select {
     border: none;
     padding: 0.8rem 1rem;
     border-radius: 0.5rem;
-    background-color: #ffffff;
+    background-color: color-mix(in srgb, var(--background-color), #fff 75%);
     font-size: 0.8rem;
     width: 100%;
     box-sizing:  border-box;
@@ -345,7 +380,7 @@ input:focus,
 textarea:focus,
 select:focus {
     outline: none;
-    background-color: #e6f0ff;
+    background-color: color-mix(in srgb, var(--background-color), #000 30%);
     box-shadow: 0 0 0 0.1rem #000;
 }
 
@@ -366,21 +401,21 @@ button[type="submit"], input[type="reset"] {
 }
 
 button[type="submit"]:hover {
-    background-color: #e67600;
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%)
 }
 
 button[type="submit"] {
-    background-color: #f80;
+    background-color: var(--primary-color);
     color: #fff;
 }
 
 input[type="reset"] {
-    background-color: #fff;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 input[type="reset"]:hover {
-    background-color: #b3b3b3;
+    background-color: color-mix(in srgb, var(--background-color), #000 20%)
 }
 
 label {
@@ -409,22 +444,22 @@ input:focus,
 textarea:focus,
 select:focus {
     outline: none;
-    border-color: #f80;
-    background-color: #fff;
-    box-shadow: 0 0 0 0.1rem rgba(255,136,0,0.15);
+    border-color: var(--primary-color);
+    background-color: var(--light);
+    box-shadow: 0 0 0 0.1rem rgba(var(--primary-color-rgb),0.15);
 }
 
 .titreBox {
-    color: #f80
+    color: var(--primary-color);
 }
 
 input[type="radio"], input[type="checkbox"]{
-    accent-color:#f80;
+    accent-color:var(--primary-color);
 }
 
 input[type="file"]::file-selector-button{
-    background-color: #f80;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--secondary-text-color);
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
@@ -433,14 +468,14 @@ input[type="file"]::file-selector-button{
     transition: 0.3s;
 }
 input[type="file"]::file-selector-button:hover{
-    background-color: #e67600;
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
 }
 
 input[type="file"] {
-    background-color: #fafafa;
+    background-color: color-mix(in srgb, var(--background-color), #fff 50%);
     padding: 0.5rem;
     border-radius: 0.5rem;
-    border: 0.06rem solid #ddd;
+    border: 0.06rem solid color-mix(in srgb, var(--light), #000 50%);
 }
 
 
@@ -453,12 +488,12 @@ button[type="login"]{
 }
 
 button[type="login"]:hover {
-    background-color: #e67600;
+    background-color: color-mix(in srgb, var(--primary-color), #000 10%);
 }
 
 button[type="login"] {
-    background-color: #f80;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--text-color);
 }
 
 /* Mobile responsive navbar (hamburger) */
@@ -478,7 +513,7 @@ button[type="login"] {
     display: block;
     width: 24px;
     height: 2px;
-    background: #000;
+    background: var(--secondary-color);
     margin: 4px 0;
     transition: transform .3s ease, opacity .25s ease;
 }
@@ -490,8 +525,8 @@ button[type="login"] {
     left: 0;
     height: 100%;
     width: 260px;
-    background: #fff;
-    box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+    background: var(--light);
+    box-shadow: 2px 0 12px rgba(var(--secondary-color-rgb), 0.2);
     transform: translateX(-100%);
     transition: transform .3s ease;
     z-index: 1001;
@@ -514,15 +549,15 @@ button[type="login"] {
 .mobile-menu a, .mobile-menu span {
     display: block;
     padding: 0.6rem 0;
-    color: #000;
+    color: var(--text-color);
     text-decoration: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(var(--secondary-color-rgb),0.4);
 }
 
 .mobile-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(var(--secondary-color-rgb),0.4);
     opacity: 0;
     visibility: hidden;
     transition: opacity .3s ease;
@@ -544,10 +579,26 @@ body.menu-open {
 @media (max-width: 768px) {
     .navbar { display: none; }
     .menu-toggle { display: flex; margin-left: auto; }
-    .logreg { margin-left: 0; }
+    .logreg {margin: 0.5rem; margin-left: 6rem;}
     header { justify-content: center; padding: 0 1rem; }
-    .logo img { height: 2.5rem; }
+    .logo img { height: 1.5rem; }
     .login { padding: 0.6rem 1rem; font-size: 0.8rem; }
+    header .search-bar { display: none; }
+
+    .mobile-menu .search-bar { display: flex; margin: 0 0 1rem 0; }
+    .mobile-menu .search-bar input { width: calc(100% - 2.4rem); padding: 0.5rem 0.8rem; background: #fff; border: 1px solid #ddd; border-radius: 0.6rem; }
+    .mobile-menu .search-bar .search-btn { position: static; right: auto; top: auto; transform: none; margin-left: 0.5rem; }
+    
+    .mobile-menu .search-bar,
+    .mobile-menu .search-bar input,
+    .mobile-menu .search-bar .search-btn {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+.mobile-menu .search-bar { padding: 0; margin-bottom: 1rem; }
+.mobile-menu .search-bar .search-btn { margin-left: 0.5rem; width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; }
 }
 
 
