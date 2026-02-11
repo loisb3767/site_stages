@@ -24,47 +24,31 @@
 				Se connecter
 			</a>
 		</div>
+		</header>
  
 		<main>
- 
-			<section>
-	   
-				<h1 class="text-center">Créez un compte</h1>
-				
-				<p>Pour déposer une annonce ou bénéficier d'une expérience personnalisée avec du contenu en lien avec vos recherches inscrivez-vous, c'est rapide et gratuit !</p>
-				
-				<article>
-					<h2>Formulaire d'inscription</h2>
-					
-					<form>
-						<label>Civilité
-						<select name="title">
-							<option value="ms">Madame</option>
-							<option value="mr">Monsieur</option>	  
-						</select>
-						</label>
-						
-						<label>Nom<input name="lastname" type="text" value="" size="50" required ></label>
-						
-						<label>Prénom<input name="surname" type="text" size="50" value="" required ></label>
-						
-						<label>Courriel<input name="email" type="email" size="30" value="" required ></label>
-						
-						<label>Mot de passe<input name="password" type="password" size="30" value="" required ></label>
-						
-						<label>Confirmation<input name="password_confirm" type="password" size="30" minlength="8" value="" required ></label>
-						
-						<button type="submit">Envoyer</button>&nbsp;<input type="reset" value="Réinitialiser" >
-						<button type="button" onclick="window.location.href='connexion.html'">CONNEXION</button>
-					</form>
-				</article>
-			</section>
+			<div class="container_inscription">
+				<div class="auth-card">
+					<div class="tabs">
+						<a href="connexion.html" class="tab">Login</a>
+        				<a href="inscription.html" class="tab active">Sign up</a>
+					</div>
+					<div class="card-body">
+						<div class="logo">
+							<img src="./images/JOB_2_MAIN_mini.png" alt="Lebonplan - Le meilleur site d'annonces en ligne">
+						</div>
+						<h2 id="form-title" class="text-center">
+							Connectez vous à votre compte pour inscrire des étudiants!
+						</h2>
+					</div>
+				</div>
+			</div>
 		</main>
 		<footer>
 		<p>&copy;2026 - Tous droits réservés -	JGT</p>
 		<a href="mentionslégales.html">Mentions légales</a>&nbsp;
- 	 </footer>
-  <script src="assets/menu.js"></script>
+ 	</footer>
+    <script src="assets/menu.js"></script>
  	 
 	</body> 
 </html> 

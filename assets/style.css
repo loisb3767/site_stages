@@ -63,6 +63,12 @@ footer a:active {
 }
 
 header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--background-color);
+    z-index: 1000;
     display: flex;
     align-items: center;
     
@@ -226,6 +232,119 @@ header .search-bar .search-btn svg {
     color: var(--text-color);
 }
 
+main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+.container, .container_inscription {
+    align-self: center;
+    max-width: 1200px;
+    padding: 0 1rem;
+    min-height: 25rem;
+}
+
+.auth-card {
+    background-color: color-mix(in srgb, var(--background-color), var(--secondary-color) 5%);
+    width: 30rem;
+    min-height: 30rem;
+    border-radius: 30px;
+    box-shadow: 0 10px 20px rgba(var(--secondary-color-rgb), 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.tabs {
+    display: flex;
+    background: color-mix(in srgb, var(--light), var(--secondary-color) 10%);
+    text-decoration: none;
+}
+
+.tab {
+    flex: 1;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: color-mix(in srgb, var(--secondary-text-color), var(--text-color) 50%);
+    transition: 0.3s;
+    border-radius: 0 0 0 20px;
+    text-decoration: none;
+}
+
+.tab.active {
+    background: color-mix(in srgb, var(--background-color), var(--secondary-color) 5%);
+    color: var(--text-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 20px 20px 0 0px;
+    text-decoration: none;
+}
+
+
+
+.card-body {
+    padding: 2rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.card-body .logo h1 {
+    font-size: 1.8em;
+    margin-bottom: 1.2rem;
+}
+
+.card-body .logo img {
+    width: 80px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+.card-body h2 {
+    font-size: 1.2em;
+    margin-bottom: 1.2rem;
+}
+
+.card-body .input-group {
+    text-align: left;
+    margin-bottom: 0.9rem;
+}
+
+.card-body .input-group label {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 0.4rem;
+    color: var(--primary-color)
+}
+
+.required {
+    color: color-mix(in srgb, var(--primary-color), #f00 33%);
+}
+
+.card-body input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--light), #000 50%);
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    background-color: color-mix(in srgb, var(--background-color), #fff 75%);
+}
+
+.card-body .btn-primary {
+    background-color: var(--primary-color);
+    color: var(--secondary-text-color);
+    border: none;
+    padding: 0.8rem 2rem;
+    width: 50%;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 0.7rem;
+    transition: var(--background-color) 0.3s;
+}
+
+.card-body .btn-primary:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
+
 
 /* -------------- */
 
@@ -258,7 +377,9 @@ header .search-bar .search-btn svg {
 
 /* Style compétences checkbox */
 .offers-page {
+    margin-top: 5rem;
     display: flex;
+    flex-direction: row;
     gap: 1rem;
     padding: 1rem;
     align-items: stretch;
@@ -270,8 +391,6 @@ header .search-bar .search-btn svg {
     border: 2px solid var(--secondary-color);
     border-radius: 1rem;
     padding: 1rem;
-
-    position: sticky;
     top: 1rem;
 }
 
