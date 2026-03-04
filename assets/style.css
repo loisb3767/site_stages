@@ -1,0 +1,716 @@
+:root {
+    --primary-color: #00a5cf;
+    --primary-color-rgb: 0, 165, 207;
+    --secondary-color: #004e64;
+    --secondary-color-rgb: 0, 78, 100;
+    --background-color: #f7f9f9;
+    --background-color-rgb: 243, 245, 245;
+    --text-color: #081c30;
+    --text-color-rgb: 8, 28, 48;
+    --font-family: Helvetica, Arial, sans-serif;
+    --secondary-text-color: #fff;
+    --secondary-text-color-rgb: 255, 255, 255;
+    --light: color-mix(in srgb, #d8ecff 30%, var(--background-color) 70%);
+    --light-rgb: 255, 255, 255;
+}
+
+
+html{
+    margin: 0;
+    padding: 0;
+    height: auto;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 0 0 0;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+footer {
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
+    font-style: italic;
+    font-size: 0.8em;
+    text-align:center;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+footer a:link, footer a:visited {
+    color: currentColor;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-shadow: 0 0 1px currentColor;
+    text-decoration: underline;
+}
+
+footer a:active {
+    color: var(--primary-color);
+    text-shadow: 0 0 1px currentColor;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    
+    box-shadow: 
+        0 1px 1px rgba(var(--secondary-color-rgb), 0.12),
+        0 2px 2px rgba(var(--secondary-color-rgb), 0.12),
+        0 4px 4px rgba(var(--secondary-color-rgb), 0.12),
+        0 8px 8px rgba(var(--secondary-color-rgb), 0.12);
+        
+    padding: 0.5rem 1rem;
+}
+
+.logo {
+    margin-right: 1rem;
+}
+
+.logo img {
+    height: 2rem;
+    width: auto;
+    display:block;
+}
+
+.left-group {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.navbar{
+    color: var(--text-color);
+    font-family:"Century Gothic";
+    padding: 1rem 0;
+
+    display:flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+header .search-bar {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+    position: relative;
+}
+
+header .search-bar input {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 99rem;
+    font-size: 0.95rem;
+    width: 35rem;
+    height: 2.2rem;
+    box-sizing: border-box;
+    transition: 0.2s ease;
+    padding-right: 2.6rem;
+}
+
+header .search-bar input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(var(--primary-color-rgb), 0.5);
+}
+
+header .search-bar .search-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-60%);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+}
+
+header .search-bar .search-btn:hover {
+    color: var(--primary-color);
+}
+
+header .search-bar .search-btn svg {
+    width: 1rem;
+    height: 1rem;
+    display: block;
+    fill: currentColor;
+}
+
+.navbar :link, .navbar :visited{
+    color: currentColor;
+    text-decoration: none;
+}
+.navbar :hover{
+    text-shadow: 0 0 1px currentColor;
+    text-decoration: underline;
+}
+.active-page{
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Connection */
+.logreg {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    align-items: center;
+    color: var(--secondary-text-color);
+    margin-left: 30px;
+}
+
+.logreg a {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.login:link, .login:visited {
+    color: var(--secondary-text-color);
+}
+
+.breadcrumb a:hover {
+    text-shadow: 0 0 1px currentColor;
+    text-decoration: underline;
+}
+
+.login {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
+    text-decoration: none;
+
+    padding: 0.8rem 1.6rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.login img{
+    width: 25px;
+    height: 25px;
+    filter: invert(1) brightness(10);
+}
+.login:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.5);
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+.container, .container_inscription {
+    align-self: center;
+    max-width: 1200px;
+    padding: 0 1rem;
+    min-height: 25rem;
+}
+
+.auth-card {
+    background-color: color-mix(in srgb, var(--background-color), var(--secondary-color) 5%);
+    width: 30rem;
+    min-height: 30rem;
+    border-radius: 30px;
+    box-shadow: 0 10px 20px rgba(var(--secondary-color-rgb), 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.tabs {
+    display: flex;
+    background: color-mix(in srgb, var(--light), var(--secondary-color) 10%);
+    text-decoration: none;
+}
+
+.tab {
+    flex: 1;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: color-mix(in srgb, var(--secondary-text-color), var(--text-color) 50%);
+    transition: 0.3s;
+    border-radius: 0 0 0 20px;
+    text-decoration: none;
+}
+
+.tab.active {
+    background: color-mix(in srgb, var(--background-color), var(--secondary-color) 5%);
+    color: var(--text-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 20px 20px 0 0px;
+    text-decoration: none;
+}
+
+
+
+.card-body {
+    padding: 2rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.card-body .logo h1 {
+    font-size: 1.8em;
+    margin-bottom: 1.2rem;
+}
+
+.card-body .logo img {
+    width: 80px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+.card-body h2 {
+    font-size: 1.2em;
+    margin-bottom: 1.2rem;
+}
+
+.card-body .input-group {
+    text-align: left;
+    margin-bottom: 0.9rem;
+}
+
+.card-body .input-group label {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 0.4rem;
+    color: var(--primary-color)
+}
+
+.required {
+    color: color-mix(in srgb, var(--primary-color), #f00 33%);
+}
+
+.card-body input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid color-mix(in srgb, var(--light), #000 50%);
+    border-radius: 0.5rem;
+    box-sizing: border-box;
+    background-color: color-mix(in srgb, var(--background-color), #fff 75%);
+}
+
+.card-body .btn-primary {
+    background-color: var(--primary-color);
+    color: var(--secondary-text-color);
+    border: none;
+    padding: 0.8rem 2rem;
+    width: 50%;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 0.7rem;
+    transition: var(--background-color) 0.3s;
+}
+
+.card-body .btn-primary:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
+
+
+/* -------------- */
+
+.propos{
+    max-width: 100%;
+}
+.propos_title {
+    text-align: center;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+.propos_line{
+    display: flex;
+    gap: 1rem;
+}
+.propos_block {
+    flex: 1;
+    border: 1px solid var(--secondary-color);
+    padding: 0.5rem;
+    text-align: justify;
+}
+.propos_bottom {
+    width: 100%;
+}
+.propos_block h2 {
+    margin-top: 0;
+    border-bottom: 0.05rem solid color-mix(in srgb, var(--secondary-color), #000 10%);
+    padding-bottom: 1rem;
+}
+
+/* Style compétences checkbox */
+.offers-page {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 1rem;
+    align-items: stretch;
+}
+
+.sidebar {
+    width: 20%;
+    background-color: var(--light);
+    border: 2px solid var(--secondary-color);
+    border-radius: 1rem;
+    padding: 1rem;
+    top: 1rem;
+}
+
+.sidebar-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.specialites {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.specialites li {
+    break-inside: avoid;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.specialites input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.offers-content {
+    flex: 1;
+}
+
+
+.offers-content .search-bar {
+    margin-bottom: 20px;
+}
+
+.offers-content .search-bar input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--secondary-color);
+    border-radius: 1.5rem;
+    font-size: 14px;
+    text-align: center;
+}
+/* --------------------- */
+/* Style pour les offres */
+.offer-card {
+    background-color: var(--light);
+    border: 2px solid var(--secondary-color);
+    border-radius: 25px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.offer-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.offer-card .resume {
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.competence-bar {
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
+    padding: 8px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 14px;
+}
+
+.offer-card :link, .offer-card :visited {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.7rem;
+}
+/* ----------*/
+
+form {
+    color:var(--primary-color);
+    max-width: 75%;
+    margin: auto;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 0.5rem;
+    background-color: color-mix(in srgb, var(--background-color), #fff 75%);
+    font-size: 0.8rem;
+    width: 100%;
+    box-sizing:  border-box;
+    margin-top: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    background-color: color-mix(in srgb, var(--background-color), #000 30%);
+    box-shadow: 0 0 0 0.1rem #000;
+}
+
+select {
+    cursor: pointer;
+}
+
+textarea {
+    resize: none;
+}
+
+button[type="submit"], input[type="reset"] {
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%)
+}
+
+button[type="submit"] {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+input[type="reset"] {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+input[type="reset"]:hover {
+    background-color: color-mix(in srgb, var(--background-color), #000 20%)
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: auto;
+    margin-right: 0.5rem;
+    margin-bottom: 0.7rem;
+}
+
+form p {
+    margin-top: 0.7rem;
+    margin-bottom: 0.3rem;
+}
+
+form label input[type="checkbox"],
+form label input[type="radio"] {
+    margin-top: 0;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--light);
+    box-shadow: 0 0 0 0.1rem rgba(var(--primary-color-rgb),0.15);
+}
+
+.titreBox {
+    color: var(--primary-color);
+}
+
+input[type="radio"], input[type="checkbox"]{
+    accent-color:var(--primary-color);
+}
+
+input[type="file"]::file-selector-button{
+    background-color: var(--primary-color);
+    color: var(--secondary-text-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    margin-right: 0.6rem;
+    transition: 0.3s;
+}
+input[type="file"]::file-selector-button:hover{
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
+
+input[type="file"] {
+    background-color: color-mix(in srgb, var(--background-color), #fff 50%);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 0.06rem solid color-mix(in srgb, var(--light), #000 50%);
+}
+
+
+button[type="login"]{
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button[type="login"]:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 10%);
+}
+
+button[type="login"] {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
+/* Mobile responsive navbar (hamburger) */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    
+    width: 44px;
+    height: 44px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.menu-toggle .bar {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--secondary-color);
+    margin: 4px 0;
+    transition: transform .3s ease, opacity .25s ease;
+}
+
+/* menu */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 260px;
+    background: var(--light);
+    box-shadow: 2px 0 12px rgba(var(--secondary-color-rgb), 0.2);
+    transform: translateX(-100%);
+    transition: transform .3s ease;
+    z-index: 1001;
+    padding: 1.5rem 1rem;
+    overflow: auto;
+}
+.mobile-menu.open {
+    transform: translateX(0);
+}
+.mobile-menu .mobile-nav-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+}
+.mobile-menu a, .mobile-menu span {
+    display: block;
+    padding: 0.6rem 0;
+    color: var(--text-color);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(var(--secondary-color-rgb),0.4);
+}
+
+.mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(var(--secondary-color-rgb),0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease;
+    z-index: 1000;
+}
+.mobile-overlay.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+body.menu-open {
+    overflow: hidden;
+}
+
+.menu-toggle.open .bar:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+.menu-toggle.open .bar:nth-child(2) { opacity: 0; }
+.menu-toggle.open .bar:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+@media (max-width: 768px) {
+    .navbar { display: none; }
+    .menu-toggle { display: flex; margin-left: auto; }
+    .logreg {margin: 0.5rem; margin-left: 6rem;}
+    header { justify-content: center; padding: 0 1rem; }
+    .logo img { height: 1.5rem; }
+    .login { padding: 0.6rem 1rem; font-size: 0.8rem; }
+    header .search-bar { display: none; }
+
+    .mobile-menu .search-bar { display: flex; margin: 0 0 1rem 0; }
+    .mobile-menu .search-bar input { width: calc(100% - 2.4rem); padding: 0.5rem 0.8rem; background: #fff; border: 1px solid #ddd; border-radius: 0.6rem; }
+    .mobile-menu .search-bar .search-btn { position: static; right: auto; top: auto; transform: none; margin-left: 0.5rem; }
+    
+    .mobile-menu .search-bar,
+    .mobile-menu .search-bar input,
+    .mobile-menu .search-bar .search-btn {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+.mobile-menu .search-bar { padding: 0; margin-bottom: 1rem; }
+.mobile-menu .search-bar .search-btn { margin-left: 0.5rem; width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; }
+}
+
+
