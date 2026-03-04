@@ -33,6 +33,10 @@ body {
 
 main {
     flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
 }
 
 footer {
@@ -95,7 +99,6 @@ header {
     text-align: center;
 }
 
-}
 .navbar{
     color: var(--text-color);
     font-family:"Century Gothic";
@@ -228,12 +231,6 @@ header .search-bar .search-btn svg {
     color: var(--text-color);
 }
 
-main {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    gap: 2rem;
-}
 .container, .container_inscription {
     align-self: center;
     max-width: 1200px;

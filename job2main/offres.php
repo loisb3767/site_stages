@@ -1,3 +1,20 @@
+<?php 
+include 'offres_data.php'; 
+
+$parPage = 10;
+$total = count($offres);
+$nbPages = ceil($total / $parPage);
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+if ($page < 1) $page = 1;
+if ($page > $nbPages) $page = $nbPages;
+
+$indexDepart = ($page - 1) * $parPage;
+
+$offresAffichées = array_slice($offres, $indexDepart, $parPage);
+
+?>
+
 <!doctype html> 
 <html lang="fr"> 
    <head> 
@@ -44,37 +61,30 @@
             </aside>
 
             <section class="offers-content">
-                <div class="search-bar">
-                    <input type="text" placeholder="recherche précise">
+                <?php foreach ($offresAffichées as $offre): ?>
+                    <article class="offer-card">
+                        <div class="offer-info">
+                            <h3><?= htmlspecialchars($offre['titre']) ?></h3>
+                            <p class="resume"><?= htmlspecialchars($offre['resume']) ?></p>
+                            <?php foreach ($offre['competences'] as $comp): ?>
+                                <div class="competence-bar"><?= htmlspecialchars($comp) ?></div>
+                            <?php endforeach; ?>
+                        </div>
+                        <a href="detailOffre.php?id=<?= $offre['id'] ?>" class="info-btn">plus d'info</a>
+                    </article>
+                <?php endforeach; ?>
+
+                <div class="pagination" style="margin-top: 20px; text-align: center;">
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?= $page - 1 ?>" style="padding: 10px; background: #004f66; color: white; text-decoration: none;">Précédent</a>
+                    <?php endif; ?>
+
+                    <span style="margin: 0 15px;"> Page <?= $page ?> sur <?= $nbPages ?> </span>
+
+                    <?php if ($page < $nbPages): ?>
+                        <a href="?page=<?= $page + 1 ?>" style="padding: 10px; background: #004f66; color: white; text-decoration: none;">Suivant</a>
+                    <?php endif; ?>
                 </div>
-
-                <article class="offer-card">
-                    <div class="offer-info">
-                        <h3>Titre1</h3>
-                        <p class="resume">résumé1</p>
-                        <div class="competence-bar">compétence1</div>
-                        <div class="competence-bar">compétence2</div>
-                    </div>
-                    <a href="detailOffre.html" class="info-btn">plus d'info</a>
-                </article>
-
-                <article class="offer-card">
-                    <div class="offer-info">
-                        <h3>Titre2</h3>
-                        <p class="resume">résumé2</p>
-                        <div class="competence-bar">compétence2</div>
-                    </div>
-                    <a href="detailOffre.html" class="info-btn">plus d'info</a>
-                </article>
-
-                <article class="offer-card">
-                    <div class="offer-info">
-                        <h3>Titre3</h3>
-                        <p class="resume">résumé3</p>
-                        <div class="competence-bar">compétence3</div>
-                    </div>
-                    <a href="detailOffre.html" class="info-btn">plus d'info</a>
-                </article>
             </section>
         </main>
      	<footer>
