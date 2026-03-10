@@ -1,0 +1,27 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Parcours des offres - Job2main{% endblock %}
+{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+
+{% block body %}
+	 
+	   <section>
+	   
+			<h1 class="text-center">Nous sommes à votre écoute</h1>
+			
+			<p>Vous pouvez nous contacter directement via <a href="mailto:info@job2main.fr">notre adresse de courriel</a> ou utilisez le formulaire ci-dessous. Nous vous répondrons dans tous les cas dans les délais les plus bref.</p>
+			
+			<article>
+			
+				<h2>Vous avez la parole</h2>
+				
+				<form>
+					<label class="titreBox">Nom complet<input name="fullname" type="text" value="" size="100" required ></label>
+		
+					<label class="titreBox">Votre message<textarea name="feedbacks" rows="5" cols="100" ></textarea></label>
+		
+					<button type="submit">Envoyer</button>&nbsp;<input type="reset" value="Effacer" >
+				</form>
+			</article>					
+	   </section>
+{% endblock %}

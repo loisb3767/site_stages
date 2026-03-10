@@ -1,0 +1,83 @@
+<!doctype html> 
+<html lang="fr"> 
+    <head> 
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="author" content="Groupe 4">
+        <meta name="description" content="{% block meta_description %}Venez trouver votre stage de rêve !{% endblock %}">
+        <title>{% block title %}Job2main{% endblock %}</title> 
+        <link rel="stylesheet" href="assets/style.css">
+        {% block stylesheets %}{% endblock %}
+    </head> 
+    <body>
+        <header>
+            <div class="left-group">
+                <div class="logo">
+                    <img src="./images/JOB_2_MAIN_mini.png" alt="Logo Job2main">
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" placeholder="recherche précise" aria-label="Recherche">
+                    <button class="search-btn" aria-label="Rechercher">
+                        <img src="./images/search_icon.png" alt="Rechercher">
+                    </button>
+                </div>
+            </div>
+            <nav class="navbar">
+                {% if page_active == 'accueil' %}
+                    <span class="active-page">Accueil</span>
+                {% else %}
+                    <a href="index.php?page=accueil">Accueil</a>
+                {% endif %}
+            </nav>
+            <div class="logreg">
+                {% if user_logged_in %}
+                    <a class="profile" href="profile.php">
+                        <img src="./images/user_icon.png" alt="Profil">
+                        Mon compte
+                    </a>
+                {% elseif page_active == 'connexion' %}
+                     <a class="login">
+                        <img src="./images/user_icon.png" alt="">
+                        Se connecter
+                    </a>
+                {% else %}
+                    <a class="login" href="index.php?page=connexion">
+                        <img src="./images/user_icon.png" alt="">
+                        Se connecter
+                    </a>
+                {% endif %}
+                </a>
+            </div>
+        </header>
+
+        <main>
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer>
+            <p>&copy;2026 - Tous droits réservés - JGT</p>
+            
+            {# Un petit tableau Twig pour éviter les répétitions si tu te sens à l'aise #}
+            {% set footer_links = {
+                'mentions': {'url': 'index.php?page=mention-légales', 'label': 'Mentions légales'},
+                'propos':   {'url': 'index.php?page=a-propos',       'label': 'A propos'},
+                'stats':    {'url': 'index.php?page=statistiques',   'label': 'Statistiques'},
+                'avis':     {'url': 'index.php?page=avis',           'label': 'Avis'},
+                'contact':  {'url': 'index.php?page=contact',        'label': 'Contact'}
+            } %}
+
+            {% for key, link in footer_links %}
+                {% if page_active == key %}
+                    <span class="active-footer">{{ link.label }}</span>
+                {% else %}
+                    <a href="{{ link.url }}">{{ link.label }}</a>
+                {% endif %}
+                {% if not loop.last %}&nbsp;{% endif %}
+            {% endfor %}
+        </footer>
+
+        <script src="assets/menu.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body> 
+</html>
