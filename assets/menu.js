@@ -53,3 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
 });
+
+
+// Header sticky sur desktop
+
+let lastScroll = 0;
+const header = document.getElementById("site-header");
+
+window.addEventListener("scroll", () => {
+    let currentScroll = window.pageYOffset;
+
+    if (currentScroll > lastScroll) {
+        header.classList.add("hide"); // scroll vers le bas → cacher
+    } else {
+        header.classList.remove("hide"); // scroll vers le haut → afficher
+    }
+
+    lastScroll = currentScroll;
+});

@@ -37,6 +37,8 @@ main {
     justify-content: center;
     flex-direction: column;
     gap: 2rem;
+    margin-top: 5rem;
+
 }
 
 footer {
@@ -69,14 +71,20 @@ footer a:active {
 header {
     display: flex;
     align-items: center;
-    
+
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+
     box-shadow: 
         0 1px 1px rgba(var(--secondary-color-rgb), 0.12),
         0 2px 2px rgba(var(--secondary-color-rgb), 0.12),
         0 4px 4px rgba(var(--secondary-color-rgb), 0.12),
         0 8px 8px rgba(var(--secondary-color-rgb), 0.12);
-        
+
     padding: 0.5rem 1rem;
+    background: var(--background-color);
 }
 
 .logo {
@@ -710,6 +718,18 @@ button[type="login"] {
 
 body.menu-open {
     overflow: hidden;
+}
+
+#site-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+}
+
+#site-header.hide {
+    transform: translateY(-100%);
 }
 
 .menu-toggle.open .bar:nth-child(1) { transform: translateY(10px) rotate(45deg); }
