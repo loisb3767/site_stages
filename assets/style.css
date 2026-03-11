@@ -187,6 +187,40 @@ header .search-bar .search-btn:hover img {
     font-weight: bold;
 }
 
+.pagination {
+    margin-top: 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espace entre les boutons et le texte */
+}
+
+/* Style des boutons Précédent / Suivant */
+.btn-pagination {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #004f66;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 5px; /* Un petit arrondi pour le look */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Effet au survol (Hover) */
+.btn-pagination:hover {
+    background-color: #006a88;
+    transform: translateY(-2px); /* Petit effet de levée */
+}
+
+/* Style du texte "Page X sur Y" */
+.page-info {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+}
+
 /* Connection */
 .logreg {
     display: flex;
@@ -760,5 +794,3 @@ body.menu-open {
 .mobile-menu .search-bar { padding: 0; margin-bottom: 1rem; }
 .mobile-menu .search-bar .search-btn { margin-left: 0.5rem; width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; }
 }
-
-

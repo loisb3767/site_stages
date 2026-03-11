@@ -24,7 +24,7 @@
                         <div class="competence-bar">{{ comp }}</div>
                     {% endfor %}
                 </div>
-                <a href="detailOffre.php?id={{ offre.id }}" class="info-btn">plus d'info</a>
+                <a href="index.php?page=detail-offre&id={{ offre.id }}" class="info-btn">plus d'info</a>
             </article>
         {% else %}
             <p>Aucune offre disponible pour le moment.</p>
@@ -32,13 +32,13 @@
 
         <div class="pagination">
             {% if page > 1 %}
-                <a href="?page={{ page - 1 }}" class="btn-pagination">Précédent</a>
+                <a href="?page=offres&p={{ page - 1 }}" class="btn-pagination">Précédent</a>
             {% endif %}
 
             <span class="page-info"> Page {{ page }} sur {{ nbPages }} </span>
 
             {% if page < nbPages %}
-                <a href="?page={{ page + 1 }}" class="btn-pagination">Suivant</a>
+                <a href="?page=offres&p={{ page + 1 }}" class="btn-pagination">Suivant</a>
             {% endif %}
         </div>
     </section>

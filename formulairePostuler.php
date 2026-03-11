@@ -30,18 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'fichier' => $filePath
         ];
 
-        $storageDir = 'avisForms/';
+        $storageDir = 'postulerForms/';
         if (!is_dir($storageDir)) mkdir($storageDir, 0755, true);
         
-        $fileName = $storageDir . 'avis_' . time() . '_' . uniqid() . '.json';
+        $fileName = $storageDir . 'postuler_' . time() . '_' . uniqid() . '.json';
         file_put_contents($fileName, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
-        header('Location: index.php?page=avis&status=success');
+        header('Location: index.php?page=postuler&status=success');
         exit;
 
     } catch (Exception $e) {
         $errorMsg = urlencode($e->getMessage());
-        header("Location: index.php?page=avis&error=$errorMsg");
+        header("Location: index.php?page=postuler&error=$errorMsg");
         exit;
     }
 }

@@ -5,7 +5,7 @@ include 'offres_data.php';
 $parPage = 10;
 $total = count($offres);
 $nbPages = ceil($total / $parPage);
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['p']) ? (int)$_GET['p'] : 1;
 if ($page < 1) $page = 1;
 if ($page > $nbPages && $nbPages > 0) $page = $nbPages;
 
@@ -17,7 +17,7 @@ $twig = new \Twig\Environment($loader);
 
 echo $twig->render('offres.twig.html', [
     'offres' => $offresAffichées,
-    'page' => $page,
+    'p' => $page,
     'nbPages' => $nbPages,
     'active_page' => 'offres'
 ]);
