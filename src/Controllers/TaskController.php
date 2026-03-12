@@ -16,9 +16,8 @@ class TaskController extends Controller {
     }
 
     public function offresPage() {
-        include 'offres_data.php'; // Charge ton tableau d'offres
+        include 'offres_data.php';
         
-        // Logique de pagination
         $parPage = 10;
         $totalOffres = $this->model->getTotalCount();
         $nbPages = ceil($totalOffres / $parPage);
@@ -27,7 +26,6 @@ class TaskController extends Controller {
         if ($currentPage < 1) $currentPage = 1;
         if ($currentPage > $nbPages) $currentPage = $nbPages;
 
-        // On demande au model de nous donner juste le "morceau" de données nécessaire
         $data['offres'] = $this->model->getPaginatedOffres($currentPage, $parPage);
         $data['page'] = $currentPage;
         $data['nbPages'] = $nbPages;

@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         $storageDir = 'avisForms/';
-        if (!is_dir($storageDir)) mkdir($storageDir, 0755, true);
+        if (!is_dir($storageDir)) mkdir($storageDir, 755, true);
         
         $fileName = $storageDir . 'avis_' . time() . '_' . uniqid() . '.json';
         file_put_contents($fileName, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));

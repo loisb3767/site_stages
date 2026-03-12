@@ -1,3 +1,4 @@
+/* definition des variables de couleurs et de polices */
 :root {
     --primary-color: #00a5cf;
     --primary-color-rgb: 0, 165, 207;
@@ -14,7 +15,7 @@
     --light-rgb: 255, 255, 255;
 }
 
-
+/* Styles généraux */
 html{
     margin: 0;
     padding: 0;
@@ -41,6 +42,7 @@ main {
 
 }
 
+/* Styles du header et du footer */
 footer {
     background-color: var(--secondary-color);
     color: var(--secondary-text-color);
@@ -87,6 +89,7 @@ header {
     background: var(--background-color);
 }
 
+/* Styles spécifiques du header */
 .logo {
     margin-right: 1rem;
 }
@@ -189,31 +192,32 @@ header .search-bar .search-btn:hover img {
     font-weight: bold;
 }
 
+/* Style des boutons Précédent / Suivant */
 .pagination {
     margin-top: 30px;
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px; /* Espace entre les boutons et le texte */
+    gap: 15px;
 }
 
-/* Style des boutons Précédent / Suivant */
+
 .btn-pagination {
     display: inline-block;
     padding: 10px 20px;
     background-color: #004f66;
     color: #ffffff;
     text-decoration: none;
-    border-radius: 5px; /* Un petit arrondi pour le look */
+    border-radius: 5px;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Effet au survol (Hover) */
+
 .btn-pagination:hover {
     background-color: #006a88;
-    transform: translateY(-2px); /* Petit effet de levée */
+    transform: translateY(-2px);
 }
 
 /* Style du texte "Page X sur Y" */
@@ -385,7 +389,8 @@ header .search-bar .search-btn:hover img {
     background-color: color-mix(in srgb, var(--primary-color), #000 20%);
 }
 
-
+/* ----------*/
+/* Page "A propos" */
 
 .propos{
     max-width: 100%;
@@ -413,6 +418,8 @@ header .search-bar .search-btn:hover img {
     border-bottom: 0.05rem solid color-mix(in srgb, var(--secondary-color), #000 10%);
     padding-bottom: 1rem;
 }
+
+/* Page "Offres" */
 
 .offers-page {
     align-items: flex-start; 
@@ -506,6 +513,7 @@ header .search-bar .search-btn:hover img {
 }
 /* ----------*/
 
+/* Formulaires */
 form {
     color:var(--primary-color);
     max-width: 75%;
@@ -660,6 +668,9 @@ button[type="login"] {
     color: red;
 }
 
+/* ---------- */
+/* element généraux */
+
 .active-page {
     font-weight: bold;
     color: var(--secondary-color);
@@ -747,6 +758,7 @@ body.menu-open {
     overflow: hidden;
 }
 
+/* Effet de scroll pour cacher le header */
 #site-header {
     position: fixed;
     top: 0;
@@ -759,6 +771,7 @@ body.menu-open {
     transform: translateY(-100%);
 }
 
+/* Animation du menu hamburger */
 .menu-toggle.open .bar:nth-child(1) { transform: translateY(10px) rotate(45deg); }
 .menu-toggle.open .bar:nth-child(2) { opacity: 0; }
 .menu-toggle.open .bar:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }

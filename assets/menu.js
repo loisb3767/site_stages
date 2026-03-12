@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
   toggle.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span>';
   header.appendChild(toggle);
 
-    // Menu navbar sur Mobile — inclure la search-bar de l'en-tête si présente
+  // Menu navbar sur Mobile — inclure la search-bar de l'en-tête si présente
   var mobile = document.createElement('nav');
   mobile.className = 'mobile-menu';
   mobile.setAttribute('aria-hidden', 'true');
@@ -61,13 +61,13 @@ let lastScroll = 0;
 const header = document.getElementById("site-header");
 
 window.addEventListener("scroll", () => {
-    let currentScroll = window.pageYOffset;
+  let currentScroll = window.pageYOffset;
 
-    if (currentScroll > lastScroll) {
-        header.classList.add("hide"); // scroll vers le bas → cacher
-    } else {
-        header.classList.remove("hide"); // scroll vers le haut → afficher
-    }
+  if (currentScroll > lastScroll) {
+    header.classList.add("hide"); // scroll vers le bas = cacher
+  } else {
+    header.classList.remove("hide"); // scroll vers le haut = afficher
+  }
 
-    lastScroll = currentScroll;
+  lastScroll = currentScroll;
 });

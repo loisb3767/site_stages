@@ -3,16 +3,13 @@ require_once 'vendor/autoload.php';
 
 use App\Controllers\TaskController;
 
-// Configuration de Twig
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig = new \Twig\Environment($loader, [
-    'cache' => false, // Désactivé en dev
+    'debug' => true, // a modifier avec le gitignore
 ]);
 
-// Récupération de la page demandée (par défaut 'accueil')
 $page = isset($_GET['page']) ? $_GET['page'] : 'accueil';
 
-// Initialisation des données par défaut
 $data = ['page_active' => $page];
 
 $controller = new TaskController($twig);
@@ -71,7 +68,7 @@ switch ($page) {
         break;
 
     
-    // Rajouter les autres mais la flemme
+    // A rajouter les autres pages apres
     
     default:
         http_response_code(404);

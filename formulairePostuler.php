@@ -6,16 +6,12 @@ use App\Services\FileUploader;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $fullname = Validator::sanitize($_POST['fullname'] ?? '');
-        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-        $subject = Validator::sanitize($_POST['subject'] ?? '');
-        $feedback = Validator::sanitize($_POST['feedbacks'] ?? '');
-        $satisfaction = Validator::sanitize($_POST['satisfaction'] ?? '');
+        $satisfaction = Validator::sanitize($_POST['motivation'] ?? '');
 
         if (!$email) throw new Exception("Email invalide.");
 
         $filePath = "Aucun fichier";
-        if (isset($_FILES['document']) && $_FILES['document']['error'] !== UPLOAD_ERR_NO_FILE) {
+        if (isset($_FILES['cv']) && $_FILES['cv']['error'] !== UPLOAD_ERR_NO_FILE) {
             $uploader = new FileUploader();
             $filePath = $uploader->upload($_FILES['document']);
         }
@@ -31,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         $storageDir = 'postulerForms/';
-        if (!is_dir($storageDir)) mkdir($storageDir, 0755, true);
+        if (!is_dir($storageDir)) mkdir($storageDir, 755, true);
         
         $fileName = $storageDir . 'postuler_' . time() . '_' . uniqid() . '.json';
         file_put_contents($fileName, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
