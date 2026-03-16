@@ -111,6 +111,7 @@ header {
     text-align: center;
 }
 
+
 .navbar{
     color: var(--text-color);
     font-family:"Century Gothic";
@@ -169,9 +170,14 @@ header .search-bar .search-btn:hover {
 }
 
 header .search-bar .search-btn img {
+header .search-bar .search-btn img {
     width: 1rem;
     height: 1rem;
     display: block;
+}
+
+header .search-bar .search-btn:hover img {
+    filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(161deg) brightness(97%) contrast(101%);
 }
 
 header .search-bar .search-btn:hover img {

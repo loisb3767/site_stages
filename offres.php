@@ -21,3 +21,4 @@ echo $twig->render('offres.twig.html', [
     'nbPages' => $nbPages,
     'active_page' => 'offres'
 ]);
+?>
