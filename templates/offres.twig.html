@@ -1,0 +1,46 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Parcours des offres - Job2main{% endblock %}
+{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+
+{% block body %}
+<div class="offers-page">
+    <aside class="sidebar">
+        <div class="sidebar-title">Catégories</div>
+        <ul class="specialites">
+            {% for i in 1..10 %}
+                <li><input type="checkbox" id="spec{{ i }}"> <label for="spec{{ i }}">Spécialité {{ i }}</label></li>
+            {% endfor %}
+        </ul>
+    </aside>
+
+    <section class="offers-content">
+        {% for offre in offres %}
+            <article class="offer-card">
+                <div class="offer-info">
+                    <h3>{{ offre.titre }}</h3>
+                    <p class="resume">{{ offre.resume }}</p>
+                    {% for comp in offre.competences %}
+                        <div class="competence-bar">{{ comp }}</div>
+                    {% endfor %}
+                </div>
+                <a href="index.php?page=detail-offre&id={{ offre.id }}" class="info-btn">plus d'info</a>
+            </article>
+        {% else %}
+            <p>Aucune offre disponible pour le moment.</p>
+        {% endfor %}
+
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="?page=offres&p={{ page - 1 }}" class="btn-pagination">Précédent</a>
+            {% endif %}
+
+            <span class="page-info"> Page {{ page }} sur {{ nbPages }} </span>
+
+            {% if page < nbPages %}
+                <a href="?page=offres&p={{ page + 1 }}" class="btn-pagination">Suivant</a>
+            {% endif %}
+        </div>
+    </section>
+</div>
+{% endblock %}
