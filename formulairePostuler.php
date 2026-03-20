@@ -7,23 +7,20 @@ use App\Services\FileUploader;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $satisfaction = Validator::sanitize($_POST['motivation'] ?? '');
+        $username = "Candidat " . time(); // Récuperer le username une fois qu'on a intégrer les connexions
 
-        if (!$email) throw new Exception("Email invalide.");
 
         $filePath = "Aucun fichier";
         if (isset($_FILES['cv']) && $_FILES['cv']['error'] !== UPLOAD_ERR_NO_FILE) {
             $uploader = new FileUploader();
-            $filePath = $uploader->upload($_FILES['document']);
+            $filePath = $uploader->upload($_FILES['cv']);
         }
 
         $data = [
             'date' => date('r'),
-            'nom' => $fullname,
-            'email' => $email,
-            'sujet' => $subject,
-            'satisfaction' => $satisfaction,
-            'message' => $feedback,
-            'fichier' => $filePath
+            'username' => $username,
+            'motivation' => $satisfaction,
+            'cv' => $filePath
         ];
 
         $storageDir = 'postulerForms/';
