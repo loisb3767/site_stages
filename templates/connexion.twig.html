@@ -22,15 +22,15 @@
 						Email atau kata sandi yang anda masukan salah, coba lagi
 					</div>
 
-					<form id="auth-form">
+					<form id="auth-form" method="POST" action="formulaireConnexion.php">
 						<div class="input-group">
 							<label>Email ou identifiant</label>
-							<input type="text" placeholder="gontrand.dupont@viacesi.fr" required>
+							<input name="auth" type="text" placeholder="gontrand.dupont@viacesi.fr" required>
 						</div>
 
 						<div class="input-group">
 							<label>Mot de passe <span class="required">*</span></label>
-							<input type="password" placeholder="azerty123" required>
+							<input name="password" type="password" placeholder="azerty123" required>
 						</div>
 						<button type="submit" class="btn-primary" id="submit-btn">Login</button>
 					</form>
