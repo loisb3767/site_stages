@@ -1,3 +1,4 @@
+<!--
 {% extends "base.twig.html" %}
 
 {% block title %}Parcours des offres - Job2main{% endblock %}
@@ -33,4 +34,57 @@ Maecenas eget vestibulum elit. Nunc venenatis, nulla vitae accumsan tempus, ex m
             </article>
         </section>
 	 </main>
+{% endblock %}
+-->
+{% extends "base.twig.html" %}
+
+{% block title %}{{ offre.titre }} - Job2main{% endblock %}
+
+{% block body %}
+<section>
+    <h1 class="text-center">DÉTAIL DE L'OFFRE</h1>
+
+    <article class="offer-card-detail">
+        <div class="offer-info">
+            <h3>{{ offre.titre }}</h3>
+
+            <p class="resume">
+                {{ offre.description ? offre.description|slice(0, 140) ~ '...' : 'Aucun résumé disponible.' }}
+            </p>
+
+            {# ✅ Compétences dynamiques #}
+            {% if offre.competences is not empty %}
+                {% for comp in offre.competences %}
+                    <div class="competence-bar">{{ comp }}</div>
+                {% endfor %}
+            {% else %}
+                <p>Aucune compétence renseignée</p>
+            {% endif %}
+
+            {# ✅ Lieu dynamique #}
+            <p>
+                <strong>Lieu :</strong>
+                {% if offre.nom_rue %}
+                    {{ offre.nom_rue }} ({{ offre.code_postal }})
+                {% else %}
+                    Non renseigné
+                {% endif %}
+                |
+                <strong>Gratification :</strong>
+                {{ offre.gratification ? offre.gratification ~ '€/mois' : 'Non précisée' }}
+            </p>
+
+            <hr>
+
+            <div class="full-description">
+                <h4>Description du poste</h4>
+                <p>{{ offre.description ?: 'Aucune description disponible.' }}</p>
+            </div>
+        </div>
+
+        <a href="index.php?page=postuler&id={{ offre.id_offre }}" class="info-btn">
+            Postuler maintenant
+        </a>
+    </article>
+</section>
 {% endblock %}

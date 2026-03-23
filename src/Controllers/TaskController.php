@@ -1,51 +1,73 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\TaskModel;
 
-class TaskController extends Controller {
-
-    public function __construct($templateEngine) {
+class TaskController extends Controller
+{
+    public function __construct($templateEngine)
+    {
         $this->model = new TaskModel();
         $this->templateEngine = $templateEngine;
     }
 
-    public function accueilPage() {
-
+    public function accueilPage(): void
+    {
         echo $this->templateEngine->render('accueil.twig.html');
     }
 
-    public function offresPage() {
-        include 'offres_data.php';
-        
+    public function offresPage(): void
+    {
         $parPage = 10;
         $totalOffres = $this->model->getTotalCount();
-        $nbPages = ceil($totalOffres / $parPage);
-        
-        $currentPage = isset($_GET['p']) ? (int)$_GET['p'] : 1;
-        if ($currentPage < 1) $currentPage = 1;
-        if ($currentPage > $nbPages) $currentPage = $nbPages;
+        $nbPages = ($totalOffres > 0) ? (int) ceil($totalOffres / $parPage) : 1;
 
-        $data['offres'] = $this->model->getPaginatedOffres($currentPage, $parPage);
-        $data['page'] = $currentPage;
-        $data['nbPages'] = $nbPages;
+        $currentPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
+
+        if ($currentPage < 1) {
+            $currentPage = 1;
+        }
+
+        if ($currentPage > $nbPages) {
+            $currentPage = $nbPages;
+        }
+
+        $data = [
+            'offres' => $this->model->getPaginatedOffres($currentPage, $parPage),
+            'page' => $currentPage,
+            'nbPages' => $nbPages,
+            'active_page' => 'offres',
+        ];
 
         echo $this->templateEngine->render('offres.twig.html', $data);
     }
 
-    public function detailOffrePage() {
+    public function detailOffrePage(): void
+    {
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        $data['offre'] = $this->model->getOffreById($id);
-        
-        if (!$data['offre']) {
-            http_response_code(404);
-            $this->e404Page();
-            exit;
-        } else {
-            $template = 'detailOffre.twig.html';
+        if ($id <= 0) {
+            die('ID offre invalide.');
         }
-        echo $this->templateEngine->render($template, $data);
+
+        $offre = $this->model->getOffreById($id);
+
+        if (!$offre) {
+            die('Offre introuvable.');
+        }
+
+        $competences = $this->model->getCompetencesByOffreId($id);
+
+        $offre['competences'] = array_map(
+            fn($comp) => $comp['nom_competence'],
+            $competences
+        );
+
+        echo $this->templateEngine->render('detail-offre.twig.html', [
+            'offre' => $offre,
+            'active_page' => 'offres',
+        ]);
     }
 
     public function contactPage() {
