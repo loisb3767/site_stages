@@ -20,7 +20,12 @@ class TaskController extends Controller
     public function offresPage(): void
     {
         $parPage = 10;
-        $totalOffres = $this->model->getTotalCount();
+
+        $selectedCompetences = isset($_GET['competences']) && is_array($_GET['competences'])
+            ? array_map('intval', $_GET['competences'])
+            : [];
+
+        $totalOffres = $this->model->getTotalCount($selectedCompetences);
         $nbPages = ($totalOffres > 0) ? (int) ceil($totalOffres / $parPage) : 1;
 
         $currentPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
@@ -33,14 +38,24 @@ class TaskController extends Controller
             $currentPage = $nbPages;
         }
 
-        $data = [
-            'offres' => $this->model->getPaginatedOffres($currentPage, $parPage),
+        $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
+
+        foreach ($offres as &$offre) {
+            $competences = $this->model->getCompetencesByOffreId($offre['id_offre']);
+            $offre['competences'] = array_map(
+                fn($comp) => $comp['nom_competence'],
+                $competences
+            );
+        }
+
+        echo $this->templateEngine->render('offres.twig.html', [
+            'offres' => $offres,
+            'categories' => $this->model->getAllCompetences(),
+            'selectedCompetences' => $selectedCompetences,
             'page' => $currentPage,
             'nbPages' => $nbPages,
             'active_page' => 'offres',
-        ];
-
-        echo $this->templateEngine->render('offres.twig.html', $data);
+        ]);
     }
 
     public function detailOffrePage(): void
@@ -64,7 +79,7 @@ class TaskController extends Controller
             $competences
         );
 
-        echo $this->templateEngine->render('detail-offre.twig.html', [
+        echo $this->templateEngine->render('detailOffre.twig.html', [
             'offre' => $offre,
             'active_page' => 'offres',
         ]);

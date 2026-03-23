@@ -764,6 +764,11 @@ body.menu-open {
     transform: translateY(-100%);
 }
 
+.secteur{
+    color:var(--secondary-color);
+    font-size:0.95em;
+}
+
 /* Animation du menu hamburger */
 .menu-toggle.open .bar:nth-child(1) { transform: translateY(10px) rotate(45deg); }
 .menu-toggle.open .bar:nth-child(2) { opacity: 0; }
