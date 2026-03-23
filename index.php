@@ -2,10 +2,11 @@
 require_once 'vendor/autoload.php';
 
 use App\Controllers\TaskController;
+require_once 'config.php';
 
 $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig = new \Twig\Environment($loader, [
-    'debug' => true, // a modifier avec le gitignore
+    'debug' => $debug_env ?? false,
 ]);
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'accueil';

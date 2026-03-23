@@ -31,14 +31,14 @@
         {% endfor %}
 
         <div class="pagination">
-            {% if page > 1 %}
-                <a href="?page=offres&p={{ page - 1 }}" class="btn-pagination">Précédent</a>
+            {% if p > 1 %}
+                <a href="?page=offres&p={{ p - 1 }}" class="btn-pagination">Précédent</a>
             {% endif %}
 
-            <span class="page-info"> Page {{ page }} sur {{ nbPages }} </span>
+            <span class="page-info"> Page {{ p }} sur {{ nbPages }} </span>
 
-            {% if page < nbPages %}
-                <a href="?page=offres&p={{ page + 1 }}" class="btn-pagination">Suivant</a>
+            {% if p < nbPages %}
+                <a href="?page=offres&p={{ p + 1 }}" class="btn-pagination">Suivant</a>
             {% endif %}
         </div>
     </section>
