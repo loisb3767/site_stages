@@ -32,21 +32,16 @@
                 {% endif %}
             </nav>
             <div class="logreg">
-                {% if user_logged_in %}
-                    <a class="profile" href="profile.php">
-                        <img src="projet-static.local/images/user_icon.png" alt="Profil">
-                        Mon compte
-                    </a>
-                {% elseif page_active == 'connexion' %}
-                     <a class="login">
+                {% if session.user is defined %}
+                    <a class="profile" href="index.php?page=profil">
                         <img src="projet-static.local/images/user_icon.png" alt="">
-                        Se connecter
+                        Profil ({{ session.user.prenom_utilisateur }})
                     </a>
+                    <a href="index.php?page=logout">Déconnexion</a>
                 {% else %}
                     <a class="login" href="index.php?page=connexion">
-                        <img src="projet-static.local/images/user_icon.png" alt="">
-                        Se connecter
-                    </a>
+                    <img src="projet-static.local/images/user_icon.png" alt="">
+                    Connexion</a>
                 {% endif %}
             </div>
         </header>

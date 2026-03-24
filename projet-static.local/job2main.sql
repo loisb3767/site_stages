@@ -66,7 +66,7 @@ CREATE TABLE `utilisateur` (
   `prenom_utilisateur` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `telephone` varchar(50) DEFAULT NULL,
-  `mot_de_passe` varchar(50) NOT NULL,
+  `mot_de_passe` varchar(255) NOT NULL,
   `id_role` int NOT NULL,
   PRIMARY KEY (`id_utilisateur`),
   UNIQUE KEY `email` (`email`),
@@ -191,3 +191,16 @@ INSERT INTO role (nom_role) VALUES ('Administrateur'), ('Candidat'), ('Entrepris
 -- Insertion de l'utilisateur test (Lié au rôle 'Candidat' via l'id_role 2)
 INSERT INTO utilisateur (nom_utilisateur, prenom_utilisateur, email, telephone, mot_de_passe, id_role) 
 VALUES ('Dupont', 'Gontrand', 'gontrand.dupont@viacesi.fr', '0601020304', 'azerty123', 2);
+
+
+GRANT ALL PRIVILEGES ON *.* TO `Admin`@`%` IDENTIFIED BY PASSWORD '*B8E22781821DC07031C5EC98BB8BC1012E689E2D' WITH GRANT OPTION;
+GRANT SELECT, INSERT, UPDATE, DELETE ON `job2main`.* TO `Admin`@`%`;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, FILE ON *.* TO `Pilote`@`%` IDENTIFIED BY PASSWORD '*3CE1965C9C626D2F1881AA1B18DA8C4D462BB153';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `job2main`.* TO `Pilote`@`%`;
+
+GRANT SELECT, FILE ON *.* TO `etudiant`@`%` IDENTIFIED BY PASSWORD '*9F5FC07C6B0125D07952E4EBA6F7936FA3960B83';
+
+GRANT SELECT ON *.* TO ``@`%`;
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, EVENT, TRIGGER, DELETE HISTORY ON `test`.* TO ``@`%`;
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, EVENT, TRIGGER, DELETE HISTORY ON `test\_%`.* TO ``@`%`;

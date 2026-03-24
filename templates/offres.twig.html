@@ -7,11 +7,32 @@
 <div class="offers-page">
     <aside class="sidebar">
         <div class="sidebar-title">Catégories</div>
-        <ul class="specialites">
-            {% for i in 1..10 %}
-                <li><input type="checkbox" id="spec{{ i }}"> <label for="spec{{ i }}">Spécialité {{ i }}</label></li>
-            {% endfor %}
-        </ul>
+
+        <form method="GET" action="index.php">
+            <input type="hidden" name="page" value="offres">
+
+            <ul class="specialites">
+                {% for categorie in categories %}
+                    <li>
+                        <input
+                            type="checkbox"
+                            name="competences[]"
+                            value="{{ categorie.id_competence }}"
+                            id="categorie{{ categorie.id_competence }}"
+                            {% if categorie.id_competence in selectedCompetences %}checked{% endif %}
+                        >
+                        <label for="categorie{{ categorie.id_competence }}">
+                            {{ categorie.nom_competence }}
+                        </label>
+                    </li>
+                {% else %}
+                    <li>Aucune catégorie disponible</li>
+                {% endfor %}
+            </ul>
+
+            <button type="submit">Filtrer</button>
+            <a href="index.php?page=offres">Réinitialiser</a>
+        </form>
     </aside>
 
     <section class="offers-content">
@@ -19,26 +40,41 @@
             <article class="offer-card">
                 <div class="offer-info">
                     <h3>{{ offre.titre }}</h3>
-                    <p class="resume">{{ offre.resume }}</p>
-                    {% for comp in offre.competences %}
-                        <div class="competence-bar">{{ comp }}</div>
-                    {% endfor %}
+                    <p><strong>Entreprise :</strong> {{ offre.nom_entreprise }}</p>
+                    <p class="secteur"><strong>Secteur :</strong> {{ offre.nom_secteur ?: 'Non renseigné' }}</p>
+
+                    {% if offre.competences is not empty %}
+                        {% for comp in offre.competences %}
+                            <div class="competence-bar">{{ comp }}</div>
+                        {% endfor %}
+                    {% else %}
+                        <p>Aucune compétence renseignée</p>
+                    {% endif %}
+
+                    <p class="resume">{{ offre.description }}</p>
                 </div>
-                <a href="index.php?page=detail-offre&id={{ offre.id }}" class="info-btn">plus d'info</a>
+
+                <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
+                    plus d'info
+                </a>
             </article>
         {% else %}
             <p>Aucune offre disponible pour le moment.</p>
         {% endfor %}
 
         <div class="pagination">
-            {% if p > 1 %}
-                <a href="?page=offres&p={{ p - 1 }}" class="btn-pagination">Précédent</a>
+            {% if page > 1 %}
+                <a href="?page=offres&p={{ page - 1 }}{% for id in selectedCompetences %}&competences[]={{ id }}{% endfor %}" class="btn-pagination">
+                    Précédent
+                </a>
             {% endif %}
 
-            <span class="page-info"> Page {{ p }} sur {{ nbPages }} </span>
+            <span class="page-info">Page {{ page }} sur {{ nbPages }}</span>
 
-            {% if p < nbPages %}
-                <a href="?page=offres&p={{ p + 1 }}" class="btn-pagination">Suivant</a>
+            {% if page < nbPages %}
+                <a href="?page=offres&p={{ page + 1 }}{% for id in selectedCompetences %}&competences[]={{ id }}{% endfor %}" class="btn-pagination">
+                    Suivant
+                </a>
             {% endif %}
         </div>
     </section>

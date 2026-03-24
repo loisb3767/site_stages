@@ -3,7 +3,7 @@ $config = require 'config.php';
 
 try {
     $dbh = new PDO(
-        'mysql:host=localhost;dbname=PROJET_WEB',
+        "mysql:host={$config['db_host']};dbname={$config['db_name']}",
         $config['db_user'],
         $config['db_pass']
     );
