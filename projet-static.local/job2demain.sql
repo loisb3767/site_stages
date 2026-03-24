@@ -163,4 +163,31 @@ CREATE TABLE `wishlist` (
     FOREIGN KEY (`id_offre`) REFERENCES `offre` (`id_offre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- Pré-requis : Entreprises et Secteurs
+INSERT INTO secteur (nom_secteur) VALUES ('Informatique'), ('Marketing'), ('Industrie');
+INSERT INTO entreprise (nom_entreprise, id_secteur) VALUES ('Cyberdyne', 1), ('Wayne Ent.', 3), ('Stark Ind.', 1);
 
+-- Insertion de 15 offres
+INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise) VALUES
+('Développeur Web Fullstack', 'Mise en place d’une interface React/Node.', 650.00, '2026-03-01', '6 mois', 1),
+('Analyste Cybersécurité', 'Audit de vulnérabilité réseau.', 700.00, '2026-03-05', '4 mois', 1),
+('Ingénieur Système', 'Optimisation des serveurs Linux.', 600.00, '2026-03-10', '5 mois', 1),
+('Data Scientist Junior', 'Analyse de données de production.', 800.00, '2026-03-12', '6 mois', 1),
+('Chef de Projet IT', 'Coordination d’équipes agiles.', 550.00, '2026-03-15', '3 mois', 1),
+('Ingénieur Mécanique', 'Conception de pièces en titane.', 750.00, '2026-02-20', '6 mois', 2),
+('Technicien Maintenance', 'Maintenance préventive parc machine.', 500.00, '2026-02-25', '2 mois', 2),
+('Chargé de Logistique', 'Optimisation de la supply chain.', 580.00, '2026-03-01', '4 mois', 2),
+('Designer Industriel', 'Modélisation 3D de nouveaux prototypes.', 620.00, '2026-03-05', '5 mois', 2),
+('Responsable Qualité', 'Suivi des normes ISO.', 600.00, '2026-03-08', '6 mois', 2),
+('Développeur IA', 'Entraînement de modèles de vision.', 900.00, '2026-03-02', '6 mois', 3),
+('Ingénieur Hardware', 'Conception de circuits imprimés.', 850.00, '2026-03-07', '6 mois', 3),
+('Spécialiste Réseaux', 'Déploiement fibre et switchs.', 550.00, '2026-03-11', '3 mois', 3),
+('Assistant Marketing Tech', 'Promotion de solutions Cloud.', 450.00, '2026-03-14', '4 mois', 3),
+('Expert Cloud Azure', 'Migration d’infrastructure locale.', 780.00, '2026-03-18', '6 mois', 3);
+
+-- Insertion des rôles
+INSERT INTO role (nom_role) VALUES ('Administrateur'), ('Candidat'), ('Entreprise');
+
+-- Insertion de l'utilisateur test (Lié au rôle 'Candidat' via l'id_role 2)
+INSERT INTO utilisateur (nom_utilisateur, prenom_utilisateur, email, telephone, mot_de_passe, id_role) 
+VALUES ('Dupont', 'Gontrand', 'gontrand.dupont@viacesi.fr', '0601020304', 'azerty123', 2);

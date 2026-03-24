@@ -81,8 +81,16 @@ class TaskController extends Controller
     }
 
     public function connexionPage() {
-
-        echo $this->templateEngine->render('connexion.twig.html');
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user = $this->model->getUserByEmail($_POST['email']);
+            if ($user && $_POST['password'] === $user['mot_de_passe']) { 
+                $_SESSION['user'] = $user;
+                header('Location: index.php?page=profil');
+                exit;
+            }
+            $error = "Identifiants invalides";
+        }
+        echo $this->templateEngine->render('connexion.twig.html', ['error' => $error ?? null]);
     }
 
     public function inscriptionPage() {

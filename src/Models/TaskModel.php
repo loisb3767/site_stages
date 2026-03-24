@@ -141,4 +141,16 @@ class TaskModel extends Model
             'active_page' => 'offres',
         ]);
     }
+
+    public function getUserByEmail(string $email): array|null 
+    {
+        $sql = "SELECT * FROM utilisateur WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':email', $email, \PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch();
+        return $user ?: null;
+    }
+
+    
 }
