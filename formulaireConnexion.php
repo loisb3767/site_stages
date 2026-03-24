@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Vérification du mot de passe
-        if (!password_verify($password, $user['mot_de_passe'])) {
+        if ($password !== $user['mot_de_passe']) {
             throw new Exception("Mot de passe incorrect.");
         }
 
