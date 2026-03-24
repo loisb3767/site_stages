@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'vendor/autoload.php';
 
 use App\Controllers\TaskController;
@@ -8,6 +9,7 @@ $loader = new \Twig\Loader\FilesystemLoader('templates');
 $twig = new \Twig\Environment($loader, [
     'debug' => $debug_env ?? false,
 ]);
+$twig->addGlobal('session', $_SESSION);
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'accueil';
 
@@ -68,6 +70,13 @@ switch ($page) {
         $controller -> detailOffrePage();
         break;
 
+    case 'profil':
+        $controller -> profilPage();
+        break;
+
+    case 'logout':
+        $controller->logoutPage();
+        break;
     
     // A rajouter les autres pages apres
     

@@ -1,39 +1,59 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once 'db.php';
 
 use App\Services\Validator;
 
+session_start();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $auth = Validator::sanitize($_POST['auth'] ?? '');
-        $password = Validator::sanitize($_POST['password'] ?? '');
+        $email = Validator::sanitize($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
 
-        //Vérification Email et username
-        $isEmail = filter_var($auth, FILTER_VALIDATE_EMAIL);
-        $isUsername = strlen($auth) >= 3;
-
-        if (!$auth || (!$isEmail && !$isUsername)) {
-            throw new Exception("Email ou identifiant invalide.");
+        // Validation email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Email invalide.");
         }
 
-        // Validation du mot de passe
+        // Validation mot de passe
         if (!$password || strlen($password) < 8) {
-            throw new Exception("Mot de passe invalide min 8 characteres.");
+            throw new Exception("Mot de passe invalide.");
         }
 
-        $data = [
-            'date'     => date('r'),
-            'auth'     => $auth,
-            'password' => password_hash($password, PASSWORD_BCRYPT)
+        // Requête SQL
+        $sql = "
+            SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, mot_de_passe, id_role
+            FROM utilisateur
+            WHERE email = :email
+            LIMIT 1
+        ";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            throw new Exception("Utilisateur introuvable.");
+        }
+
+        // Vérification du mot de passe
+        if (!password_verify($password, $user['mot_de_passe'])) {
+            throw new Exception("Mot de passe incorrect.");
+        }
+
+        // Création session
+        $_SESSION['user'] = [
+            'id_utilisateur' => $user['id_utilisateur'],
+            'nom_utilisateur' => $user['nom_utilisateur'],
+            'prenom_utilisateur' => $user['prenom_utilisateur'],
+            'email' => $user['email'],
+            'id_role' => $user['id_role'],
         ];
 
-        $storageDir = 'connexionForms/';
-        if (!is_dir($storageDir)) mkdir($storageDir, 0755, true);
-
-        $fileName = $storageDir . 'connexion_' . time() . '_' . uniqid() . '.json';
-        file_put_contents($fileName, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-
-        header('Location: index.php?page=connexion&status=success');
+        header('Location: index.php?page=profil');
         exit;
 
     } catch (Exception $e) {
@@ -42,4 +62,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-

@@ -105,11 +105,6 @@ class TaskController extends Controller
         echo $this->templateEngine->render('inscription.twig.html');
     }
 
-    public function profilPage() {
-
-        echo $this->templateEngine->render('profil.twig.html');
-    }
-
     public function mentionsLegalesPage() {
 
         echo $this->templateEngine->render('mentions_legales.twig.html');
@@ -133,6 +128,16 @@ class TaskController extends Controller
     public function e404Page() {
 
         echo $this->templateEngine->render('404.twig.html');
+    }
+
+    public function profilPage(): void
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        echo $this->templateEngine->render('profil.twig.html');
     }
 
 }

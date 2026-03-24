@@ -66,7 +66,7 @@ CREATE TABLE `utilisateur` (
   `prenom_utilisateur` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `telephone` varchar(50) DEFAULT NULL,
-  `mot_de_passe` varchar(50) NOT NULL,
+  `mot_de_passe` varchar(255) NOT NULL,
   `id_role` int NOT NULL,
   PRIMARY KEY (`id_utilisateur`),
   UNIQUE KEY `email` (`email`),
