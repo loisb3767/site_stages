@@ -26,9 +26,13 @@
 							<div class="carousel-track">
 								{% for offre in latestOffres %}
 									<a class="card" href="index.php?page=detail-offre&id={{ offre.id_offre }}">
-										<h3>{{ offre.titre }}</h3>
-										<p>{{ offre.nom_entreprise }}</p>
-										<p>{{ offre.date_offre }}</p>
+										<div class="card-content">
+											<h3>{{ offre.titre }}</h3>
+											<div class="meta">
+												<span class="entreprise">{{ offre.nom_entreprise }}</span>
+												<span class="date">{{ offre.date_offre }}</span>
+											</div>
+										</div>
 									</a>
 								{% else %}
 									<div class="card">Aucune offre récente disponible.</div>

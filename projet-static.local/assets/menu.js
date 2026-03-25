@@ -86,10 +86,8 @@ document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
             }
 
             nextBtn.addEventListener("click", () => {
-                if (index < total - 1) { index++; updateCarousel(); }
-            });
+            if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); });
 
-            prevBtn.addEventListener("click", () => {
-                if (index > 0) { index--; updateCarousel(); }
-            });
+            prevBtn.addEventListener("click", () => { 
+            if (index > 0) { index--; } else { index = total - 1; } updateCarousel(); });
         });
