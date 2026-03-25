@@ -259,4 +259,11 @@ class TaskModel extends Model
         return $stmt->fetch();
     }
 
+    public function getUserById($id) {
+        $sql = "SELECT email, nom_utilisateur, prenom_utilisateur, telephone FROM utilisateur WHERE id_utilisateur = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
+
 }

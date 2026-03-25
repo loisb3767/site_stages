@@ -149,7 +149,12 @@ class TaskController extends Controller
             exit;
         }
 
-        echo $this->templateEngine->render('profil.twig.html');
+        $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+
+        echo $this->templateEngine->render('profil.twig.html', [
+            'user' => $user,
+            'session' => $_SESSION
+        ]);
     }
 
     public function logoutPage() {

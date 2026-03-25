@@ -1,0 +1,46 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Profil - Job2main{% endblock %}
+{% block description %}Mon profil Job2main{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <div class="tab active">Profil</div>
+                <a href="index.php?page=inscription" class="tab">Inscription</a>
+            </div>
+
+            <div class="card-body">
+
+                {% if user %}
+                    <div class="input-group">
+                        <label>Nom</label>
+                        <p>{{ user.nom_utilisateur }}</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Prénom</label>
+                        <p>{{ user.prenom_utilisateur }}</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email</label>
+                        <p>{{ user.email }}</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Téléphone</label>
+                        <p>{{ user.telephone }}</p>
+                    </div>
+
+                    <a href="index.php?page=logout" class="btn-primary">Se déconnecter</a>
+
+                {% else %}
+                    <p>Impossible de charger les informations.</p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
