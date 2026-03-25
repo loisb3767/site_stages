@@ -48,8 +48,12 @@ class TaskModel extends Model
                 e.email AS entreprise_email,
                 e.telephone AS entreprise_telephone,
                 s.nom_secteur,
+                a.id_adresse,
                 a.nom_rue,
-                a.code_postal
+                a.code_postal,
+                a.ville,
+                a.latitude,
+                a.longitude
             FROM offre o
             INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
             LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
@@ -64,7 +68,11 @@ class TaskModel extends Model
 
         $offre = $stmt->fetch();
 
-        return $offre ?: null;
+        if (!$offre) {
+            return null;
+        }
+
+        return $this->geocodeAdresseIfNeeded($offre);
     }
 
     public function getPaginatedOffres(int $page, int $parPage, array $competenceIds = []): array
@@ -284,5 +292,116 @@ class TaskModel extends Model
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    private function geocodeAdresseIfNeeded(array $offre): array
+    {
+        if (
+            empty($offre['id_adresse']) ||
+            (
+                !empty($offre['latitude']) &&
+                !empty($offre['longitude']) &&
+                !empty($offre['ville'])
+            )
+        ) {
+            return $offre;
+        }
+
+        $street = trim((string)($offre['nom_rue'] ?? ''));
+        $postalCode = trim((string)($offre['code_postal'] ?? ''));
+        $existingCity = trim((string)($offre['ville'] ?? ''));
+
+        if ($street === '' && $postalCode === '' && $existingCity === '') {
+            return $offre;
+        }
+
+        $geocoded = $this->fetchGeocodingData($street, $postalCode, $existingCity);
+
+        if (!$geocoded) {
+            return $offre;
+        }
+
+        $sql = "
+            UPDATE adresse
+            SET ville = :ville,
+                latitude = :latitude,
+                longitude = :longitude
+            WHERE id_adresse = :id_adresse
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':ville', $geocoded['ville'], PDO::PARAM_STR);
+        $stmt->bindValue(':latitude', $geocoded['latitude']);
+        $stmt->bindValue(':longitude', $geocoded['longitude']);
+        $stmt->bindValue(':id_adresse', $offre['id_adresse'], PDO::PARAM_INT);
+        $stmt->execute();
+
+        $offre['ville'] = $geocoded['ville'];
+        $offre['latitude'] = $geocoded['latitude'];
+        $offre['longitude'] = $geocoded['longitude'];
+
+        return $offre;
+    }
+
+    private function fetchGeocodingData(string $street, string $postalCode): ?array
+    {
+        $queries = [];
+
+        if ($street || $postalCode) {
+            $queries[] = trim("$street, $postalCode, France");
+        }
+
+        if ($postalCode) {
+            $queries[] = "$postalCode, France";
+        }
+
+        foreach ($queries as $query) {
+
+            $url = 'https://nominatim.openstreetmap.org/search?' . http_build_query([
+                'q' => $query,
+                'format' => 'jsonv2',
+                'limit' => 1,
+                'addressdetails' => 1,
+                'countrycodes' => 'fr',
+            ]);
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'User-Agent: job2main/1.0 (contact: test@test.com)',
+            ]);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            if (!$response) continue;
+
+            $data = json_decode($response, true);
+
+            if (empty($data[0])) continue;
+
+            $result = $data[0];
+            $address = $result['address'] ?? [];
+
+            // récupération intelligente de la ville
+            $city =
+                $address['city']
+                ?? $address['town']
+                ?? $address['village']
+                ?? $address['municipality']
+                ?? $address['hamlet']
+                ?? null;
+
+            if (!isset($result['lat'], $result['lon'])) continue;
+
+            return [
+                'latitude' => (float)$result['lat'],
+                'longitude' => (float)$result['lon'],
+                'ville' => $city ?? '',
+            ];
+        }
+
+        return null;
     }
 }

@@ -7,6 +7,7 @@
         <meta name="description" content="{% block meta_description %}Venez trouver votre stage de rêve !{% endblock %}">
         <title>{% block title %}Job2main{% endblock %}</title> 
         <link rel="stylesheet" href="projet-static.local/assets/style.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
         {% block stylesheets %}{% endblock %}
     </head> 
     <body>
@@ -72,5 +73,7 @@
 
         <script src="projet-static.local/assets/menu.js"></script>
         {% block javascripts %}{% endblock %}
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script src="projet-static.local/assets/map-offre.js"></script>
     </body> 
 </html>
