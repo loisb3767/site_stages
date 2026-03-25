@@ -137,9 +137,33 @@ class TaskController extends Controller
         echo $this->templateEngine->render('avis.twig.html');
     }
 
-    public function postulerPage() {
+    public function postulerPage()
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
 
-        echo $this->templateEngine->render('postuler.twig.html');
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+
+        if ($id <= 0) {
+            die("Offre invalide.");
+        }
+
+        $offre = $this->model->getOffreById($id);
+
+        if (!$offre) {
+            die("Offre introuvable.");
+        }
+
+        $error = isset($_GET['error']) ? urldecode($_GET['error']) : null;
+        $status = $_GET['status'] ?? null;
+
+        echo $this->templateEngine->render('postuler.twig.html', [
+            'offre' => $offre,
+            'error' => $error,
+            'status' => $status,
+        ]);
     }
 
     public function e404Page() {
