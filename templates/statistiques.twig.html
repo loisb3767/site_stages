@@ -9,10 +9,10 @@
     </section>
 
     <style>
-        /* ───── BASE MOBILE FIRST ───── */
+		/* TELEPHONE */
         .carousels-container {
             display: flex;
-            flex-direction: column;   /* empilés sur mobile */
+            flex-direction: column;   
             align-items: center;
             gap: 2rem;
             padding: 1.5rem 1rem;
@@ -20,7 +20,7 @@
         }
 
         .carousel-wrapper {
-            width: 100%;              /* pleine largeur sur mobile */
+            width: 100%;            
             max-width: 100%;
             position: relative;
         }
@@ -29,7 +29,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 36px;              /* boutons plus petits sur mobile */
+            width: 36px;           
             height: 36px;
             border: none;
             border-radius: 50%;
@@ -64,7 +64,7 @@
             font-size: 1.2rem;
         }
 
-        /* ───── TABLETTE (≥ 600px) ───── */
+        /*TABLETTE (>= 600px) */
         @media (min-width: 600px) {
             .carousels-container {
                 padding: 2rem 1.5rem;
@@ -90,10 +90,10 @@
             }
         }
 
-        /* ───── DESKTOP (≥ 1024px) ───── */
+        /*  ORDINATEURS (≥ 1024px) */
         @media (min-width: 1024px) {
             .carousels-container {
-                flex-direction: row;        /* côte à côte sur desktop */
+                flex-direction: row;      
                 justify-content: center;
                 align-items: flex-start;
                 gap: 6rem;
