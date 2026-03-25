@@ -74,20 +74,24 @@ window.addEventListener("scroll", () => {
 
 // Carousel
 document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
-            const track = wrapper.querySelector(".carousel-track");
-            const prevBtn = wrapper.querySelector(".prev");
-            const nextBtn = wrapper.querySelector(".next");
+    const track = wrapper.querySelector(".carousel-track");
+    const prevBtn = wrapper.querySelector(".prev");
+    const nextBtn = wrapper.querySelector(".next");
 
-            let index = 0;
-            const total = track.children.length;
+    let index = 0;
+    const total = track.children.length;
 
-            function updateCarousel() {
-                track.style.transform = `translateX(-${index * 100}%)`;
-            }
+    function updateCarousel() {
+        track.style.transform = `translateX(-${index * 100}%)`;
+    }
 
-            nextBtn.addEventListener("click", () => {
-            if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); });
+    nextBtn.addEventListener("click", () => { 
+      if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); });
 
-            prevBtn.addEventListener("click", () => { 
-            if (index > 0) { index--; } else { index = total - 1; } updateCarousel(); });
-        });
+    prevBtn.addEventListener("click", () => { 
+      if (index > 0) { index--; } else { index = total - 1; } updateCarousel(); });
+
+    //  Auto-slide
+    setInterval(() => {
+        if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); }, 5000);
+});
