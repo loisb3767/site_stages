@@ -940,14 +940,18 @@ body.menu-open {
 
     /* ───── ORDINATEUR (≥ 1024px) ───── */
     @media (min-width: 1024px) {
+        .article-accueil{
+            margin-top: 100px;
+        }
         .carousels-container {
             flex-direction: row;
             justify-content: center;
             align-items: flex-start;
             gap: 6rem;
             padding: 3rem 2rem;
-            margin-bottom: 7rem;
-        }
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+        }   
         .carousel-wrapper { flex: 1; max-width: 400px; min-width: 250px; }
         .carousel-btn { width: 44px; height: 44px; font-size: 1.5rem; }
         .carousel-btn.prev { left: -20px; }
