@@ -96,6 +96,11 @@ class TaskController extends Controller
     }
 
     public function connexionPage() {
+        if (isset($_SESSION['user'])) {
+            header('Location: index.php?page=profil');
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $this->model->getUserByEmail($_POST['email']);
             if ($user && $_POST['password'] === $user['mot_de_passe']) { 
@@ -138,14 +143,19 @@ class TaskController extends Controller
         echo $this->templateEngine->render('404.twig.html');
     }
 
-    public function profilPage(): void
-    {
+    public function profilPage() {
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=connexion');
             exit;
         }
 
         echo $this->templateEngine->render('profil.twig.html');
+    }
+
+    public function logoutPage() {
+        session_destroy();
+        header('Location: index.php?page=accueil');
+        exit;
     }
 
 }
