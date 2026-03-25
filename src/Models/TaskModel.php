@@ -259,4 +259,23 @@ class TaskModel extends Model
         return $stmt->fetch();
     }
 
+    public function getLatestOffres(int $limit = 5): array {
+        $sql="
+            SELECT
+                o.id_offre,
+                o.titre,
+                o.date_offre,
+                e.nom_entreprise
+            FROM offre o
+            INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+            ORDER BY o.date_offre DESC, o.id_offre DESC
+            LIMIT :limit
+        ";
+
+        $stmt=$this->pdo->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }

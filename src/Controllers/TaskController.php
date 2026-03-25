@@ -14,7 +14,11 @@ class TaskController extends Controller
 
     public function accueilPage(): void
     {
-        echo $this->templateEngine->render('accueil.twig.html');
+        $latestOffres = $this->model->getLatestOffres();
+        
+        echo $this->templateEngine->render('accueil.twig.html', [
+            'latestOffres' => $latestOffres
+        ]);
     }
 
     public function offresPage(): void
