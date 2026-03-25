@@ -92,6 +92,8 @@ document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
       if (index > 0) { index--; } else { index = total - 1; } updateCarousel(); });
 
     //  Auto-slide
-    setInterval(() => {
-        if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); }, 5000);
+    if (wrapper.closest(".accueil")) {
+      setInterval(() => {
+          if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); }, 5000);
+    }
 });
