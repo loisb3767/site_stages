@@ -382,6 +382,27 @@ header .search-bar .search-btn:hover img {
     background-color: color-mix(in srgb, var(--primary-color), #000 20%);
 }
 
+.btn-deco {
+    background-color: var(--primary-color);
+    color: var(--secondary-text-color);
+    border: none;
+    padding: 0.8rem 2rem;
+    width: 50%;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 0.7rem;
+    transition: var(--background-color) 0.3s;
+    text-decoration: none;
+    margin-top: 50px;
+    justify-content: center;
+    display: block;        /* changer flex -> block */
+    margin: 50px auto 0;   /* 50px en haut, auto à gauche/droite */
+}
+
+.btn-deco:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
+
 /* ----------*/
 /* Page "A propos" */
 
