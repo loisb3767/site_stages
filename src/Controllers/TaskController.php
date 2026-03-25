@@ -71,7 +71,7 @@ class TaskController extends Controller
         if (!$offre) {
             die('Offre introuvable.');
         }
-
+ 
         $competences = $this->model->getCompetencesByOffreId($id);
 
         $offre['competences'] = array_map(
