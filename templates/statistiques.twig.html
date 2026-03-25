@@ -4,8 +4,197 @@
 {% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
 
 {% block body %}	 
-	   <section>
-	   
-			<h1 class="text-center">STATISTIQUES</h1>
-	   </section>
+    <section>
+        <h1 class="text-center">STATISTIQUES</h1>
+    </section>
+
+    <style>
+        /* ───── BASE MOBILE FIRST ───── */
+        .carousels-container {
+            display: flex;
+            flex-direction: column;   /* empilés sur mobile */
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .carousel-wrapper {
+            width: 100%;              /* pleine largeur sur mobile */
+            max-width: 100%;
+            position: relative;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;              /* boutons plus petits sur mobile */
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .carousel-btn.prev { left: -10px; }
+        .carousel-btn.next { right: -10px; }
+
+        .carousel {
+            overflow: hidden;
+        }
+
+        .carousel-track {
+            display: flex;
+            width: 100%;
+            transition: transform 0.4s ease;
+        }
+
+        .card {
+            min-width: 100%;
+            height: 120px;
+            background: #ccc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* ───── TABLETTE (≥ 600px) ───── */
+        @media (min-width: 600px) {
+            .carousels-container {
+                padding: 2rem 1.5rem;
+                gap: 3rem;
+            }
+
+            .carousel-wrapper {
+                max-width: 500px;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+
+            .carousel-btn.prev { left: -15px; }
+            .carousel-btn.next { right: -15px; }
+
+            .card {
+                height: 150px;
+                font-size: 1.4rem;
+            }
+        }
+
+        /* ───── DESKTOP (≥ 1024px) ───── */
+        @media (min-width: 1024px) {
+            .carousels-container {
+                flex-direction: row;        /* côte à côte sur desktop */
+                justify-content: center;
+                align-items: flex-start;
+                gap: 6rem;
+                padding: 3rem 2rem;
+                margin-bottom: 7rem;
+            }
+
+            .carousel-wrapper {
+                flex: 1;
+                max-width: 400px;
+                min-width: 250px;
+            }
+
+            .carousel-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 1.5rem;
+            }
+
+            .carousel-btn.prev { left: -20px; }
+            .carousel-btn.next { right: -20px; }
+
+            .card {
+                height: 150px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+	<div class="carousels-container">
+		<div class="carousel-wrapper">
+			<button class="carousel-btn prev">‹</button>
+			<div class="carousel">
+				<div class="carousel-track">
+					<div class="card">Bloc 1</div>
+					<div class="card">Bloc 2</div>
+					<div class="card">Bloc 3</div>
+					<div class="card">Bloc 4</div>
+					<div class="card">Bloc 5</div>
+				</div>
+			</div>
+			<button class="carousel-btn next">›</button>
+		</div>
+
+		<div class="carousel-wrapper">
+			<button class="carousel-btn prev">‹</button>
+			<div class="carousel">
+				<div class="carousel-track">
+					<div class="card">Bloc 6</div>
+					<div class="card">Bloc 7</div>
+					<div class="card">Bloc 8</div>
+					<div class="card">Bloc 9</div>
+					<div class="card">Bloc 10</div>
+				</div>
+			</div>
+			<button class="carousel-btn next">›</button>
+		</div>
+
+		<div class="carousel-wrapper">
+			<button class="carousel-btn prev">‹</button>
+			<div class="carousel">
+				<div class="carousel-track">
+					<div class="card">Bloc 11</div>
+					<div class="card">Bloc 12</div>
+					<div class="card">Bloc 13</div>
+					<div class="card">Bloc 14</div>
+					<div class="card">Bloc 15</div>
+				</div>
+			</div>
+			<button class="carousel-btn next">›</button>
+		</div>
+	</div>
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script>
+            document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
+                const track = wrapper.querySelector(".carousel-track");
+                const prevBtn = wrapper.querySelector(".prev");
+                const nextBtn = wrapper.querySelector(".next");
+
+                let index = 0;
+                const total = track.children.length;
+
+                function updateCarousel() {
+                    track.style.transform = `translateX(-${index * 100}%)`;
+                }
+
+                nextBtn.addEventListener("click", () => {
+                    if (index < total - 1) {
+                        index++;
+                        updateCarousel();
+                    }
+                });
+
+                prevBtn.addEventListener("click", () => {
+                    if (index > 0) {
+                        index--;
+                        updateCarousel();
+                    }
+                });
+            });
+        </script>
+    {% endblock %}
 {% endblock %}
