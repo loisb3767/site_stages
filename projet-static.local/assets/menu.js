@@ -71,3 +71,31 @@ window.addEventListener("scroll", () => {
 
   lastScroll = currentScroll;
 });
+
+//Carousel 
+document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
+                const track = wrapper.querySelector(".carousel-track");
+                const prevBtn = wrapper.querySelector(".prev");
+                const nextBtn = wrapper.querySelector(".next");
+
+                let index = 0;
+                const total = track.children.length;
+
+                function updateCarousel() {
+                    track.style.transform = `translateX(-${index * 100}%)`;
+                }
+
+                nextBtn.addEventListener("click", () => {
+                    if (index < total - 1) {
+                        index++;
+                        updateCarousel();
+                    }
+                });
+
+                prevBtn.addEventListener("click", () => {
+                    if (index > 0) {
+                        index--;
+                        updateCarousel();
+                    }
+                });
+            });
