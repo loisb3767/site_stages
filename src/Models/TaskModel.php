@@ -252,4 +252,11 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
+    public function getUserByEmail($email) {
+        $sql = "SELECT * FROM utilisateur WHERE email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetch();
+    }
+
 }
