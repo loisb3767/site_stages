@@ -32,6 +32,13 @@
                 {{ offre.gratification ? offre.gratification ~ '€/mois' : 'Non précisée' }}
             </p>
 
+            <p>
+                <strong>Date de début :</strong> 
+                {{ offre.date_debut ? offre.date_debut|date("d/m/Y") : 'Non précisée' }}
+                <strong>Durée :</strong> 
+                {{ offre.duree ? offre.duree : 'Non précisée' }}
+            </p>
+
             <hr>
             <p class="resume">
                 {{ offre.description ? offre.description|slice(0, 140) ~ '...' : 'Aucun résumé disponible.' }}

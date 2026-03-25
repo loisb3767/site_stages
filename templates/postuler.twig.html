@@ -6,11 +6,12 @@
 {% block body %}
 	 
 	   <section>
-			<h1 class="text-center">POSTULER À L'OFFRE</h1>
+			<h1 class="text-center">Postuler à l'offre : {{ offre.titre }}</h>
 	   </section>
        <section class="apply-section">
             <h3>Postuler à cette offre</h3>
             <form action="formulairePostuler.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="id_offre" value="{{ offre.id_offre }}">
                 <div class="form-group">
                     <label for="cv">Votre CV (PDF uniquement) :</label>
                     <input type="file" id="cv" name="cv" accept=".pdf" required>
