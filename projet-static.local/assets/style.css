@@ -13,6 +13,8 @@
     --secondary-text-color-rgb: 255, 255, 255;
     --light: color-mix(in srgb, #d8ecff 30%, var(--background-color) 70%);
     --light-rgb: 255, 255, 255;
+    --error-color: #f00;
+    --good-color: #0f0;
 }
 
 /* Styles généraux */
@@ -204,8 +206,8 @@ header .search-bar .search-btn:hover img {
 .btn-pagination {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #004f66;
-    color: #ffffff;
+    background-color: color-mix(in srgb, var(--secondary-color), #0ff 10%);
+    color: var(--secondary-text-color);
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
@@ -214,14 +216,14 @@ header .search-bar .search-btn:hover img {
 
 
 .btn-pagination:hover {
-    background-color: #006a88;
+    background-color: color-mix(in srgb, var(--secondary-color), #000 10%);
     transform: translateY(-2px);
 }
 
 /* Style du texte "Page X sur Y" */
 .page-info {
     font-size: 1rem;
-    color: #333;
+    color: var(--text-color);
     font-weight: 500;
 }
 
@@ -354,7 +356,7 @@ header .search-bar .search-btn:hover img {
 }
 
 .required {
-    color: color-mix(in srgb, var(--primary-color), #f00 33%);
+    color: color-mix(in srgb, var(--primary-color), var(--error-color) 33%);
 }
 
 .card-body input {
@@ -950,7 +952,7 @@ body.menu-open {
 
     border: none;
     border-radius: 50%;
-    background: white;
+    background: var(--light);
 
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     font-size: 1.2rem;
