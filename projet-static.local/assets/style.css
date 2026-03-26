@@ -1050,3 +1050,18 @@ body.menu-open {
         font-size: 13px;
         color: var(--text-color);
     }
+
+    .btn-postuler {
+        background-color: var(--primary-color);
+        color: var(--secondary-text-color);
+        border: none;
+        padding: 0.7rem;
+        width: 15%;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        justify-content: center;
+        display: flex;   
+        margin: 0 auto 25px;
+        text-align: center;
+    }
