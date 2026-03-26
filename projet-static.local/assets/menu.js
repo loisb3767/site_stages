@@ -100,9 +100,9 @@ document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
 
 //Carousel Statistiques
 document.querySelectorAll(".carousel-wrapper-stats").forEach(wrapper => {
-    const track = wrapper.querySelector(".carousel-track");
-    const prevBtn = wrapper.querySelector(".carousel-btn.prev");
-    const nextBtn = wrapper.querySelector(".carousel-btn.next");
+    const track = wrapper.querySelector(".carousel-track-stats");
+    const prevBtn = wrapper.querySelector(".carousel-btn-stats.prev");
+    const nextBtn = wrapper.querySelector(".carousel-btn-stats.next");
 
     let index = 0;
     const total = track.children.length;
