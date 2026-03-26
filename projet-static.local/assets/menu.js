@@ -72,7 +72,7 @@ window.addEventListener("scroll", () => {
   lastScroll = currentScroll;
 });
 
-// Carousel
+// Carousel Accueil
 document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
     const track = wrapper.querySelector(".carousel-track");
     const prevBtn = wrapper.querySelector(".prev");
@@ -96,4 +96,28 @@ document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
       setInterval(() => {
           if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); }, 5000);
     }
+});
+
+//Carousel Statistiques
+document.querySelectorAll(".carousel-wrapper-stats").forEach(wrapper => {
+    const track = wrapper.querySelector(".carousel-track");
+    const prevBtn = wrapper.querySelector(".carousel-btn.prev");
+    const nextBtn = wrapper.querySelector(".carousel-btn.next");
+
+    let index = 0;
+    const total = track.children.length;
+
+    function updateCarousel() {
+        track.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    nextBtn.addEventListener("click", () => {
+        index = index < total - 1 ? index + 1 : 0;
+        updateCarousel();
+    });
+
+    prevBtn.addEventListener("click", () => {
+        index = index > 0 ? index - 1 : total - 1;
+        updateCarousel();
+    });
 });
