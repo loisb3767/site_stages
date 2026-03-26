@@ -13,6 +13,7 @@
     --secondary-text-color-rgb: 255, 255, 255;
     --light: color-mix(in srgb, #d8ecff 30%, var(--background-color) 70%);
     --light-rgb: 255, 255, 255;
+    --light-blue: #afe0ff;
     --error-color: #f00;
     --good-color: #0f0;
 }
