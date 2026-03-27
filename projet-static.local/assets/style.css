@@ -1139,6 +1139,19 @@ body.menu-open {
 .carousel-btn-stats.prev { left: -18px; }
 .carousel-btn-stats.next { right: -18px; }
 
+    .stat-block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 0 0.7rem 0 0.7rem;
+    }
+
+    .stat-total {
+        font-weight: 700;
+    }
+
 
 /* ───── TABLETTE (≥ 600px) ───── */
 
@@ -1165,6 +1178,19 @@ body.menu-open {
     .card-stats {
         height: 300px;
         font-size: 1.4rem;
+    }
+
+    .stat-block {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 0 0.7rem 0 0.9rem;
+    }
+
+    .stat-total {
+        font-weight: 700;
     }
 }
 
@@ -1202,9 +1228,20 @@ body.menu-open {
         height: 400px;
         font-size: 1.5rem;
     }
+
+    .stat-block {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 0 2rem 0 3rem;
+    }
+
+    .stat-total {
+        font-weight: 700;
+    }
 }
 
-.section-stats {
-    margin-bottom: 0;
-}
+
+
 
