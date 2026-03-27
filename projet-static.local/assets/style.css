@@ -14,8 +14,8 @@
     --light: color-mix(in srgb, #d8ecff 30%, var(--background-color) 70%);
     --light-rgb: 255, 255, 255;
     --light-blue: #afe0ff;
-    --error-color: color-mix(in srgb, #c70000 75%, var(--secondary-color) 25%);
-    --good-color: color-mix(in srgb, #00c900 75%, var(--primary-color) 25%);
+    --error-color: #f00;
+    --good-color: #0f0;
 }
 
 /* Styles généraux */
@@ -284,6 +284,7 @@ header .search-bar .search-btn:hover img {
     max-width: 1200px;
     padding: 0 1rem;
     min-height: 25rem;
+    margin-bottom: 1.5rem;
 }
 
 .auth-card {
@@ -678,11 +679,11 @@ button[type="login"] {
 }
 
 .alert.alert-success {
-    color: var(--good-color);
+    color: green;
 }
 
 .alert.alert-danger {
-    color: var(--error-color);
+    color: red;
 }
 
 /* ---------- */
