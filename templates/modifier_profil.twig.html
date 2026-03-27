@@ -1,27 +1,71 @@
 {% extends "base.twig.html" %}
 
-{% block title %}Parcours des offres - Job2main{% endblock %}
-{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+{% block title %}Modifier mon profil - Job2main{% endblock %}
+{% block description %}Modifier mon profil Job2main{% endblock %}
 
 {% block body %}
-		<section>
-			<h1 class="text-center">PROFIL</h1>			
-			<article>
-				<h2>INFORMATIONS</h2>
-				<form action="formulaireAvis.php" method="post" enctype="multipart/form-data">
-					<label>Nom complet*<input name="fullname" type="text" size="50" required></label>
-					<label>Courriel académique*<input name="email" type="email" size="30" required></label>
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <a href="index.php?page=profil" class="tab">Profil</a>
+                <div class="tab active">Modifier mon profil</div>
+            </div>
 
-					
-					<button type="submit">Publier l'avis</button>
-					<input type="reset" value="Effacer">
+            <div class="card-body">
 
-					{% if GET.status == 'success' %}
-						<span class="alert alert-success" role="alert">Données modifiées avec succès !</span>
-					{% elseif GET.error %}
-						<span class="alert alert-danger" role="alert">Erreur : {{ GET.error }}</span>
-					{% endif %}
-				</form>
-			</article>
-		</section>
+                {% if user %}
+                    <form action="formulaireModifUtilisateur.php" method="post" enctype="multipart/form-data">
+
+                        <div class="input-group">
+                            <label for="fullname">Nom</label>
+                            <input id="fullname" name="fullname" type="text" value="{{ user.nom_utilisateur }}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="firstname">Prénom</label>
+                            <input id="firstname" name="firstname" type="text" value="{{ user.prenom_utilisateur }}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">Courriel académique</label>
+                            <input id="email" name="email" type="email" value="{{ user.email }}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="phone">Numéro de téléphone</label>
+                            <input id="phone" name="phone" type="text" value="{{ user.telephone }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="password">Mot de passe</label>
+                            <input id="password" name="password" type="password">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="confirm_password">Confirmer le mot de passe</label>
+                            <input id="confirm_password" name="confirm_password" type="password">
+                        </div>
+
+                        {% if session.success %}
+                            <span class="alert alert-success">{{ session.success }}</span>
+                        {% endif %}
+
+                        {% if session.error %}
+                            <span class="alert alert-danger">{{ session.error }}</span>
+                        {% endif %}
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-deco">SAUVEGARDER</button>
+                            <a href="index.php?page=profil" class="btn-deco">Annuler</a>
+                        </div>
+
+                    </form>
+
+                {% else %}
+                    <p>Impossible de charger les informations. <a href="index.php?page=connexion">Se connecter</a></p>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
