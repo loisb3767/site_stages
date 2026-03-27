@@ -464,4 +464,34 @@ class TaskModel extends Model
         $stmt->execute(['id_role' => $id_role]);
         return $stmt->fetchColumn() > 0;
     }
+
+    public function updateUser($id, $nom, $prenom, $email, $telephone, $password = null) {
+        $sql = "UPDATE utilisateur SET
+                    nom_utilisateur = :nom,
+                    prenom_utilisateur = :prenom,
+                    email = :email,
+                    telephone = :telephone";
+
+        if ($password !== null) {
+            $sql .= ", mot_de_passe = :password";
+        }
+
+        $sql .= " WHERE id_utilisateur = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $params = [
+            'id' => $id,
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'email' => $email,
+            'telephone' => $telephone
+        ];
+
+        if ($password !== null) {
+            $params['password'] = $password;
+        }
+
+        return $stmt->execute($params);
+    }
 }

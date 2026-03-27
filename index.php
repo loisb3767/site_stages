@@ -81,8 +81,7 @@ switch ($page) {
     case 'modifier_profil':
         $controller->modifierProfilPage();
         break;
-    
-    // A rajouter les autres pages apres
+
     
     default:
         http_response_code(404);
