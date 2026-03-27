@@ -405,6 +405,24 @@ class TaskModel extends Model
         return null;
     }
 
+    public function getOffresByDuree(): array
+    {
+        $sql = "
+            SELECT
+                CASE
+                    WHEN duree <= 2 THEN '1-2 mois'
+                    WHEN duree <= 5 THEN '3-5 mois'
+                    ELSE 'Plus de 5 mois'
+                END AS tranche,
+                COUNT(*) AS total
+            FROM offre
+            GROUP BY tranche
+            ORDER BY MIN(duree)
+        ";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
+
     public function createUser($nom, $prenom, $email, $telephone=NULL, $password, $id_role) {
         $sql = "INSERT INTO utilisateur (
                     nom_utilisateur,

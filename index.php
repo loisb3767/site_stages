@@ -77,6 +77,10 @@ switch ($page) {
     case 'logout':
         $controller->logoutPage();
         break;
+
+    case 'modifier_profil':
+        $controller->modifierProfilPage();
+        break;
     
     // A rajouter les autres pages apres
     

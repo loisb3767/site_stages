@@ -145,11 +145,6 @@ class TaskController extends Controller
         echo $this->templateEngine->render('mentions_legales.twig.html');
     }
 
-    public function statistiquesPage() {
-
-        echo $this->templateEngine->render('statistiques.twig.html');
-    }
-
     public function avisPage() {
 
         echo $this->templateEngine->render('avis.twig.html');
@@ -207,6 +202,19 @@ class TaskController extends Controller
         session_destroy();
         header('Location: index.php?page=accueil');
         exit;
+    }
+
+<<<<<<< HEAD
+    public function statistiquesPage()
+    {
+        echo $this->templateEngine->render('statistiques.twig.html', [
+            'offresByDuree'   => $this->model->getOffresByDuree()
+        ]);
+=======
+    public function modifierProfilPage() {
+
+        echo $this->templateEngine->render('modifier_profil.twig.html');
+>>>>>>> 08f516c53ae00d88824e5232d898ba3f370d0021
     }
 
 }
