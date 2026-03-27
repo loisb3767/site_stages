@@ -494,4 +494,14 @@ class TaskModel extends Model
 
         return $stmt->execute($params);
     }
+
+    public function getWishlistByUserId($id) {
+    $sql = "SELECT o.* 
+            FROM wishlist w
+            JOIN offre o ON w.id_offre = o.id_offre
+            WHERE w.id_utilisateur = :id";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetchAll();
+  }
 }

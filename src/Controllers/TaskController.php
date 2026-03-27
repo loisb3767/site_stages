@@ -223,7 +223,20 @@ class TaskController extends Controller
             'session' => $_SESSION
         ]);
     }
+    public function mes_offres() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
 
+        $id_utilisateur = $_SESSION['user']['id_utilisateur'];
+        $wishlist = $this->model->getWishlistByUserId($id_utilisateur);
+
+        echo $this->templateEngine->render('mes_offres.twig.html', [
+            'wishlist' => $wishlist,
+            'session' => $_SESSION
+        ]);
+    }
 }
 
 

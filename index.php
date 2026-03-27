@@ -81,6 +81,10 @@ switch ($page) {
     case 'modifier_profil':
         $controller->modifierProfilPage();
         break;
+    
+    case 'mes_offres':
+        $controller->mes_offres();
+        break;
 
     
     default:

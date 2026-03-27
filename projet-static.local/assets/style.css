@@ -353,7 +353,7 @@ header .search-bar .search-btn:hover img {
 .card-body .input-group label {
     display: block;
     font-size: 0.9em;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.1rem;
     color: var(--primary-color)
 }
 
@@ -399,15 +399,15 @@ header .search-bar .search-btn:hover img {
     text-decoration: none;
     margin-top: 50px;
     justify-content: center;
-    display: block;        /* changer flex -> block */
-    margin: 50px auto 0;   /* 50px en haut, auto à gauche/droite */
+    display: block;   
+    margin: 50px auto 0; 
+    font-weight: 600;
 }
 
 .btn-deco:hover {
     background-color: color-mix(in srgb, var(--primary-color), #000 20%);
 }
 
-/* ----------*/
 /* Page "A propos" */
 
 .propos{
@@ -1243,6 +1243,95 @@ body.menu-open {
     }
 }
 
+.mes-offres-container {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        flex-direction: row;
+        gap: 1rem;
+        margin: 0 0.7rem 0 0.7rem;
+}
+.flex-item {
+    flex: 1;                 
+}
+.btn-wishlist-offre,
+.btn-wishlist-supprimer {
+    background-color: var(--primary-color);
+    color: var(--secondary-text-color);
+    padding: 0.5rem 2rem;
+    width: fit-content;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    font-weight: 600;
+}
 
+.btn-wishlist-offre:hover,
+.btn-wishlist-supprimer:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
 
+@media (max-width: 1024px) {
+    .wishlist-card h2 {
+        font-size: 1rem;
+    }
 
+    .wishlist-card p {
+        font-size: 0.85rem;
+    }
+
+    .btn-wishlist-offre {
+        margin-right: 0.8rem;
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+    }
+    .btn-wishlist-supprimer {
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+}
+
+@media (max-width: 480px) {
+    .wishlist-card h2 {
+        font-size: 0.95rem;
+    }
+
+    .wishlist-card p {
+        font-size: 0.8rem;
+    }
+
+    .btn-wishlist-offre {
+        margin-right: 0.6rem;
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+    }
+    .btn-wishlist-supprimer {
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+    }
+}
+
+.btn-mes-offres {
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-mes-offres::before {
+    content: "⭐";
+    font-size: 1.1rem;
+}
+
+.btn-mes-offres:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
