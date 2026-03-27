@@ -1,0 +1,27 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Parcours des offres - Job2main{% endblock %}
+{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+
+{% block body %}
+		<section>
+			<h1 class="text-center">PROFIL</h1>			
+			<article>
+				<h2>INFORMATIONS</h2>
+				<form action="formulaireAvis.php" method="post" enctype="multipart/form-data">
+					<label>Nom complet*<input name="fullname" type="text" size="50" required></label>
+					<label>Courriel académique*<input name="email" type="email" size="30" required></label>
+
+					
+					<button type="submit">Publier l'avis</button>
+					<input type="reset" value="Effacer">
+
+					{% if GET.status == 'success' %}
+						<span class="alert alert-success" role="alert">Données modifiées avec succès !</span>
+					{% elseif GET.error %}
+						<span class="alert alert-danger" role="alert">Erreur : {{ GET.error }}</span>
+					{% endif %}
+				</form>
+			</article>
+		</section>
+{% endblock %}

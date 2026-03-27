@@ -191,6 +191,11 @@ class TaskController extends Controller
         exit;
     }
 
+    public function modifierProfilPage() {
+
+        echo $this->templateEngine->render('modifier_profil.twig.html');
+    }
+
 }
 
 
