@@ -60,6 +60,7 @@ class TaskModel extends Model
             LEFT JOIN entreprise_adresse ea ON e.id_entreprise = ea.id_entreprise
             LEFT JOIN adresse a ON ea.id_adresse = a.id_adresse
             WHERE o.id_offre = :id
+            ORDER BY o.date_offre ASC
         ";
 
         $stmt = $this->pdo->prepare($sql);
@@ -93,7 +94,8 @@ class TaskModel extends Model
                 FROM offre o
                 INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
                 LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
-                ORDER BY o.date_offre DESC, o.id_offre DESC
+                WHERE o.date_offre >= CURDATE()
+                ORDER BY o.date_offre ASC, o.id_offre ASC
                 LIMIT :limit OFFSET :offset
             ";
 
@@ -129,12 +131,13 @@ class TaskModel extends Model
             INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
             LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
             INNER JOIN offre_competence oc ON o.id_offre = oc.id_offre
-            WHERE oc.id_competence IN (" . implode(',', $placeholders) . ")
+            WHERE o.date_offre >= CURDATE()
+            AND oc.id_competence IN (" . implode(',', $placeholders) . ")
             GROUP BY
                 o.id_offre, o.titre, o.description, o.gratification,
                 o.date_offre, o.duree, e.nom_entreprise, s.nom_secteur
             HAVING COUNT(DISTINCT oc.id_competence) = :nb
-            ORDER BY o.date_offre DESC, o.id_offre DESC
+            ORDER BY o.date_offre ASC, o.id_offre ASC
             LIMIT :limit OFFSET :offset
         ";
 
@@ -283,11 +286,12 @@ class TaskModel extends Model
                 e.nom_entreprise
             FROM offre o
             INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
-            ORDER BY o.date_offre DESC, o.id_offre DESC
+            WHERE o.date_offre >= CURRENT_DATE
+            ORDER BY o.date_offre ASC, o.id_offre DESC
             LIMIT :limit
         ";
 
-        $stmt=$this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
 

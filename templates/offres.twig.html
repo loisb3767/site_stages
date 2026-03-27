@@ -42,6 +42,7 @@
                     <h3>{{ offre.titre }}</h3>
                     <p><strong>Entreprise :</strong> {{ offre.nom_entreprise }}</p>
                     <p class="secteur"><strong>Secteur :</strong> {{ offre.nom_secteur ?: 'Non renseigné' }}</p>
+                    <p><strong>Date de l'offre :</strong> {{ offre.date_offre|date("d/m/Y") }}</p>
 
                     {% if offre.competences is not empty %}
                         {% for comp in offre.competences %}
