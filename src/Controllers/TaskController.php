@@ -192,8 +192,17 @@ class TaskController extends Controller
     }
 
     public function modifierProfilPage() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
 
-        echo $this->templateEngine->render('modifier_profil.twig.html');
+        $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+
+        echo $this->templateEngine->render('modifier_profil.twig.html', [
+            'user' => $user,
+            'session' => $_SESSION
+        ]);
     }
 
 }
