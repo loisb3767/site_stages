@@ -64,12 +64,12 @@ CREATE TABLE `entreprise` (
 -- Table utilisateur
 CREATE TABLE `utilisateur` (
   `id_utilisateur` int NOT NULL AUTO_INCREMENT,
-  `nom_utilisateur` varchar(50) NOT NULL,
-  `prenom_utilisateur` varchar(50) NOT NULL,
+  `nom_utilisateur` varchar(50) NULL,
+  `prenom_utilisateur` varchar(50) NULL,
   `email` varchar(50) NOT NULL,
   `telephone` varchar(50) DEFAULT NULL,
   `mot_de_passe` varchar(255) NOT NULL,
-  `id_role` int NOT NULL,
+  `id_role` int DEFAULT 0,
   PRIMARY KEY (`id_utilisateur`),
   UNIQUE KEY `email` (`email`),
   KEY `id_role` (`id_role`),
@@ -758,3 +758,8 @@ GRANT SELECT, FILE ON *.* TO `etudiant`@`%` IDENTIFIED BY PASSWORD '*9F5FC07C6B0
 GRANT SELECT ON *.* TO ``@`%`;
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, EVENT, TRIGGER, DELETE HISTORY ON `test`.* TO ``@`%`;
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, EVENT, TRIGGER, DELETE HISTORY ON `test\_%`.* TO ``@`%`;
+
+
+-- USER TEST
+INSERT INTO utilisateur (nom_utilisateur, prenom_utilisateur, email, telephone, mot_de_passe, id_role) VALUES
+    ('Nom etudiant Test', 'Prenom etudiant Test', 'test@etudiant.test', '0000000000', 'test', 0),('Nom pilote Test', 'Prenom pilote Test', 'test@pilote.test', '0000000000', 'test', 1),('Nom admin Test', 'Prenom admin Test', 'test@admin.test', '0000000000', 'test', 2);

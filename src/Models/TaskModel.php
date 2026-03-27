@@ -268,7 +268,7 @@ class TaskModel extends Model
     }
 
     public function getUserById($id) {
-        $sql = "SELECT email, nom_utilisateur, prenom_utilisateur, telephone FROM utilisateur WHERE id_utilisateur = :id";
+        $sql = "SELECT email, nom_utilisateur, prenom_utilisateur, telephone, id_role FROM utilisateur WHERE id_utilisateur = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         return $stmt->fetch();
@@ -403,5 +403,47 @@ class TaskModel extends Model
         }
 
         return null;
+    }
+
+    public function createUser($nom, $prenom, $email, $telephone=NULL, $password, $id_role) {
+        $sql = "INSERT INTO utilisateur (
+                    nom_utilisateur,
+                    prenom_utilisateur,
+                    email,
+                    telephone,
+                    mot_de_passe,
+                    id_role
+                ) VALUES (
+                    :nom,
+                    :prenom,
+                    :email,
+                    :telephone,
+                    :password,
+                    :id_role
+                )";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute([
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'email' => $email,
+            'telephone' => $telephone,
+            'password' => $password,
+            'id_role' => $id_role
+        ]);
+    }
+
+    public function getAllRoles() {
+        $sql = "SELECT id_role, nom_role FROM role ORDER BY id_role";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function roleExists($id_role) {
+        $sql = "SELECT COUNT(*) FROM role WHERE id_role = :id_role";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id_role' => $id_role]);
+        return $stmt->fetchColumn() > 0;
     }
 }
