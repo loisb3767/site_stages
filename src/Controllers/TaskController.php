@@ -118,18 +118,31 @@ class TaskController extends Controller
     }
 
     public function inscriptionPage() {
+        $user = null;
 
-        echo $this->templateEngine->render('inscription.twig.html');
+        if (isset($_SESSION['user']['id_utilisateur'])) {
+            $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+        }
+
+        $roles = $this->model->getAllRoles();
+
+        $error = $_SESSION['error'] ?? null;
+        $success = $_SESSION['success'] ?? null;
+
+        unset($_SESSION['error'], $_SESSION['success']);
+
+        echo $this->templateEngine->render('inscription.twig.html', [
+            'user' => $user,
+            'roles' => $roles,
+            'error' => $error,
+            'success' => $success,
+            'session' => $_SESSION
+        ]);
     }
 
     public function mentionsLegalesPage() {
 
         echo $this->templateEngine->render('mentions_legales.twig.html');
-    }
-
-    public function statistiquesPage() {
-
-        echo $this->templateEngine->render('statistiques.twig.html');
     }
 
     public function avisPage() {
@@ -191,6 +204,12 @@ class TaskController extends Controller
         exit;
     }
 
+    public function statistiquesPage()
+    {
+        echo $this->templateEngine->render('statistiques.twig.html', [
+            'offresByDuree'   => $this->model->getOffresByDuree()
+        ]);
+    }    
     public function modifierProfilPage() {
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=connexion');
