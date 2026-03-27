@@ -283,7 +283,7 @@ class TaskModel extends Model
                 e.nom_entreprise
             FROM offre o
             INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
-            ORDER BY o.date_offre DESC, o.id_offre DESC
+            ORDER BY o.date_offre ASC, o.id_offre DESC
             LIMIT :limit
         ";
 
