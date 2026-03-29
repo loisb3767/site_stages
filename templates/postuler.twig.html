@@ -1,28 +1,59 @@
 {% extends "base.twig.html" %}
 
-{% block title %}Parcours des offres - Job2main{% endblock %}
-{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+{% block title %}Postuler - Job2main{% endblock %}
 
 {% block body %}
-	 
-	   <section>
-			<h1 class="text-center">Postuler à l'offre : {{ offre.titre }}</h>
-	   </section>
-       <section class="apply-section">
-            <h3>Postuler à cette offre</h3>
-            <form action="formulairePostuler.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="id_offre" value="{{ offre.id_offre }}">
-                <div class="form-group">
-                    <label for="cv">Votre CV (PDF uniquement) :</label>
-                    <input type="file" id="cv" name="cv" accept=".pdf" required>
-                </div>
+    <section>
+        <h1 class="text-center">Postuler à l'offre : {{ offre.titre }}</h1>
+    </section>
 
-                <div class="form-group">
-                    <label for="motivation">Lettre de motivation :</label>
-                    <textarea id="motivation" name="motivation" rows="8" placeholder="Expliquez pourquoi ce stage vous intéresse..."></textarea>
-                </div>
+    <section class="apply-section">
+        <h3>Postuler à cette offre</h3>
 
-                <button type="submit" class="submit-btn">Envoyer ma candidature</button>
-            </form>
-        </section>
+        <form id="formPostuler" action="formulairePostuler.php" method="POST" enctype="multipart/form-data" novalidate>
+            <input type="hidden" name="id_offre" value="{{ offre.id_offre }}">
+
+            <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" value="{{ session.user.nom_utilisateur }}">
+                <span id="err-nom" style="color:red; display:none;">Le champ Nom est obligatoire.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" value="{{ session.user.prenom_utilisateur }}">
+                <span id="err-prenom" style="color:red; display:none;">Le champ Prénom est obligatoire.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Courriel :</label>
+                <input type="text" id="email" name="email" value="{{ session.user.email }}">
+                <span id="err-email" style="color:red; display:none;">Veuillez entrer une adresse e-mail valide.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="cv">Votre CV :</label>
+                <small>Formats : .pdf, .doc, .docx, .odt, .rtf, .jpg, .png — 2 Mo max</small>
+                <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx,.odt,.rtf,.jpg,.jpeg,.png">
+                <span id="err-cv" style="color:red; display:none;"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Message au recruteur :</label>
+                <textarea id="message" name="message" rows="4" placeholder="Présentez-vous brièvement..."></textarea>
+                <span id="err-message" style="color:red; display:none;">Le champ Message est obligatoire.</span>
+            </div>
+
+            <div class="form-group">
+                <label for="motivation">Lettre de motivation :</label>
+                <textarea id="motivation" name="motivation" rows="8" placeholder="Expliquez pourquoi ce stage vous intéresse..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Envoyer ma candidature</button>
+        </form>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="projet-static.local/assets/postuler.js"></script>
 {% endblock %}
