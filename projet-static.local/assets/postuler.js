@@ -59,7 +59,13 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             errEmail.style.display = 'none';
         }
-
+        var cvInput = document.getElementById('cv');
+        var errCv = document.getElementById('err-cv');
+        if (cvInput.files.length === 0) {
+            errCv.textContent = 'Veuillez ajouter votre CV.';
+            errCv.style.display = 'block';
+            valid = false;
+        }
         if (!valid) e.preventDefault();
     });
 
