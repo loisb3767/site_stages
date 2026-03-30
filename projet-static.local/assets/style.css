@@ -1107,12 +1107,13 @@ body.menu-open {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;  /* titre en haut */
+    justify-content: center;
     padding-top: 1.5rem;
     font-size: 1.2rem;
     color: inherit;
     box-sizing: border-box;
     padding: 1.5rem;
+    gap: 1rem;
 }
 
 .card-stats-title {
@@ -1140,8 +1141,13 @@ body.menu-open {
     gap: 0.3rem;
 }
 
+.stat-tranche {
+    font-size: 1.2rem;
+}
+
 .stat-total {
     font-weight: 700;
+    font-size: 1.4rem;
 }
 
 /* BOUTONS */
@@ -1314,8 +1320,6 @@ body.menu-open {
     background-color: color-mix(in srgb, var(--primary-color), #000 20%);
 }
 
-<<<<<<< HEAD
-=======
 /* ───── PAGE 404 ───── */
 @keyframes fadeDown {
   from { opacity: 0; transform: translateY(-30px); }
@@ -1423,4 +1427,3 @@ main.game-mode #e404-num {
     75% { transform: translate(5px, -5px); }
     100% { transform: translate(0, 0); }
 }
->>>>>>> b7c238f3fba0dcd3e47d1823687ce3fba76f3010
