@@ -442,34 +442,37 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-    public function createUser($nom, $prenom, $email, $telephone=NULL, $password, $id_role) {
-        $sql = "INSERT INTO utilisateur (
-                    nom_utilisateur,
-                    prenom_utilisateur,
-                    email,
-                    telephone,
-                    mot_de_passe,
-                    id_role
-                ) VALUES (
-                    :nom,
-                    :prenom,
-                    :email,
-                    :telephone,
-                    :password,
-                    :id_role
-                )";
+    public function createUser($nom, $prenom, $email, $password, $id_role, $telephone = NULL) {
 
-        $stmt = $this->pdo->prepare($sql);
+    $password = password_hash($password, PASSWORD_DEFAULT);
 
-        return $stmt->execute([
-            'nom' => $nom,
-            'prenom' => $prenom,
-            'email' => $email,
-            'telephone' => $telephone,
-            'password' => $password,
-            'id_role' => $id_role
-        ]);
-    }
+    $sql = "INSERT INTO utilisateur (
+                nom_utilisateur,
+                prenom_utilisateur,
+                email,
+                telephone,
+                mot_de_passe,
+                id_role
+            ) VALUES (
+                :nom,
+                :prenom,
+                :email,
+                :telephone,
+                :password,
+                :id_role
+            )";
+
+    $stmt = $this->pdo->prepare($sql);
+
+    return $stmt->execute([
+        ':nom' => $nom,
+        ':prenom' => $prenom,
+        ':email' => $email,
+        ':telephone' => $telephone,
+        ':password' => $password,
+        ':id_role' => $id_role
+    ]);
+}
 
     public function getAllRoles() {
         $sql = "SELECT id_role, nom_role FROM role ORDER BY id_role";
