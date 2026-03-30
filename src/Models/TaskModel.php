@@ -408,7 +408,7 @@ class TaskModel extends Model
 
         return null;
     }
-
+    //Données Carrousel nombre d'offres par durée
     public function getOffresByDuree(): array
     {
         $sql = "

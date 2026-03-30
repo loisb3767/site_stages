@@ -121,3 +121,45 @@ document.querySelectorAll(".carousel-wrapper-stats").forEach(wrapper => {
         updateCarousel();
     });
 });
+
+//Postuler Offre Vérifications
+document.addEventListener('DOMContentLoaded', function () {
+    // Vérification du CV à la sélection
+    document.getElementById('cv').addEventListener('change', function () {
+        var formats = ['.pdf', '.doc', '.docx', '.odt', '.rtf', '.jpg', '.jpeg', '.png'];
+        var errCv = document.getElementById('err-cv');
+        var file = this.files[0];
+
+        if (!file) { errCv.style.display = 'none'; return; }
+
+        var ext = file.name.toLowerCase().substring(file.name.lastIndexOf('.'));
+
+        if (formats.indexOf(ext) === -1) {
+            errCv.textContent = 'Format non autorisé : ' + ext;
+            errCv.style.display = 'block';
+            this.value = '';
+        } else if (file.size > 2 * 1024 * 1024) {
+            errCv.textContent = 'Le fichier dépasse 2 Mo.';
+            errCv.style.display = 'block';
+            this.value = '';
+        } else {
+            errCv.style.display = 'none';
+        }
+    });
+
+    // Validation à l'envoi
+    document.getElementById('formPostuler').addEventListener('submit', function (e) {
+        var valid = true;
+        
+        var cvInput = document.getElementById('cv');
+        var errCv = document.getElementById('err-cv');
+        if (cvInput.files.length === 0) {
+            errCv.textContent = 'Veuillez ajouter votre CV.';
+            errCv.style.display = 'block';
+            valid = false;
+        }
+
+        if (!valid) e.preventDefault();
+    });
+
+});
