@@ -60,9 +60,9 @@ $success = $model->createUser(
     $nom,
     $prenom,
     $email,
-    $telephone,
+    $id_role,
     $password,
-    $id_role
+    $telephone
 );
 
 if ($success) {
