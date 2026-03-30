@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();
 require_once 'vendor/autoload.php';
 
@@ -53,10 +56,6 @@ switch ($page) {
     case 'statistiques':
         $controller -> statistiquesPage();
         break;
-
-    case 'contact':
-        $controller -> contactPage();
-        break;
     
     case 'avis':
         $controller -> avisPage();
@@ -70,10 +69,6 @@ switch ($page) {
         $controller -> detailOffrePage();
         break;
 
-    case 'profil':
-        $controller -> profilPage();
-        break;
-
     case 'logout':
         $controller->logoutPage();
         break;
@@ -84,6 +79,10 @@ switch ($page) {
     
     case 'mes_offres':
         $controller->mes_offres();
+        break;
+
+    case 'entreprises':
+        $controller->entreprises();
         break;
 
     
