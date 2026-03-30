@@ -1101,7 +1101,7 @@ body.menu-open {
 
 .card-stats {
     min-width: 100%;
-    height: 250px;
+    height: auto;
     background: var(--light-blue);
     border-radius: 12px;
     display: flex;
@@ -1173,6 +1173,11 @@ body.menu-open {
 /* ───── TABLETTE (≥ 600px) ───── */
 
 @media (min-width: 600px) {
+    .card-stats {
+        min-height: 300px;
+        font-size: 1.4rem;
+        
+    }
     .carousels-container-stats {
         padding: 1rem 1.5rem;
         gap: 3rem;
@@ -1197,6 +1202,10 @@ body.menu-open {
 /* ───── ORDINATEUR (≥ 1024px) ───── */
 
 @media (min-width: 1024px) {
+    .card-stats {
+        min-height: 350px;
+        font-size: 1.5rem;
+    }
     .carousels-container-stats {
         flex-direction: row;
         justify-content: center;
