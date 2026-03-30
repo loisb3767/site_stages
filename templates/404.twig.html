@@ -1,14 +1,24 @@
 {% extends "base.twig.html" %}
 
-{% block title %}Parcours des offres - Job2main{% endblock %}
-{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+{% block title %}Page introuvable - Job2main{% endblock %}
+{% block description %}La page que vous cherchez est introuvable.{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1 class="text-center">404 - Page non trouvée</h1>
-        <p class="text-center">Désolé, la page que vous recherchez n'existe pas ou a été déplacée.</p>
-        <div class="text-center">
-            <a href="index.php" class="btn-deco">Retour à l'accueil</a>
-        </div>
-    </div>
+<main style="align-items:center; justify-content:center; text-align:center; padding:3rem 1rem;">
+
+  <div class="e404-num" id="e404-num"></div>
+
+  <h2 class="e404-title" style="color:var(--secondary-color); margin:0.5rem 0;">
+    Page introuvable
+  </h2>
+  <p class="e404-text" style="color:var(--text-color); max-width:400px; margin:0 auto 1.5rem;">
+    La page que vous cherchez n'existe pas ou a été déplacée.
+  </p>
+  <a href="/" class="btn-postuler e404-btn" style="width:auto; padding:0.8rem 2rem; display:inline-flex;">
+    ← Retour à l'accueil
+  </a>
+
+</main>
+
+<script src="/projet-static.local/assets/404.js"></script>
 {% endblock %}
