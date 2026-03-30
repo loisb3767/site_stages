@@ -8,6 +8,16 @@ class FileUploader
 {
     private int $maxSize;
     private string $uploadDir;
+    private array $allowedMimeTypes = [
+        'application/pdf',
+        'application/msword',                                                      // .doc
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+        'application/vnd.oasis.opendocument.text',                                 // .odt
+        'application/rtf',
+        'text/rtf',
+        'image/jpeg',
+        'image/png',
+    ];
 
     public function __construct(int $maxSize = 2097152, string $uploadDir = "uploads/")
     {
@@ -28,15 +38,28 @@ class FileUploader
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->file($file['tmp_name']);
 
-        if ($mimeType !== 'application/pdf') {
-            throw new Exception("Only PDF files allowed.");
+        if (!in_array($mimeType, $this->allowedMimeTypes)) {
+            throw new Exception("Format non autorisé.");
         }
 
         if (!is_dir($this->uploadDir)) {
             mkdir($this->uploadDir, 0755, true);
         }
 
-        $fileName = uniqid('file', true) . '.pdf';
+        // Extension selon le mime type
+        $extensions = [
+            'application/pdf'        => 'pdf',
+            'application/msword'     => 'doc',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+            'application/vnd.oasis.opendocument.text' => 'odt',
+            'application/rtf'        => 'rtf',
+            'text/rtf'               => 'rtf',
+            'image/jpeg'             => 'jpg',
+            'image/png'              => 'png',
+        ];
+
+        $ext = $extensions[$mimeType];
+        $fileName = uniqid('file', true) . '.' . $ext;
         $destination = $this->uploadDir . $fileName;
 
         if (!move_uploaded_file($file['tmp_name'], $destination)) {

@@ -203,7 +203,8 @@ class TaskController extends Controller
         header('Location: index.php?page=accueil');
         exit;
     }
-
+    
+    //Carrousel
     public function statistiquesPage()
     {
         echo $this->templateEngine->render('statistiques.twig.html', [
