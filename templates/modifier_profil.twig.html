@@ -8,12 +8,44 @@
         <div class="auth-card">
             <div class="tabs">
                 <a href="index.php?page=profil" class="tab">Profil</a>
-                <div class="tab active">Modifier mon profil</div>
+                {% if user and user.role == 0 %}
+                    <div class="tab active">Modifier mon mot de passe</div>
+                {% else %}
+                    <div class="tab active">Modifier mon profil</div>
+                {% endif %}
             </div>
 
             <div class="card-body">
 
                 {% if user %}
+                    {% if user.role==0 %}
+                    <form action="formulaireModifEtudiant.php" method="post" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <label for="password">Mot de passe</label>
+                            <input id="password" name="password" type="password">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="confirm_password">Confirmer le mot de passe</label>
+                            <input id="confirm_password" name="confirm_password" type="password">
+                        </div>
+
+                        {% if session.success %}
+                            <span class="alert alert-success">{{ session.success }}</span>
+                        {% endif %}
+
+                        {% if session.error %}
+                            <span class="alert alert-danger">{{ session.error }}</span>
+                        {% endif %}
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-deco">SAUVEGARDER</button>
+                            <a href="index.php?page=profil" class="btn-deco">Annuler</a>
+                        </div>
+
+                    </form>
+
+                    {% else %}
                     <form action="formulaireModifUtilisateur.php" method="post" enctype="multipart/form-data">
 
                         <div class="input-group">
@@ -60,7 +92,7 @@
                         </div>
 
                     </form>
-
+                    {% endif %}
                 {% else %}
                     <p>Impossible de charger les informations. <a href="index.php?page=connexion">Se connecter</a></p>
                 {% endif %}
