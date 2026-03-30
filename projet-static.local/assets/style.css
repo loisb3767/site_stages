@@ -1384,13 +1384,12 @@ body.menu-open {
   100% { opacity: 0;   transform: translateY(-120px) scale(0.3); }
 }
 
-/* --- Mode Mini-Jeu 404 --- */
 main.game-mode {
     position: relative;
     overflow: hidden;
     background-color: var(--light-blue) !important;
     border: 3px dashed var(--primary-color);
-    min-height: 400px; /* Espace pour jouer */
+    min-height: 400px;
     transition: all 0.3s ease;
 }
 
@@ -1423,18 +1422,16 @@ main.game-mode {
 
 @keyframes winRainbow {
     0% { background-color: var(--background-color); }
-    50% { background-color: #d4edda; } /* Vert pâle succès */
+    50% { background-color: #d4edda; }
     100% { background-color: var(--background-color); }
 }
 
-/* On cache le 404 pendant le jeu pour faire de la place */
 main.game-mode #e404-num {
     opacity: 0.2;
     transform: scale(0.5);
     pointer-events: none;
 }
 
-/* Effet de secousse (Shake) */
 .shake-hit {
     animation: shake-anim 0.15s ease-in-out;
 }
