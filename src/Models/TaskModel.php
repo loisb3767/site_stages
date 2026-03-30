@@ -75,50 +75,71 @@ class TaskModel extends Model
 
         return $this->geocodeAdresseIfNeeded($offre);
     }
-
-    public function getPaginatedOffres(int $page, int $parPage, array $competenceIds = []): array
-    {
-        $offset = ($page - 1) * $parPage;
-
-        if (empty($competenceIds)) {
-            $sql = "
-                SELECT
-                    o.id_offre,
-                    o.titre,
-                    o.description,
-                    o.gratification,
-                    o.date_offre,
-                    o.duree,
-                    e.nom_entreprise,
-                    s.nom_secteur
-                FROM offre o
-                INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
-                LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
-                WHERE o.date_offre >= CURDATE()
-                ORDER BY o.date_offre ASC, o.id_offre ASC
-                LIMIT :limit OFFSET :offset
-            ";
-
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
-            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-            $stmt->execute();
-
-            return $stmt->fetchAll();
+    public function getTotalCountEntreprises(array $secteurIds = []): int{
+        if (empty($secteurIds)) {
+            return (int) $this->pdo->query("SELECT COUNT(*) FROM entreprise")->fetchColumn();
         }
 
-        // paramètres dynamiques
-        $namedParams = [];
         $placeholders = [];
+        $namedParams = [];
 
-        foreach ($competenceIds as $index => $id) {
-            $param = ':comp' . $index;
+        foreach ($secteurIds as $index => $id) {
+            $param = ':secteur' . $index;
             $placeholders[] = $param;
             $namedParams[$param] = $id;
         }
 
         $sql = "
-            SELECT
+            SELECT COUNT(*)
+            FROM entreprise e
+            WHERE e.id_secteur IN (" . implode(',', $placeholders) . ")
+            ";
+
+            $stmt = $this->pdo->prepare($sql);
+            foreach ($namedParams as $param => $value) {
+            $stmt->bindValue($param, $value, PDO::PARAM_INT);
+            }
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+            }
+            public function getPaginatedOffres(int $page, int $parPage, array $SecteurIds = []): array{
+                $offset = ($page - 1) * $parPage;
+
+                if (empty($SecteurIds)) {
+                    $sql = "
+                    SELECT
+                        o.id_offre,
+                        o.titre,
+                        o.description,
+                        o.gratification,
+                        o.date_offre,
+                        o.duree,
+                        e.nom_entreprise,
+                        s.nom_secteur
+                        FROM offre o
+                        INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+                        LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
+                        WHERE o.date_offre >= CURDATE()
+                        ORDER BY o.date_offre ASC, o.id_offre ASC
+                        LIMIT :limit OFFSET :offset
+                        ";
+
+                        $stmt = $this->pdo->prepare($sql);
+                        $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
+                        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                        $stmt->execute();
+                        return $stmt->fetchAll();
+                        }
+                // paramètres dynamiques
+                $namedParams = [];
+                $placeholders = [];
+                foreach ($SecteurIds as $index => $id) {
+                    $param = ':comp' . $index;
+                    $placeholders[] = $param;
+                    $namedParams[$param] = $id;
+                    }
+                $sql = "
+                SELECT
                 o.id_offre,
                 o.titre,
                 o.description,
@@ -212,32 +233,8 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-    public function detailOffrePage(): void
-    {
-        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-        if ($id <= 0) {
-            die('ID offre invalide.');
-        }
 
-        $offre = $this->model->getOffreById($id);
-
-        if (!$offre) {
-            die('Offre introuvable.');
-        }
-
-        $competences = $this->model->getCompetencesByOffreId($id);
-
-        $offre['competences'] = array_map(
-            fn($comp) => $comp['nom_competence'],
-            $competences
-        );
-
-        echo $this->templateEngine->render('detailOffre.twig.html', [
-            'offre' => $offre,
-            'active_page' => 'offres',
-        ]);
-    }
 
     public function getAllSecteurs(): array
     {
@@ -522,8 +519,80 @@ class TaskModel extends Model
             FROM wishlist w
             JOIN offre o ON w.id_offre = o.id_offre
             WHERE w.id_utilisateur = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetchAll();
+    }
+    public function getTotalEntreprises(array $secteurs = []): int
+    {
+        if (empty($secteurs)) {
+            return (int) $this->pdo->query("SELECT COUNT(*) FROM entreprise")->fetchColumn();
+        }
+
+        $placeholders = implode(',', array_fill(0, count($secteurs), '?'));
+
+        $sql = "
+            SELECT COUNT(*)
+            FROM entreprise
+            WHERE id_secteur IN ($placeholders)
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(array_values($secteurs));
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getPaginatedEntreprises(int $page, int $parPage, array $secteurs = []): array
+{
+    $offset = ($page - 1) * $parPage;
+
+    if (empty($secteurs)) {
+        $sql = "SELECT * FROM entreprise LIMIT ? OFFSET ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(1, $parPage, PDO::PARAM_INT);
+        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    $placeholders = implode(',', array_fill(0, count($secteurs), '?'));
+
+    $sql = "
+        SELECT *
+        FROM entreprise
+        WHERE id_secteur IN ($placeholders)
+        LIMIT ? OFFSET ?
+    ";
+
     $stmt = $this->pdo->prepare($sql);
-    $stmt->execute(['id' => $id]);
+
+    $i = 1;
+    foreach ($secteurs as $secteur) {
+        $stmt->bindValue($i++, $secteur, PDO::PARAM_INT);
+    }
+
+    $stmt->bindValue($i++, $parPage, PDO::PARAM_INT);
+    $stmt->bindValue($i, $offset, PDO::PARAM_INT);
+
+    $stmt->execute();
+
     return $stmt->fetchAll();
-  }
+    }
+
+    public function getSecteursByEntrepriseId(int $id): array
+    {
+        $sql = "
+            SELECT s.nom_secteur
+            FROM secteur s
+            JOIN entreprise e ON e.id_secteur = s.id_secteur
+            WHERE e.id_entreprise = :id
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }

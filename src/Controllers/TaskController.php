@@ -240,6 +240,51 @@ class TaskController extends Controller
             'session' => $_SESSION
         ]);
     }
+
+
+    public function entreprises(): void{
+    $parPage = 10;
+    // Si tu veux filtrer par secteur par exemple
+    $selectedSecteurs = isset($_GET['secteurs']) && is_array($_GET['secteurs'])
+        ? array_map('intval', $_GET['secteurs'])
+        : [];
+
+    // Total entreprises
+    $totalEntreprises = $this->model->getTotalEntreprises($selectedSecteurs);
+    $nbPages = ($totalEntreprises > 0) ? (int) ceil($totalEntreprises / $parPage) : 1;
+
+    $currentPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
+
+    if ($currentPage < 1) {
+        $currentPage = 1;
+    }
+
+    if ($currentPage > $nbPages) {
+        $currentPage = $nbPages;
+    }
+
+    // Récupération des entreprises paginées
+    $entreprises = $this->model->getPaginatedEntreprises($currentPage, $parPage, $selectedSecteurs);
+
+    // Exemple : ajouter des infos liées (facultatif)
+    foreach ($entreprises as &$entreprise) {
+        $secteurs = $this->model->getSecteursByEntrepriseId($entreprise['id_entreprise']);
+        $entreprise['secteurs'] = array_map(
+            fn($s) => $s['nom_secteur'],
+            $secteurs
+        );
+    }
+
+    echo $this->templateEngine->render('entreprises.twig.html', [
+        'entreprises' => $entreprises,
+        'categories' => $this->model->getAllSecteurs(),
+        'selectedSecteurs' => $selectedSecteurs,
+        'page' => $currentPage,
+        'nbPages' => $nbPages,
+        'active_page' => 'entreprises',
+    ]);
+    }
+
 }
 
 

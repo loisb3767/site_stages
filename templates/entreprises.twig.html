@@ -1,0 +1,67 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Parcours des offres - Job2main{% endblock %}
+{% block description %}Parcourez nos entreprises !{% endblock %}
+
+{% block body %}
+<div class="offers-page">
+    <aside class="sidebar">
+        <div class="sidebar-title">Catégories</div>
+
+        <form method="GET" action="index.php">
+            <input type="hidden" name="page" value="entreprises">
+
+            <ul class="specialites">
+                {% for categorie in categories %}
+                    <li>
+                        <input
+                            type="checkbox"
+                            name="secteurs[]"
+                            value="{{ categorie.id_secteur }}"
+                            id="categorie{{ categorie.id_secteur}}"
+                            {% if categorie.id_secteur in selectedSecteurs %}checked{% endif %}
+                        >
+                        <label for="categorie{{ categorie.id_secteur }}">
+                            {{ categorie.nom_secteur }}
+                        </label>
+                    </li>
+                {% else %}
+                    <li>Aucune catégorie disponible</li>
+                {% endfor %}
+            </ul>
+
+            <button type="submit">Filtrer</button>
+            <a href="index.php?page=entreprises">Réinitialiser</a>
+        </form>
+    </aside>
+
+    <section class="entreprise-content">
+    {% for entreprise in entreprises %}
+        <article class="offer-card">
+            <div class="offer-info">
+                <h3>{{ entreprise.nom_entreprise }}</h3>
+
+                {% if entreprise.secteurs is not empty %}
+                    <p><strong>Secteurs :</strong></p>
+                    {% for secteur in entreprise.secteurs %}
+                        <div class="competence-bar">{{ secteur }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun secteur renseigné</p>
+                {% endif %}
+
+                {% if entreprise.description %}
+                    <p class="resume">{{ entreprise.description }}</p>
+                {% endif %}
+            </div>
+
+            <!--<a href="index.php?page=detail-entreprise&id={{ entreprise.id_entreprise }}" class="info-btn">
+                plus d'info
+            </a>-->
+        </article>
+        {% else %}
+        <p>Aucune entreprise disponible pour le moment.</p>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}
