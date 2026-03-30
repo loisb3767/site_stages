@@ -4,19 +4,20 @@
 {% block description %}La page que vous cherchez est introuvable.{% endblock %}
 
 {% block body %}
-<main style="align-items:center; justify-content:center; text-align:center; padding:3rem 1rem;">
+<main style="align-items:center; justify-content:center; text-align:center; padding:3rem 1rem; position: relative; min-height: 50vh;">
 
-  <div class="e404-num" id="e404-num"></div>
+  <canvas id="snakeCanvas" width="400" height="400" style="display:none; background:#081c30; border:5px solid var(--primary-color); border-radius:15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100; position: relative; margin: 0 auto;"></canvas>
 
-  <h2 class="e404-title" style="color:var(--secondary-color); margin:0.5rem 0;">
-    Page introuvable
-  </h2>
-  <p class="e404-text" style="color:var(--text-color); max-width:400px; margin:0 auto 1.5rem;">
-    La page que vous cherchez n'existe pas ou a été déplacée.
-  </p>
-  <a href="/" class="btn-postuler e404-btn" style="width:auto; padding:0.8rem 2rem; display:inline-flex;">
-    ← Retour à l'accueil
-  </a>
+  <div id="normal-content">
+    <div class="e404-num" id="e404-num"></div>
+    <h2 class="e404-title" style="color:var(--secondary-color); margin:0.5rem 0;">Page introuvable</h2>
+    <p class="e404-text" style="color:var(--text-color); max-width:400px; margin:0 auto 1.5rem;">
+      La page que vous cherchez n'existe pas. <br>
+    </p>
+    <a href="/" class="btn-postuler e404-btn" style="width:auto; padding:0.8rem 2rem; display:inline-flex;">
+      ← Retour à l'accueil
+    </a>
+  </div>
 
 </main>
 

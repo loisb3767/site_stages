@@ -1383,3 +1383,66 @@ body.menu-open {
   0%   { opacity: 0.7; transform: translateY(0) scale(1); }
   100% { opacity: 0;   transform: translateY(-120px) scale(0.3); }
 }
+
+/* --- Mode Mini-Jeu 404 --- */
+main.game-mode {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--light-blue) !important;
+    border: 3px dashed var(--primary-color);
+    min-height: 400px; /* Espace pour jouer */
+    transition: all 0.3s ease;
+}
+
+.falling-job {
+    position: absolute;
+    padding: 10px 15px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 100;
+}
+
+.falling-job:hover {
+    transform: scale(1.1);
+    background: var(--secondary-color);
+}
+
+@keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.win-flash {
+    animation: winRainbow 1s infinite;
+}
+
+@keyframes winRainbow {
+    0% { background-color: var(--background-color); }
+    50% { background-color: #d4edda; } /* Vert pâle succès */
+    100% { background-color: var(--background-color); }
+}
+
+/* On cache le 404 pendant le jeu pour faire de la place */
+main.game-mode #e404-num {
+    opacity: 0.2;
+    transform: scale(0.5);
+    pointer-events: none;
+}
+
+/* Effet de secousse (Shake) */
+.shake-hit {
+    animation: shake-anim 0.15s ease-in-out;
+}
+
+@keyframes shake-anim {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(5px, 5px); }
+    50% { transform: translate(-5px, -5px); }
+    75% { transform: translate(5px, -5px); }
+    100% { transform: translate(0, 0); }
+}
