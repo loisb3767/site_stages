@@ -35,8 +35,12 @@
                         <label>Téléphone</label>
                         <p>{{ user.telephone }}</p>
                     </div>
-
-                    <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon profil</a>
+                    
+                    {% if user.role == 0 %}
+                        <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon mot de passe</a>
+                    {% else %}
+                        <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon profil</a>
+                    {% endif %}
                     <a href="index.php?page=logout" class="btn-deco">Se déconnecter</a>
 
                 {% else %}

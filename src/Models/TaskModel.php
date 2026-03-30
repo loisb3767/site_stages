@@ -405,7 +405,7 @@ class TaskModel extends Model
 
         return null;
     }
-
+    //Données Carrousel nombre d'offres par durée
     public function getOffresByDuree(): array
     {
         $sql = "
@@ -419,6 +419,24 @@ class TaskModel extends Model
             FROM offre
             GROUP BY tranche
             ORDER BY MIN(duree)
+        ";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
+
+    public function getTopWishlist(): array
+    {
+        $sql = "
+            SELECT 
+                o.titre,
+                e.nom_entreprise,
+                COUNT(DISTINCT w.id_utilisateur) AS nb_wishlist
+            FROM offre o
+            JOIN wishlist w ON o.id_offre = w.id_offre
+            JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+            GROUP BY o.id_offre, o.titre, e.nom_entreprise
+            ORDER BY nb_wishlist DESC
+            LIMIT 3
         ";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll();

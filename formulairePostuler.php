@@ -21,12 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("Offre invalide.");
         }
 
-        $filePath = null;
-
-        if (isset($_FILES['cv']) && $_FILES['cv']['error'] !== UPLOAD_ERR_NO_FILE) {
-            $uploader = new FileUploader();
-            $filePath = $uploader->upload($_FILES['cv']);
+        if (!isset($_FILES['cv']) || $_FILES['cv']['error'] === UPLOAD_ERR_NO_FILE) {
+            throw new Exception("Le CV est obligatoire.");
         }
+
+        $uploader = new FileUploader(
+            maxSize: 2097152,
+            uploadDir: __DIR__ . '/uploads/'
+        );
+        $filePath = $uploader->upload($_FILES['cv']);
 
         // Vérifier que l'offre existe
         $sqlCheckOffre = "SELECT id_offre FROM offre WHERE id_offre = :id_offre LIMIT 1";

@@ -83,11 +83,13 @@ switch ($page) {
 
     case 'entreprises':
         $controller->entreprises();
+    case 'supprimer-wishlist':
+        $controller->supprimerWishlist();
         break;
 
     
     default:
-        http_response_code(404);
+        $controller->e404Page();
         break;
 }
 

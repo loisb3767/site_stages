@@ -203,13 +203,16 @@ class TaskController extends Controller
         header('Location: index.php?page=accueil');
         exit;
     }
-
+    
+    //Carrousel
     public function statistiquesPage()
     {
         echo $this->templateEngine->render('statistiques.twig.html', [
-            'offresByDuree'   => $this->model->getOffresByDuree()
+            'offresByDuree'   => $this->model->getOffresByDuree(),
+            'topWishlist'   => $this->model->getTopWishlist()
         ]);
     }    
+
     public function modifierProfilPage() {
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=connexion');
