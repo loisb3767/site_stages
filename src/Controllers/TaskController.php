@@ -443,6 +443,39 @@ class TaskController extends Controller
         exit;
     }
 
+    public function liste_etudiantPage() {
+        $role = $_SESSION['user']['id_role'];
+
+        // Si l'utilisateur est un administrateur (role = 2), il peut voir tous les étudiants
+        if ($role == 2) {
+            $etudiants = $this->model->getAllEtudiants();
+            $pilotes = $this->model->getAllPilote();
+        }
+        // Si l'utilisateur est un pilote (role = 1), il peut voir uniquement les étudiants associés à lui
+        else{
+            $pilote_id = $_SESSION['user']['id_utilisateur'];
+            $etudiants = $this->model->getEtudiantsByPiloteId($pilote_id);  // Récupérer les étudiants associés au pilote
+        }  
+        // Affiche la liste des étudiants
+        echo $this->templateEngine->render('liste_etudiant.twig.html', [
+            'etudiants' => $etudiants,
+            'user' => $_SESSION['user'],
+            'session' => $_SESSION,
+        ]);
+    }  
+
+    function liste_adminPage(){
+        $pilote = $this->model->getAllPilote();
+        $etudiants = $this->model->getAllEtudiants();
+        //L'admin peut voir tout les pilotes
+        echo $this->templateEngine->render('liste_admin.twig.html', [
+            'pilote' => $pilote,
+            'etudiants' => $etudiants, 
+            'user' => $_SESSION['user'],
+            'session' => $_SESSION,
+        ]);
+    }
+
 
 }
 

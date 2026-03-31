@@ -716,150 +716,162 @@ class TaskModel extends Model
         $stmt->execute();
         return (int) $stmt->fetchColumn();
     }
+    public function deleteOffre(int $id): bool {
+        // Supprimer les compétences liées à l'offre
+        $stmt = $this->pdo->prepare("DELETE FROM offre_competence WHERE id_offre = :id");
+        $stmt->execute([':id' => $id]);
 
-        public function deleteOffre(int $id): bool {
-            // Supprimer les compétences liées à l'offre
-            $stmt = $this->pdo->prepare("DELETE FROM offre_competence WHERE id_offre = :id");
-            $stmt->execute([':id' => $id]);
+        // Supprimer les candidatures liées à l'offre
+        $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_offre = :id");
+        $stmt->execute([':id' => $id]);
 
-            // Supprimer les candidatures liées à l'offre
-            $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_offre = :id");
-            $stmt->execute([':id' => $id]);
+        // Supprimer les wishlists liées à l'offre
+        $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_offre = :id");
+        $stmt->execute([':id' => $id]);
 
-            // Supprimer les wishlists liées à l'offre
-            $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_offre = :id");
-            $stmt->execute([':id' => $id]);
+        // Supprimer l'offre
+        $stmt = $this->pdo->prepare("DELETE FROM offre WHERE id_offre = :id");
+        return $stmt->execute([':id' => $id]);
+    }
 
-            // Supprimer l'offre
-            $stmt = $this->pdo->prepare("DELETE FROM offre WHERE id_offre = :id");
-            return $stmt->execute([':id' => $id]);
-        }
+    public function updateOffre(int $id, string $titre, string $description, ?float $gratification, string $date_offre, string $duree): bool {
+        $sql = "UPDATE offre SET
+                    titre = :titre,
+                    description = :description,
+                    gratification = :gratification,
+                    date_offre = :date_offre,
+                    duree = :duree
+                WHERE id_offre = :id";
 
-        public function updateOffre(int $id, string $titre, string $description, ?float $gratification, string $date_offre, string $duree): bool {
-            $sql = "UPDATE offre SET
-                        titre = :titre,
-                        description = :description,
-                        gratification = :gratification,
-                        date_offre = :date_offre,
-                        duree = :duree
-                    WHERE id_offre = :id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id,
+            ':titre' => $titre,
+            ':description' => $description,
+            ':gratification' => $gratification,
+            ':date_offre' => $date_offre,
+            ':duree' => $duree
+        ]);
+    }
 
-            $stmt = $this->pdo->prepare($sql);
-            return $stmt->execute([
-                ':id' => $id,
-                ':titre' => $titre,
-                ':description' => $description,
-                ':gratification' => $gratification,
-                ':date_offre' => $date_offre,
-                ':duree' => $duree
-            ]);
-        }
+    public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise, array $competences = []): bool {
+        // Insérer l'offre
+        $sql = "INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise)
+                VALUES (:titre, :description, :gratification, :date_offre, :duree, :id_entreprise)";
 
-       public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise, array $competences = []): bool {
-            // Insérer l'offre
-            $sql = "INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise)
-                    VALUES (:titre, :description, :gratification, :date_offre, :duree, :id_entreprise)";
+        $stmt = $this->pdo->prepare($sql);
+        $result = $stmt->execute([
+            ':titre' => $titre,
+            ':description' => $description,
+            ':gratification' => $gratification,
+            ':date_offre' => $date_offre,
+            ':duree' => $duree,
+            ':id_entreprise' => $id_entreprise
+        ]);
 
-            $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute([
-                ':titre' => $titre,
-                ':description' => $description,
-                ':gratification' => $gratification,
-                ':date_offre' => $date_offre,
-                ':duree' => $duree,
-                ':id_entreprise' => $id_entreprise
-            ]);
+        if (!$result) return false;
 
-            if (!$result) return false;
+        // Récupérer l'id de l'offre créée
+        $id_offre = (int)$this->pdo->lastInsertId();
 
-            // Récupérer l'id de l'offre créée
-            $id_offre = (int)$this->pdo->lastInsertId();
-
-            // Insérer les compétences
+        // Insérer les compétences
             if (!empty($competences)) {
-                $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
-                foreach ($competences as $id_competence) {
-                    $stmt->execute([
-                        ':id_offre' => $id_offre,
-                        ':id_competence' => $id_competence
-                    ]);
-                }
+            $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
+            foreach ($competences as $id_competence) {
+                $stmt->execute([
+                    ':id_offre' => $id_offre,
+                    ':id_competence' => $id_competence
+                ]);
             }
-
-            return true;
         }
 
-        public function getAllEntreprises(): array {
-            $sql = "SELECT id_entreprise, nom_entreprise FROM entreprise ORDER BY nom_entreprise ASC";
-            $stmt = $this->pdo->query($sql);
-            return $stmt->fetchAll();
+        return true;
+    }
+
+    public function getAllEntreprises(): array {
+        $sql = "SELECT id_entreprise, nom_entreprise FROM entreprise ORDER BY nom_entreprise ASC";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
+
+
+    public function getEntrepriseById(int $id): array|null {
+        $sql = "SELECT * FROM entreprise WHERE id_entreprise = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }
+
+    public function updateEntreprise(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur): bool {
+        $sql = "UPDATE entreprise SET
+                    nom_entreprise = :nom,
+                    description = :description,
+                    email = :email,
+                    telephone = :telephone,
+                    id_secteur = :id_secteur
+                WHERE id_entreprise = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id,
+            ':nom' => $nom,
+            ':description' => $description,
+            ':email' => $email,
+            ':telephone' => $telephone,
+            ':id_secteur' => $id_secteur
+        ]);
+    }
+
+    public function deleteEntreprise(int $id): bool {
+        // Supprimer les adresses liées
+        $stmt = $this->pdo->prepare("DELETE FROM entreprise_adresse WHERE id_entreprise = :id");
+        $stmt->execute([':id' => $id]);
+
+        // Supprimer les avis liés
+        $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_entreprise = :id");
+        $stmt->execute([':id' => $id]);
+
+        // Supprimer les offres liées (et leurs dépendances)
+        $offres = $this->pdo->prepare("SELECT id_offre FROM offre WHERE id_entreprise = :id");
+        $offres->execute([':id' => $id]);
+        foreach ($offres->fetchAll() as $offre) {
+            $this->deleteOffre($offre['id_offre']);
         }
 
+        // Supprimer l'entreprise
+        $stmt = $this->pdo->prepare("DELETE FROM entreprise WHERE id_entreprise = :id");
+        return $stmt->execute([':id' => $id]);
+    }
 
-        public function getEntrepriseById(int $id): array|null {
-            $sql = "SELECT * FROM entreprise WHERE id_entreprise = :id";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            $result = $stmt->fetch();
-            return $result ?: null;
-        }
+    public function getWishlistOffreIdsByUserId(int $userId): array {
+        $sql = "
+            SELECT id_offre
+            FROM wishlist
+            WHERE id_utilisateur = :id_utilisateur
+        ";
 
-        public function updateEntreprise(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur): bool {
-            $sql = "UPDATE entreprise SET
-                        nom_entreprise = :nom,
-                        description = :description,
-                        email = :email,
-                        telephone = :telephone,
-                        id_secteur = :id_secteur
-                    WHERE id_entreprise = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id_utilisateur', $userId, PDO::PARAM_INT);
+        $stmt->execute();
 
-            $stmt = $this->pdo->prepare($sql);
-            return $stmt->execute([
-                ':id' => $id,
-                ':nom' => $nom,
-                ':description' => $description,
-                ':email' => $email,
-                ':telephone' => $telephone,
-                ':id_secteur' => $id_secteur
-            ]);
-        }
+        $rows = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-        public function deleteEntreprise(int $id): bool {
-            // Supprimer les adresses liées
-            $stmt = $this->pdo->prepare("DELETE FROM entreprise_adresse WHERE id_entreprise = :id");
-            $stmt->execute([':id' => $id]);
+        return array_map('intval', $rows);
+    }
 
-            // Supprimer les avis liés
-            $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_entreprise = :id");
-            $stmt->execute([':id' => $id]);
-
-            // Supprimer les offres liées (et leurs dépendances)
-            $offres = $this->pdo->prepare("SELECT id_offre FROM offre WHERE id_entreprise = :id");
-            $offres->execute([':id' => $id]);
-            foreach ($offres->fetchAll() as $offre) {
-                $this->deleteOffre($offre['id_offre']);
-            }
-
-            // Supprimer l'entreprise
-            $stmt = $this->pdo->prepare("DELETE FROM entreprise WHERE id_entreprise = :id");
-            return $stmt->execute([':id' => $id]);
-        }
-
-        public function getWishlistOffreIdsByUserId(int $userId): array
-        {
-            $sql = "
-                SELECT id_offre
-                FROM wishlist
-                WHERE id_utilisateur = :id_utilisateur
-            ";
-
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':id_utilisateur', $userId, PDO::PARAM_INT);
-            $stmt->execute();
-
-            $rows = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-            return array_map('intval', $rows);
-        }
-                
+    public function getAllEtudiants() : array {
+        $sql = "SELECT * FROM utilisateur WHERE id_role = 0"; 
+        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getEtudiantsByPiloteId($role) {
+        $sql = "SELECT * FROM utilisateur WHERE id_role = 0 AND referent_id = :role";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':role' => $role]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } 
+    public function getAllPilote() : array {
+        $sql = "SELECT * FROM utilisateur WHERE id_role = 1"; 
+        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

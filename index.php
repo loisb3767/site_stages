@@ -113,6 +113,12 @@ switch ($page) {
         $controller -> supprimerEntreprise();
         break;
 
+    case 'liste_etudiant':
+        $controller -> liste_etudiantPage();
+        break;
+    case 'liste_admin':
+        $controller -> liste_adminPage();
+        break;
     default:
         $controller -> e404Page();
         break;
