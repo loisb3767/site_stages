@@ -89,6 +89,10 @@ switch ($page) {
         $controller->supprimerWishlist();
         break;
 
+    case 'supprimer_offre':
+        $controller->supprimerOffre();
+        break;
+
     case 'ajouter_wishlist':
         $controller->ajouterWishlist();
         break;
@@ -96,6 +100,8 @@ switch ($page) {
     default:
         $controller->e404Page();
         break;
+
+    
 }
 
 ?>

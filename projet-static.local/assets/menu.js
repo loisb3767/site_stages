@@ -17,9 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
   mobile.setAttribute('aria-hidden', 'true');
   var headerSearch = document.querySelector('header .search-bar');
   var searchHTML = headerSearch ? headerSearch.outerHTML : '';
-  mobile.innerHTML = '<button class="mobile-nav-close" aria-label="Fermer le menu">&times;</button><div class="mobile-nav-content">' + searchHTML + nav.innerHTML + '</div>';document.body.appendChild(mobile);
-
-  
+  mobile.innerHTML = '<button class="mobile-nav-close" aria-label="Fermer le menu">&times;</button><div class="mobile-nav-content">' + searchHTML + nav.innerHTML + '</div>';
+  document.body.appendChild(mobile);
 
   var overlay = document.createElement('div');
   overlay.className = 'mobile-overlay';
@@ -52,80 +51,98 @@ document.addEventListener('DOMContentLoaded', function() {
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
+
+  // Recherche
+  var searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    var items = document.querySelectorAll('#itemList li');
+    searchInput.addEventListener('input', function () {
+      var filter = searchInput.value.toLowerCase().trim();
+      items.forEach(function(item) {
+        var text = item.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  }
 });
 
-
 // Header sticky sur desktop
+var lastScroll = 0;
+var siteHeader = document.getElementById("site-header");
 
-let lastScroll = 0;
-const header = document.getElementById("site-header");
-
-window.addEventListener("scroll", () => {
-  let currentScroll = window.pageYOffset;
-
+window.addEventListener("scroll", function() {
+  var currentScroll = window.pageYOffset;
   if (currentScroll > lastScroll) {
-    header.classList.add("hide"); // scroll vers le bas = cacher
+    siteHeader.classList.add("hide");
   } else {
-    header.classList.remove("hide"); // scroll vers le haut = afficher
+    siteHeader.classList.remove("hide");
   }
-
   lastScroll = currentScroll;
 });
 
 // Carousel Accueil
-document.querySelectorAll(".carousel-wrapper").forEach(wrapper => {
-    const track = wrapper.querySelector(".carousel-track");
-    const prevBtn = wrapper.querySelector(".prev");
-    const nextBtn = wrapper.querySelector(".next");
+document.querySelectorAll(".carousel-wrapper").forEach(function(wrapper) {
+    var track = wrapper.querySelector(".carousel-track");
+    var prevBtn = wrapper.querySelector(".prev");
+    var nextBtn = wrapper.querySelector(".next");
 
-    let index = 0;
-    const total = track.children.length;
+    var index = 0;
+    var total = track.children.length;
 
     function updateCarousel() {
-        track.style.transform = `translateX(-${index * 100}%)`;
+        track.style.transform = 'translateX(-' + (index * 100) + '%)';
     }
 
-    nextBtn.addEventListener("click", () => { 
-      if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); });
+    nextBtn.addEventListener("click", function() {
+      if (index < total - 1) { index++; } else { index = 0; } updateCarousel();
+    });
 
-    prevBtn.addEventListener("click", () => { 
-      if (index > 0) { index--; } else { index = total - 1; } updateCarousel(); });
+    prevBtn.addEventListener("click", function() {
+      if (index > 0) { index--; } else { index = total - 1; } updateCarousel();
+    });
 
-    //  Auto-slide
     if (wrapper.closest(".accueil")) {
-      setInterval(() => {
-          if (index < total - 1) { index++; } else { index = 0; } updateCarousel(); }, 5000);
+      setInterval(function() {
+          if (index < total - 1) { index++; } else { index = 0; } updateCarousel();
+      }, 5000);
     }
 });
 
-//Carousel Statistiques
-document.querySelectorAll(".carousel-wrapper-stats").forEach(wrapper => {
-    const track = wrapper.querySelector(".carousel-track-stats");
-    const prevBtn = wrapper.querySelector(".carousel-btn-stats.prev");
-    const nextBtn = wrapper.querySelector(".carousel-btn-stats.next");
+// Carousel Statistiques
+document.querySelectorAll(".carousel-wrapper-stats").forEach(function(wrapper) {
+    var track = wrapper.querySelector(".carousel-track-stats");
+    var prevBtn = wrapper.querySelector(".carousel-btn-stats.prev");
+    var nextBtn = wrapper.querySelector(".carousel-btn-stats.next");
 
-    let index = 0;
-    const total = track.children.length;
+    var index = 0;
+    var total = track.children.length;
 
     function updateCarousel() {
-        track.style.transform = `translateX(-${index * 100}%)`;
+        track.style.transform = 'translateX(-' + (index * 100) + '%)';
     }
 
-    nextBtn.addEventListener("click", () => {
+    nextBtn.addEventListener("click", function() {
         index = index < total - 1 ? index + 1 : 0;
         updateCarousel();
     });
 
-    prevBtn.addEventListener("click", () => {
+    prevBtn.addEventListener("click", function() {
         index = index > 0 ? index - 1 : total - 1;
         updateCarousel();
     });
 });
 
-//Postuler Offre Vérifications
+// Postuler — uniquement sur la page postuler
 document.addEventListener('DOMContentLoaded', function () {
-    // Vérification du CV à la sélection
-    document.getElementById('cv').addEventListener('change', function () {
+    var cvInput = document.getElementById('cv');
+    var formPostuler = document.getElementById('formPostuler');
+    if (!cvInput || !formPostuler) return;
+
+    cvInput.addEventListener('change', function () {
         var formats = ['.pdf', '.doc', '.docx', '.odt', '.rtf', '.jpg', '.jpeg', '.png'];
         var errCv = document.getElementById('err-cv');
         var file = this.files[0];
@@ -147,19 +164,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Validation à l'envoi
-    document.getElementById('formPostuler').addEventListener('submit', function (e) {
+    formPostuler.addEventListener('submit', function (e) {
         var valid = true;
-        
-        var cvInput = document.getElementById('cv');
         var errCv = document.getElementById('err-cv');
         if (cvInput.files.length === 0) {
             errCv.textContent = 'Veuillez ajouter votre CV.';
             errCv.style.display = 'block';
             valid = false;
         }
-
         if (!valid) e.preventDefault();
     });
-
 });
