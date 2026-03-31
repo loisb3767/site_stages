@@ -47,7 +47,10 @@ class TaskController extends Controller
             $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
         }
 
-        $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+        $user = null;
+        if (isset($_SESSION['user']['id_utilisateur'])) {
+            $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+        }
 
         foreach ($offres as &$offre) {
             $competences = $this->model->getCompetencesByOffreId($offre['id_offre']);
