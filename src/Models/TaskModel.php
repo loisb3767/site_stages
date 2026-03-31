@@ -103,44 +103,12 @@ class TaskModel extends Model
         return (int) $stmt->fetchColumn();
     }
             
-    public function getPaginatedOffres(int $page, int $parPage, array $competenceIds = []): array{
+    public function getPaginatedOffres(int $page, int $parPage, string $q = '', array $competenceIds = []): array
+    {
         $offset = ($page - 1) * $parPage;
 
-        if (empty($competenceIds)) {
-            $sql = "
-            SELECT
-                o.id_offre,
-                o.titre,
-                o.description,
-                o.gratification,
-                o.date_offre,
-                o.duree,
-                e.nom_entreprise,
-                s.nom_secteur
-                FROM offre o
-                INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
-                LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
-                WHERE o.date_offre >= CURDATE()
-                ORDER BY o.date_offre ASC, o.id_offre ASC
-                LIMIT :limit OFFSET :offset
-                ";
-
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
-                $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-                $stmt->execute();
-                return $stmt->fetchAll();
-                }
-        // paramètres dynamiques
-        $namedParams = [];
-        $placeholders = [];
-        foreach ($competenceIds as $index => $id) {
-            $param = ':comp' . $index;
-            $placeholders[] = $param;
-            $namedParams[$param] = $id;
-            }
         $sql = "
-                SELECT
+            SELECT
                 o.id_offre,
                 o.titre,
                 o.description,
@@ -152,27 +120,42 @@ class TaskModel extends Model
             FROM offre o
             INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
             LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
-            INNER JOIN offre_competence oc ON o.id_offre = oc.id_offre
+            " . (!empty($competenceIds) ? "INNER JOIN offre_competence oc ON o.id_offre = oc.id_offre" : "") . "
             WHERE o.date_offre >= CURDATE()
-            AND oc.id_competence IN (" . implode(',', $placeholders) . ")
-            GROUP BY
-                o.id_offre, o.titre, o.description, o.gratification,
-                o.date_offre, o.duree, e.nom_entreprise, s.nom_secteur
-            HAVING COUNT(DISTINCT oc.id_competence) = :nb
-            ORDER BY o.date_offre ASC, o.id_offre ASC
-            LIMIT :limit OFFSET :offset
         ";
 
-        $stmt = $this->pdo->prepare($sql);
+        $params = [];
 
-        foreach ($namedParams as $param => $value) {
-            $stmt->bindValue($param, $value, PDO::PARAM_INT);
+        if ($q !== '') {
+            $sql .= " AND (o.titre LIKE :q OR o.description LIKE :q OR e.nom_entreprise LIKE :q) ";
+            $params[':q'] = '%' . $q . '%';
         }
 
-        $stmt->bindValue(':nb', count($competenceIds), PDO::PARAM_INT);
+        if (!empty($competenceIds)) {
+            $placeholders = [];
+            foreach ($competenceIds as $i => $id) {
+                $ph = ':comp' . $i;
+                $placeholders[] = $ph;
+                $params[$ph] = $id;
+            }
+
+            $sql .= " AND oc.id_competence IN (" . implode(',', $placeholders) . ") ";
+            $sql .= "
+                GROUP BY o.id_offre, o.titre, o.description, o.gratification, o.date_offre, o.duree, e.nom_entreprise, s.nom_secteur
+                HAVING COUNT(DISTINCT oc.id_competence) = :nb
+            ";
+            $params[':nb'] = count($competenceIds);
+        }
+
+        $sql .= " ORDER BY o.date_offre ASC, o.id_offre ASC LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($params as $key => $value) {
+            $type = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+            $stmt->bindValue($key, $value, $type);
+        }
         $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-
         $stmt->execute();
 
         return $stmt->fetchAll();
