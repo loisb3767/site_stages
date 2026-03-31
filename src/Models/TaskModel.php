@@ -861,5 +861,22 @@ class TaskModel extends Model
             $stmt = $this->pdo->prepare("DELETE FROM entreprise WHERE id_entreprise = :id");
             return $stmt->execute([':id' => $id]);
         }
+
+        public function getWishlistOffreIdsByUserId(int $userId): array
+        {
+            $sql = "
+                SELECT id_offre
+                FROM wishlist
+                WHERE id_utilisateur = :id_utilisateur
+            ";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':id_utilisateur', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $rows = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+            return array_map('intval', $rows);
+        }
                 
 }
