@@ -14,8 +14,8 @@
     --light: color-mix(in srgb, #d8ecff 30%, var(--background-color) 70%);
     --light-rgb: 255, 255, 255;
     --light-blue: #afe0ff;
-    --error-color: #f00;
-    --good-color: #0f0;
+    --error-color: color-mix(in srgb, #f00 75%, var(--secondary-color) 25%);
+    --good-color: color-mix(in srgb, #0f0 75%, var(--primary-color) 25%);
 }
 
 /* Styles généraux */
@@ -679,11 +679,11 @@ button[type="login"] {
 }
 
 .alert.alert-success {
-    color: green;
+    color: var(--good-color);
 }
 
 .alert.alert-danger {
-    color: red;
+    color: var(--error-color);
 }
 
 /* ---------- */
@@ -1459,7 +1459,7 @@ main.game-mode #e404-num {
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
     text-decoration: none;
-    color: #1a1a1a;
+    color: var(--text-color);
     font-size: 0.9rem;
     font-weight: 500;
     transition: box-shadow 0.2s ease, transform 0.2s ease;
@@ -1468,7 +1468,7 @@ main.game-mode #e404-num {
 
 .Card-acc:link,
 .Card-acc:visited {
-    color: #1a1a1a;
+    color: var(--text-color);
     text-decoration: none;
 }
 
@@ -1476,6 +1476,10 @@ main.game-mode #e404-num {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     transform: translateY(-2px);
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2b60040a5e03bdc1353dd0fd8b32a241fd6a03f1
 .class-offer {
     display: flex;
     flex-direction: column;
