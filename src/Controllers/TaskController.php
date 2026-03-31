@@ -44,6 +44,13 @@ class TaskController extends Controller
 
         $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
 
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+
         foreach ($offres as &$offre) {
             $competences = $this->model->getCompetencesByOffreId($offre['id_offre']);
             $offre['competences'] = array_map(
@@ -59,6 +66,8 @@ class TaskController extends Controller
             'page' => $currentPage,
             'nbPages' => $nbPages,
             'active_page' => 'offres',
+            'user' => $user,
+            'session' => $_SESSION,
         ]);
     }
 

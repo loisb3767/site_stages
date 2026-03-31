@@ -48,24 +48,15 @@
                     <p class="secteur"><strong>Secteur :</strong> {{ offre.nom_secteur ?: 'Non renseigné' }}</p>
                     <p><strong>Date de l'offre :</strong> {{ offre.date_offre|date("d/m/Y") }}</p>
                     
-                    {% if offre.competences is not empty %}
-                        {% for comp in offre.competences %}
-                            <div class="competence-bar">{{ comp }}</div>
-                        {% endfor %}
-                    {% else %}
-                        <p>Aucune compétence renseignée</p>
-                    {% endif %}
 
                     <p class="resume">{{ offre.description }}</p>
                 </div>
 
-                {% if user.id_role == 1 %}
-                    <a href="index.php?page=modifier_profil" class="btn-deco">SUPPRIMER</a>
-                    <a href="index.php?page=modifier_profil" class="btn-deco">MODIFIER</a>
-                {% elseif user.id_role == 2 %}
-                    <a href="index.php?page=modifier_profil" class="btn-deco">SUPPRIMER</a>
-                    <a href="index.php?page=modifier_profil" class="btn-deco">MODIFIER</a>
+                {% if user.id_role == 1 or user.id_role == 2 %}
+                        <a href="index.php?page=modifier_profil" class="btn-sup">SUPPRIMER</a>
+                        <a href="index.php?page=modifier_profil" class="btn-sup">MODIFIER</a>
                 {% endif %}
+
 
                 <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
                     plus d'info
