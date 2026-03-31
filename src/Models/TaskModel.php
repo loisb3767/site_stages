@@ -800,5 +800,55 @@ class TaskModel extends Model
             $stmt = $this->pdo->query($sql);
             return $stmt->fetchAll();
         }
+
+
+        public function getEntrepriseById(int $id): array|null {
+            $sql = "SELECT * FROM entreprise WHERE id_entreprise = :id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            $result = $stmt->fetch();
+            return $result ?: null;
+        }
+
+        public function updateEntreprise(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur): bool {
+            $sql = "UPDATE entreprise SET
+                        nom_entreprise = :nom,
+                        description = :description,
+                        email = :email,
+                        telephone = :telephone,
+                        id_secteur = :id_secteur
+                    WHERE id_entreprise = :id";
+
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([
+                ':id' => $id,
+                ':nom' => $nom,
+                ':description' => $description,
+                ':email' => $email,
+                ':telephone' => $telephone,
+                ':id_secteur' => $id_secteur
+            ]);
+        }
+
+        public function deleteEntreprise(int $id): bool {
+            // 1. Supprimer les adresses liées
+            $stmt = $this->pdo->prepare("DELETE FROM entreprise_adresse WHERE id_entreprise = :id");
+            $stmt->execute([':id' => $id]);
+
+            // 2. Supprimer les avis liés
+            $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_entreprise = :id");
+            $stmt->execute([':id' => $id]);
+
+            // 3. Supprimer les offres liées (et leurs dépendances)
+            $offres = $this->pdo->prepare("SELECT id_offre FROM offre WHERE id_entreprise = :id");
+            $offres->execute([':id' => $id]);
+            foreach ($offres->fetchAll() as $offre) {
+                $this->deleteOffre($offre['id_offre']);
+            }
+
+            // 4. Supprimer l'entreprise
+            $stmt = $this->pdo->prepare("DELETE FROM entreprise WHERE id_entreprise = :id");
+            return $stmt->execute([':id' => $id]);
+        }
                 
 }

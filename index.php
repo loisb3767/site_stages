@@ -105,6 +105,14 @@ switch ($page) {
         $controller -> ajouterOffrePage();
         break;
 
+    case 'modifier_entreprise':
+        $controller -> modifierEntreprisePage();
+        break;
+
+    case 'supprimer_entreprise':
+        $controller -> supprimerEntreprise();
+        break;
+
     default:
         $controller -> e404Page();
         break;
