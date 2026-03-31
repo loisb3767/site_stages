@@ -31,7 +31,7 @@
             </ul>
 
             <button type="submit">Filtrer</button>
-            <a href="index.php?page=offres">Réinitialiser</a>
+            <a href="index.php?page=offres" class="Reinitialiser-btn">Réinitialiser</a>
         </form>
     </aside>
 
@@ -41,8 +41,8 @@
                 <div class="offer-info">
                     <div class="offer-actions">
                         <h3>{{ offre.titre }}</h3>
-                        {% if user.id_role != 0 %}
-                                <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-deco">MODIFIER</a>
+                        {% if user.id_role > 0 %}
+                                <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-modifier">MODIFIER</a>
                         {% endif %}
                     </div>
                     
@@ -62,19 +62,18 @@
                     <p class="resume">{{ offre.description }}</p>
                 </div>
 
-                {% if user.id_role == 1 or user.id_role == 2 %}
+                <div class="offer-suppr-info">
+                    <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
+                        plus d'info
+                    </a>
+
+                    {% if user.id_role > 0 %}
                         <form method="POST" action="index.php?page=supprimer_offre">
                             <input type="hidden" name="id_offre" value="{{ offre.id_offre }}">
-                            <button type="submit" class="btn-deco">SUPPRIMER</button>
+                            <button type="submit" class="btn-supprimer">SUPPRIMER</button>
                         </form>
-                        <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-deco">MODIFIER</a>
-                {% endif %}
-
-
-                <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
-                    plus d'info
-                </a>
-                
+                    {% endif %}
+                </div>
             </article>
             
         {% else %}

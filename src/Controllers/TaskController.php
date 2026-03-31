@@ -47,12 +47,10 @@ class TaskController extends Controller
             $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
         }
 
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?page=connexion');
-            exit;
+        $user = null;
+        if (isset($_SESSION['user']['id_utilisateur'])) {
+            $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
         }
-
-        $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
 
         foreach ($offres as &$offre) {
             $competences = $this->model->getCompetencesByOffreId($offre['id_offre']);
@@ -241,7 +239,7 @@ class TaskController extends Controller
             'session' => $_SESSION
         ]);
     }
-    public function mes_offres() {
+    public function mon_espace() {
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=connexion');
             exit;
@@ -249,12 +247,14 @@ class TaskController extends Controller
 
         $id_utilisateur = $_SESSION['user']['id_utilisateur'];
         $wishlist = $this->model->getWishlistByUserId($id_utilisateur);
+        $offresDejaPostules = $this->model->offresDejaPostules($id_utilisateur);
 
-        echo $this->templateEngine->render('mes_offres.twig.html', [
+        echo $this->templateEngine->render('mon_espace.twig.html', [
             'wishlist' => $wishlist,
+            'offresDejaPostules' => $offresDejaPostules,
             'session' => $_SESSION
         ]);
-    }
+    }   
 
     public function entreprises(): void
     {
