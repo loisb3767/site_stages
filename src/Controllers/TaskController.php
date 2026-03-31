@@ -53,6 +53,7 @@ class TaskController extends Controller
         }
 
         $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+        $wishlistOffreIds = $this->model->getWishlistOffreIdsByUserId($_SESSION['user']['id_utilisateur']);
 
         foreach ($offres as &$offre) {
             $competences = $this->model->getCompetencesByOffreId($offre['id_offre']);
@@ -72,6 +73,7 @@ class TaskController extends Controller
             'user' => $user,
             'session' => $_SESSION,
             'q' => $q,
+            'wishlistOffreIds' => $wishlistOffreIds,
         ]);
     }
 
@@ -329,7 +331,7 @@ class TaskController extends Controller
         }
         $p=isset($_GET['p']) ? (int) $_GET['p'] : 1;
         $this->model->addToWishlist($_SESSION['user']['id_utilisateur'], $idOffre);
-        header('Location: index.php?page=offres&p=' . $p);
+        header('Location: index.php?page=offres&p=' . $p );
         exit;
     }
 
@@ -394,7 +396,6 @@ class TaskController extends Controller
             'success' => $success,
         ]);
     }
-
 
 
 }

@@ -18,12 +18,7 @@
                     <img src="projet-static.local/images/JOB_2_MAIN_mini.png" alt="Logo Job2main">
                 </div>
                 </a>
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="recherche précise" aria-label="Recherche">
-                    <button class="search-btn" aria-label="Rechercher">
-                        <img src="projet-static.local/images/search_icon.png" alt="Rechercher">
-                    </button>
-                </div>
+                {% block search_bar %}{% endblock %}
             </div>
             <nav class="navbar">
                 {% if page_active == 'accueil' %}

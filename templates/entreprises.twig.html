@@ -3,6 +3,15 @@
 {% block title %}Parcours des offres - Job2main{% endblock %}
 {% block description %}Parcourez nos entreprises !{% endblock %}
 
+{% block search_bar %}
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="recherche précise" aria-label="Recherche">
+        <button class="search-btn" aria-label="Rechercher">
+            <img src="projet-static.local/images/search_icon.png" alt="Rechercher">
+        </button>
+    </div>
+{% endblock %}
+
 {% block body %}
 <div class="offers-page">
     <aside class="sidebar">
