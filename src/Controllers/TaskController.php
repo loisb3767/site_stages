@@ -182,6 +182,7 @@ class TaskController extends Controller
 
         echo $this->templateEngine->render('postuler.twig.html', [
             'offre' => $offre,
+            'user' => $_SESSION['user'],
             'error' => $error,
             'status' => $status,
         ]);
