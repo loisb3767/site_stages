@@ -71,7 +71,7 @@
 
         <div class="pagination">
             {% if page > 1 %}
-                <a href="?page=offres&p={{ page - 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                <a href="?page=entreprises&p={{ page - 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
                     Précédent
                 </a>
             {% endif %}
@@ -79,7 +79,7 @@
             <span class="page-info">Page {{ page }} sur {{ nbPages }}</span>
 
             {% if page < nbPages %}
-                <a href="?page=offres&p={{ page + 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                <a href="?page=entreprises&p={{ page + 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
                     Suivant
                 </a>
             {% endif %}
