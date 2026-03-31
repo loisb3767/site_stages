@@ -487,7 +487,7 @@ class TaskModel extends Model
         ':password' => $password,
         ':id_role' => $id_role
     ]);
-}
+    }
 
     public function getAllRoles() {
         $sql = "SELECT id_role, nom_role FROM role ORDER BY id_role";
@@ -572,41 +572,40 @@ class TaskModel extends Model
         return (int) $stmt->fetchColumn();
     }
 
-    public function getPaginatedEntreprises(int $page, int $parPage, array $secteurs = []): array
-    {
-    $offset = ($page - 1) * $parPage;
+    public function getPaginatedEntreprises(int $page, int $parPage, array $secteurs = []): array{
+        $offset = ($page - 1) * $parPage;
 
-    if (empty($secteurs)) {
-        $sql = "SELECT * FROM entreprise LIMIT ? OFFSET ?";
+        if (empty($secteurs)) {
+            $sql = "SELECT * FROM entreprise LIMIT ? OFFSET ?";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(1, $parPage, PDO::PARAM_INT);
+            $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+
+        $placeholders = implode(',', array_fill(0, count($secteurs), '?'));
+
+        $sql = "
+            SELECT *
+            FROM entreprise
+            WHERE id_secteur IN ($placeholders)
+            LIMIT ? OFFSET ?
+        ";
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(1, $parPage, PDO::PARAM_INT);
-        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+
+        $i = 1;
+        foreach ($secteurs as $secteur) {
+            $stmt->bindValue($i++, $secteur, PDO::PARAM_INT);
+        }
+
+        $stmt->bindValue($i++, $parPage, PDO::PARAM_INT);
+        $stmt->bindValue($i, $offset, PDO::PARAM_INT);
+
         $stmt->execute();
+
         return $stmt->fetchAll();
-    }
-
-    $placeholders = implode(',', array_fill(0, count($secteurs), '?'));
-
-    $sql = "
-        SELECT *
-        FROM entreprise
-        WHERE id_secteur IN ($placeholders)
-        LIMIT ? OFFSET ?
-    ";
-
-    $stmt = $this->pdo->prepare($sql);
-
-    $i = 1;
-    foreach ($secteurs as $secteur) {
-        $stmt->bindValue($i++, $secteur, PDO::PARAM_INT);
-    }
-
-    $stmt->bindValue($i++, $parPage, PDO::PARAM_INT);
-    $stmt->bindValue($i, $offset, PDO::PARAM_INT);
-
-    $stmt->execute();
-
-    return $stmt->fetchAll();
     }
 
     public function getSecteursByEntrepriseId(int $id): array
@@ -665,18 +664,18 @@ class TaskModel extends Model
         }
 
     public function getNbCandidaturesParOffre(): float
-        {
-            $sql = "
-                SELECT AVG(nb_candidatures) FROM (
-                    SELECT COUNT(c.id_candidature) AS nb_candidatures
-                    FROM offre o
-                    LEFT JOIN candidature c ON c.id_offre = o.id_offre
-                    GROUP BY o.id_offre
-                ) AS sous_requete
-            ";
+    {
+        $sql = "
+            SELECT AVG(nb_candidatures) FROM (
+                SELECT COUNT(c.id_candidature) AS nb_candidatures
+                FROM offre o
+                LEFT JOIN candidature c ON c.id_offre = o.id_offre
+                GROUP BY o.id_offre
+            ) AS sous_requete
+        ";
 
-            $stmt = $this->pdo->query($sql);
-            return round((float) $stmt->fetchColumn(), 1);
+        $stmt = $this->pdo->query($sql);
+        return round((float) $stmt->fetchColumn(), 1);
     }
 
     public function getPaginatedOffresSearch(int $page, int $parPage, string $q): array
@@ -747,23 +746,6 @@ class TaskModel extends Model
         $stmt->execute();
         return (int) $stmt->fetchColumn();
     }
-    public function deleteOffre(int $id): bool {
-        // Supprimer les compétences liées à l'offre
-        $stmt = $this->pdo->prepare("DELETE FROM offre_competence WHERE id_offre = :id");
-        $stmt->execute([':id' => $id]);
-
-        // Supprimer les candidatures liées à l'offre
-        $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_offre = :id");
-        $stmt->execute([':id' => $id]);
-
-        // Supprimer les wishlists liées à l'offre
-        $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_offre = :id");
-        $stmt->execute([':id' => $id]);
-
-        // Supprimer l'offre
-        $stmt = $this->pdo->prepare("DELETE FROM offre WHERE id_offre = :id");
-        return $stmt->execute([':id' => $id]);
-    }
 
     public function deleteOffre(int $id): bool {
         // Supprimer les compétences liées à l'offre
@@ -791,34 +773,6 @@ class TaskModel extends Model
                     date_offre = :date_offre,
                     duree = :duree
                 WHERE id_offre = :id";
-
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':id' => $id,
-            ':titre' => $titre,
-            ':description' => $description,
-            ':gratification' => $gratification,
-            ':date_offre' => $date_offre,
-            ':duree' => $duree
-        ]);
-    }
-
-    public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise, array $competences = []): bool {
-        // Insérer l'offre
-        $sql = "INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise)
-                VALUES (:titre, :description, :gratification, :date_offre, :duree, :id_entreprise)";
-
-        $stmt = $this->pdo->prepare($sql);
-        $result = $stmt->execute([
-            ':titre' => $titre,
-            ':description' => $description,
-            ':gratification' => $gratification,
-            ':date_offre' => $date_offre,
-            ':duree' => $duree,
-            ':id_entreprise' => $id_entreprise
-        ]);
-
-        if (!$result) return false;
 
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
@@ -907,64 +861,6 @@ class TaskModel extends Model
         return $this->geocodeAdresseIfNeeded($entreprise);
     }
 
-    public function updateEntreprise(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur): bool {
-        $sql = "UPDATE entreprise SET
-                    nom_entreprise = :nom,
-                    description = :description,
-                    email = :email,
-                    telephone = :telephone,
-                    id_secteur = :id_secteur
-                WHERE id_entreprise = :id";
-
-        $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute([
-            ':id' => $id,
-            ':nom' => $nom,
-            ':description' => $description,
-            ':email' => $email,
-            ':telephone' => $telephone,
-            ':id_secteur' => $id_secteur
-        ]);
-    }
-
-    public function deleteEntreprise(int $id): bool {
-        // Supprimer les adresses liées
-        $stmt = $this->pdo->prepare("DELETE FROM entreprise_adresse WHERE id_entreprise = :id");
-        $stmt->execute([':id' => $id]);
-
-        // Supprimer les avis liés
-        $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_entreprise = :id");
-        $stmt->execute([':id' => $id]);
-
-        // Supprimer les offres liées (et leurs dépendances)
-        $offres = $this->pdo->prepare("SELECT id_offre FROM offre WHERE id_entreprise = :id");
-        $offres->execute([':id' => $id]);
-        foreach ($offres->fetchAll() as $offre) {
-            $this->deleteOffre($offre['id_offre']);
-        }
-
-        // Supprimer l'entreprise
-        $stmt = $this->pdo->prepare("DELETE FROM entreprise WHERE id_entreprise = :id");
-        return $stmt->execute([':id' => $id]);
-    }
-
-    public function getWishlistOffreIdsByUserId(int $userId): array
-    {
-        $sql = "
-            SELECT id_offre
-            FROM wishlist
-            WHERE id_utilisateur = :id_utilisateur
-        ";
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':id_utilisateur', $userId, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $rows = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-        return array_map('intval', $rows);
-    }
-
     public function getOffresByEntrepriseId(int $id): array {
         $sql = "SELECT id_offre, titre, description, gratification, date_offre, duree
                 FROM offre
@@ -976,30 +872,30 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-        public function createEntreprise(string $nom, string $description, string $email, string $telephone, ?int $id_secteur, string $nom_rue = '', string $code_postal = '', string $ville = ''): bool {
-            // Créer l'entreprise
-            $sql = "INSERT INTO entreprise (nom_entreprise, description, email, telephone, id_secteur)
-                    VALUES (:nom, :description, :email, :telephone, :id_secteur)";
+    public function createEntreprise(string $nom, string $description, string $email, string $telephone, ?int $id_secteur, string $nom_rue = '', string $code_postal = '', string $ville = ''): bool {
+        // Créer l'entreprise
+        $sql = "INSERT INTO entreprise (nom_entreprise, description, email, telephone, id_secteur)
+                VALUES (:nom, :description, :email, :telephone, :id_secteur)";
 
-            $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute([
-                ':nom' => $nom,
-                ':description' => $description,
-                ':email' => $email,
-                ':telephone' => $telephone,
-                ':id_secteur' => $id_secteur
-            ]);
+        $stmt = $this->pdo->prepare($sql);
+        $result = $stmt->execute([
+            ':nom' => $nom,
+            ':description' => $description,
+            ':email' => $email,
+            ':telephone' => $telephone,
+            ':id_secteur' => $id_secteur
+        ]);
 
         // Récupérer l'id de l'offre créée
         $id_offre = (int)$this->pdo->lastInsertId();
 
         // Insérer les compétences
-            if (!empty($competences)) {
-            $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
-            foreach ($competences as $id_competence) {
+        if (!empty($competences)) {
+        $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
+        foreach ($competences as $id_competence) {
                 $stmt->execute([
                     ':id_offre' => $id_offre,
-                    ':id_competence' => $id_competence
+                    ':id_competence' => $id_competence]);
             $id_entreprise = (int)$this->pdo->lastInsertId();
 
             // Créer l'adresse 
@@ -1023,18 +919,14 @@ class TaskModel extends Model
                 $stmt = $this->pdo->prepare($sql);
                 $stmt->execute([
                     ':id_entreprise' => $id_entreprise,
-                    ':id_adresse' => $id_adresse
+                '   :id_adresse' => $id_adresse
                 ]);
             }
         }
 
         return true;
-    }
+        }
 
-    public function getAllEntreprises(): array {
-        $sql = "SELECT id_entreprise, nom_entreprise FROM entreprise ORDER BY nom_entreprise ASC";
-        $stmt = $this->pdo->query($sql);
-        return $stmt->fetchAll();
     }
 
 
@@ -1203,6 +1095,7 @@ class TaskModel extends Model
             }
 
             return true;
+        
         }
                 
 }
