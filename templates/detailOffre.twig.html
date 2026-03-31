@@ -48,6 +48,14 @@
                 {{ offre.duree ? offre.duree : 'Non précisée' }}
             </p>
 
+            <p>
+                {% if offre.gratification and offre.gratification > 0 %}
+                    <strong>Gratification :</strong> {{ offre.gratification }} €
+                {% else %}
+                    <strong>Gratification :</strong> Non précisée
+                {% endif %}
+            </p>
+
             <hr>
             <p class="resume">
                 {{ offre.description ? offre.description|slice(0, 140) ~ '...' : 'Aucun résumé disponible.' }}
