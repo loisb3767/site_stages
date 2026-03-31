@@ -529,7 +529,7 @@ class TaskModel extends Model
     }
 
     public function offresDejaPostules($id) {
-    $sql = "SELECT o.titre, o.description, c.date_candidature, c.id_offre
+    $sql = "SELECT o.titre, o.description, c.date_candidature, c.id_offre, c.statut
             FROM candidature c
             JOIN offre o ON c.id_offre = o.id_offre
             WHERE c.id_utilisateur = :id";
