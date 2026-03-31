@@ -30,22 +30,15 @@ class TaskController extends Controller
             ? array_map('intval', $_GET['competences'])
             : [];
 
-        if ($q !== '') {
-            $totalOffres = $this->model->getTotalCountSearch($q);
-        } else {
-            $totalOffres = $this->model->getTotalCount($selectedCompetences);
-        }
-
-        $nbPages = ($totalOffres > 0) ? (int) ceil($totalOffres / $parPage) : 1;
         $currentPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
         if ($currentPage < 1) $currentPage = 1;
+
+        $totalOffres = $this->model->getTotalCount($selectedCompetences, $q);
+        $nbPages = ($totalOffres > 0) ? (int) ceil($totalOffres / $parPage) : 1;
+
         if ($currentPage > $nbPages) $currentPage = $nbPages;
 
-        if ($q !== '') {
-            $offres = $this->model->getPaginatedOffresSearch($currentPage, $parPage, $q);
-        } else {
-            $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
-        }
+        $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $q, $selectedCompetences);
 
         $user = null;
         if (isset($_SESSION['user']['id_utilisateur'])) {
