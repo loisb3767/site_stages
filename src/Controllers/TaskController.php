@@ -459,6 +459,8 @@ class TaskController extends Controller
         }
 
         $offres = $this->model->getOffresByEntrepriseId($id);
+        $secteurs = $this->model->getSecteursByEntrepriseId($id);
+        $entreprise['secteurs'] = array_map(fn($sect) => $sect['nom_secteur'], $secteurs);
 
         echo $this->templateEngine->render('detailEntreprise.twig.html', [
             'entreprise' => $entreprise,
