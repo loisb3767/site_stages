@@ -379,6 +379,7 @@ class TaskController extends Controller
         }
 
         $entreprises = $this->model->getAllEntreprises();
+        $competences = $this->model->getAllCompetences();
 
         $error = $_SESSION['error'] ?? null;
         $success = $_SESSION['success'] ?? null;
@@ -386,6 +387,7 @@ class TaskController extends Controller
 
         echo $this->templateEngine->render('ajouterOffre.twig.html', [
             'entreprises' => $entreprises,
+            'competences' => $competences,
             'user' => $_SESSION['user'] ?? null,
             'session' => $_SESSION,
             'error' => $error,
