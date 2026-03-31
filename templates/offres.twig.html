@@ -59,6 +59,14 @@
                     <p class="resume">{{ offre.description }}</p>
                 </div>
 
+                {% if user.id_role == 1 %}
+                    <a href="index.php?page=modifier_profil" class="btn-deco">SUPPRIMER</a>
+                    <a href="index.php?page=modifier_profil" class="btn-deco">MODIFIER</a>
+                {% elseif user.id_role == 2 %}
+                    <a href="index.php?page=modifier_profil" class="btn-deco">SUPPRIMER</a>
+                    <a href="index.php?page=modifier_profil" class="btn-deco">MODIFIER</a>
+                {% endif %}
+
                 <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
                     plus d'info
                 </a>
