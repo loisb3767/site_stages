@@ -24,25 +24,28 @@ class TaskController extends Controller
     public function offresPage(): void
     {
         $parPage = 10;
+        $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 
         $selectedCompetences = isset($_GET['competences']) && is_array($_GET['competences'])
             ? array_map('intval', $_GET['competences'])
             : [];
 
-        $totalOffres = $this->model->getTotalCount($selectedCompetences);
+        if ($q !== '') {
+            $totalOffres = $this->model->getTotalCountSearch($q);
+        } else {
+            $totalOffres = $this->model->getTotalCount($selectedCompetences);
+        }
+
         $nbPages = ($totalOffres > 0) ? (int) ceil($totalOffres / $parPage) : 1;
-
         $currentPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
+        if ($currentPage < 1) $currentPage = 1;
+        if ($currentPage > $nbPages) $currentPage = $nbPages;
 
-        if ($currentPage < 1) {
-            $currentPage = 1;
+        if ($q !== '') {
+            $offres = $this->model->getPaginatedOffresSearch($currentPage, $parPage, $q);
+        } else {
+            $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
         }
-
-        if ($currentPage > $nbPages) {
-            $currentPage = $nbPages;
-        }
-
-        $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
 
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=connexion');
@@ -68,33 +71,7 @@ class TaskController extends Controller
             'active_page' => 'offres',
             'user' => $user,
             'session' => $_SESSION,
-        ]);
-    }
-
-    public function detailOffrePage(): void
-    {
-        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-
-        if ($id <= 0) {
-            die('ID offre invalide.');
-        }
-
-        $offre = $this->model->getOffreById($id);
-
-        if (!$offre) {
-            die('Offre introuvable.');
-        }
-
-        $competences = $this->model->getCompetencesByOffreId($id);
-
-        $offre['competences'] = array_map(
-            fn($comp) => $comp['nom_competence'],
-            $competences
-        );
-
-        echo $this->templateEngine->render('detailOffre.twig.html', [
-            'offre' => $offre,
-            'active_page' => 'offres',
+            'q' => $q,
         ]);
     }
 
@@ -252,38 +229,35 @@ class TaskController extends Controller
         ]);
     }
 
-
-    public function entreprises(): void{
+    public function entreprises(): void
+    {
         $parPage = 10;
-        // Si tu veux filtrer par secteur par exemple
+        $q = isset($_GET['q']) ? trim($_GET['q']) : '';
+
         $selectedSecteurs = isset($_GET['secteurs']) && is_array($_GET['secteurs'])
             ? array_map('intval', $_GET['secteurs'])
             : [];
 
-        // Total entreprises
-        $totalEntreprises = $this->model->getTotalEntreprises($selectedSecteurs);
+        if ($q !== '') {
+            $totalEntreprises = $this->model->getTotalEntreprisesSearch($q);
+        } else {
+            $totalEntreprises = $this->model->getTotalEntreprises($selectedSecteurs);
+        }
+
         $nbPages = ($totalEntreprises > 0) ? (int) ceil($totalEntreprises / $parPage) : 1;
-
         $currentPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
+        if ($currentPage < 1) $currentPage = 1;
+        if ($currentPage > $nbPages) $currentPage = $nbPages;
 
-        if ($currentPage < 1) {
-            $currentPage = 1;
+        if ($q !== '') {
+            $entreprises = $this->model->getPaginatedEntreprisesSearch($currentPage, $parPage, $q);
+        } else {
+            $entreprises = $this->model->getPaginatedEntreprises($currentPage, $parPage, $selectedSecteurs);
         }
 
-        if ($currentPage > $nbPages) {
-            $currentPage = $nbPages;
-        }
-
-        // Récupération des entreprises paginées
-        $entreprises = $this->model->getPaginatedEntreprises($currentPage, $parPage, $selectedSecteurs);
-
-        // Exemple : ajouter des infos liées (facultatif)
         foreach ($entreprises as &$entreprise) {
             $secteurs = $this->model->getSecteursByEntrepriseId($entreprise['id_entreprise']);
-            $entreprise['secteurs'] = array_map(
-                fn($s) => $s['nom_secteur'],
-                $secteurs
-            );
+            $entreprise['secteurs'] = array_map(fn($s) => $s['nom_secteur'], $secteurs);
         }
 
         echo $this->templateEngine->render('entreprises.twig.html', [
@@ -294,6 +268,7 @@ class TaskController extends Controller
             'nbPages' => $nbPages,
             'active_page' => 'entreprises',
             'session' => $_SESSION,
+            'q' => $q,
         ]);
     }
 
