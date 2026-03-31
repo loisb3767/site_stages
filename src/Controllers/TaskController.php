@@ -284,6 +284,7 @@ class TaskController extends Controller
             'page' => $currentPage,
             'nbPages' => $nbPages,
             'active_page' => 'entreprises',
+            'session' => $_SESSION,
         ]);
     }
 
