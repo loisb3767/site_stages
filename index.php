@@ -119,6 +119,14 @@ switch ($page) {
     case 'liste_admin':
         $controller -> liste_adminPage();
         break;
+    case 'detail_entreprise':
+        $controller -> detailEntreprisePage();
+        break;
+
+    case 'creer_entreprise':
+        $controller -> creerEntreprisePage();
+        break;
+
     default:
         $controller -> e404Page();
         break;

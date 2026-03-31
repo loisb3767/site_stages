@@ -15,6 +15,7 @@
                 {% if entreprise %}
                     <form action="formulaireModifEntreprise.php" method="post">
                         <input type="hidden" name="id_entreprise" value="{{ entreprise.id_entreprise }}">
+                        <input type="hidden" name="id_adresse" value="{{ adresse.id_adresse ?? '' }}">
 
                         <div class="input-group">
                             <label for="nom_entreprise">Nom</label>
@@ -47,6 +48,21 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="nom_rue">Rue</label>
+                            <input id="nom_rue" name="nom_rue" type="text" value="{{ adresse.nom_rue ?? '' }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="code_postal">Code postal</label>
+                            <input id="code_postal" name="code_postal" type="text" value="{{ adresse.code_postal ?? '' }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="ville">Ville</label>
+                            <input id="ville" name="ville" type="text" value="{{ adresse.ville ?? '' }}">
                         </div>
 
                         {% if session.success %}

@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-
 if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 0) {
     $_SESSION['error'] = "Accès non autorisé.";
     header('Location: index.php?page=connexion');
@@ -20,34 +19,12 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 0) {
 }
 
 $id = $_SESSION['user']['id_utilisateur'];
-$nom = trim($_POST['fullname'] ?? '');
-$prenom = trim($_POST['firstname'] ?? '');
-$email = trim($_POST['email'] ?? '');
-$telephone = trim($_POST['phone'] ?? '');
+$nom = $_SESSION['user']['nom_utilisateur'];
+$prenom = $_SESSION['user']['prenom_utilisateur'];
+$email = $_SESSION['user']['email'];
+$telephone = $_SESSION['user']['telephone'];
 $password = trim($_POST['password'] ?? '');
 $confirm_password = trim($_POST['confirm_password'] ?? '');
-
-
-if (empty($nom) || empty($prenom) || empty($email)) {
-    $_SESSION['error'] = "Le nom, prénom et email sont obligatoires.";
-    header('Location: index.php?page=modifier_profil');
-    exit;
-}
-
-
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $_SESSION['error'] = "Format d'email invalide.";
-    header('Location: index.php?page=modifier_profil');
-    exit;
-}
-
-
-$existingUser = $model->getUserByEmail($email);
-if ($existingUser && $existingUser['id_utilisateur'] != $id) {
-    $_SESSION['error'] = "Cet email est déjà utilisé par un autre compte.";
-    header('Location: index.php?page=modifier_profil');
-    exit;
-}
 
 if (!empty($password)) {
     if ($password !== $confirm_password) {
@@ -61,8 +38,9 @@ if (!empty($password)) {
         header('Location: index.php?page=modifier_profil');
         exit;
     }
-}
 
+    $password = password_hash($password, PASSWORD_DEFAULT); // <- hash ici
+}
 
 $success = $model->updateUser(
     $id,
@@ -70,7 +48,7 @@ $success = $model->updateUser(
     $prenom,
     $email,
     $telephone,
-    !empty($password) ? $password : null 
+    !empty($password) ? $password : null
 );
 
 if ($success) {

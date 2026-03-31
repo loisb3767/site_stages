@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const lat = parseFloat(mapEl.dataset.lat);
   const lng = parseFloat(mapEl.dataset.lng);
-  const title = mapEl.dataset.title || 'Offre';
+  const title = mapEl.dataset.title || 'Localisation';
 
   if (isNaN(lat) || isNaN(lng)) return;
 
@@ -16,4 +16,5 @@ document.addEventListener('DOMContentLoaded', function () {
   }).addTo(map);
 
   L.marker([lat, lng]).addTo(map).bindPopup(title).openPopup();
+
 });

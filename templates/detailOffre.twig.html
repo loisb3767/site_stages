@@ -62,9 +62,23 @@
             </p>
         </div>
 
-        <a href="index.php?page=postuler&id={{ offre.id_offre }}" class="btn-postuler">
-            Postuler maintenant
-        </a>
+        <div>
+            {% if user.id_role == 0 %}
+                {% if offre.id_offre in wishlistOffreIds %}
+                    <a href="index.php?page=supprimer_wishlist&id={{ offre.id_offre}}" class="btn-mes-offres btn-mes-offres-supprimer">Supprimer wishlist</a>
+                {% else %}
+                    <a href="index.php?page=ajouter_wishlist&id={{ offre.id_offre}}" class="btn-mes-offres">Ajouter wishlist</a>
+                {% endif %}
+                <a href="index.php?page=postuler&id={{ offre.id_offre }}" class="btn-postuler">
+                    Postuler maintenant
+                </a>
+            {% else %}
+                <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-modifier" style="color:var(--primary-color); text-decoration: none;">MODIFIER</a>
+            {% endif %}
+            <a href="index.php?page=offres" class="btn-postuler">
+                Retour aux offres
+            </a>
+        </div>
     </article>
 </section>
 {% endblock %}
