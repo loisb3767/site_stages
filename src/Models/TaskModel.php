@@ -930,5 +930,61 @@ class TaskModel extends Model
         $stmt->execute([':id' => $id]);
         return $stmt->fetchAll();
     }
+
+        public function createEntreprise(string $nom, string $description, string $email, string $telephone, ?int $id_secteur, string $nom_rue = '', string $code_postal = '', string $ville = ''): bool {
+            // Créer l'entreprise
+            $sql = "INSERT INTO entreprise (nom_entreprise, description, email, telephone, id_secteur)
+                    VALUES (:nom, :description, :email, :telephone, :id_secteur)";
+
+            $stmt = $this->pdo->prepare($sql);
+            $result = $stmt->execute([
+                ':nom' => $nom,
+                ':description' => $description,
+                ':email' => $email,
+                ':telephone' => $telephone,
+                ':id_secteur' => $id_secteur
+            ]);
+
+            if (!$result) return false;
+
+            $id_entreprise = (int)$this->pdo->lastInsertId();
+
+            // Créer l'adresse 
+            if (!empty($nom_rue) || !empty($code_postal)) {
+                $sql = "INSERT INTO adresse (nom_rue, code_postal, ville)
+                        VALUES (:nom_rue, :code_postal, :ville)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':nom_rue' => $nom_rue,
+                    ':code_postal' => $code_postal ?: '00000',
+                    ':ville' => $ville
+                ]);
+
+                $id_adresse = (int)$this->pdo->lastInsertId();
+
+                // Lier l'adresse à l'entreprise
+                $sql = "INSERT INTO entreprise_adresse (id_entreprise, id_adresse)
+                        VALUES (:id_entreprise, :id_adresse)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':id_entreprise' => $id_entreprise,
+                    ':id_adresse' => $id_adresse
+                ]);
+            }
+
+            return true;
+        }
+
+        public function getAllUsers(): array {
+            $stmt = $this->pdo->query("SELECT id_utilisateur, mot_de_passe FROM utilisateur");
+            return $stmt->fetchAll();
+        }
+
+        public function updatePasswordById(int $id, string $password): bool {
+            $stmt = $this->pdo->prepare("UPDATE utilisateur SET mot_de_passe = :password WHERE id_utilisateur = :id");
+            return $stmt->execute([':password' => $password, ':id' => $id]);
+        }
                 
 }

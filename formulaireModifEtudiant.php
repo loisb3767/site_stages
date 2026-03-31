@@ -40,6 +40,8 @@ if (!empty($password)) {
         header('Location: index.php?page=modifier_profil');
         exit;
     }
+
+    $password = password_hash($password, PASSWORD_DEFAULT); // <- ajoutez cette ligne
 }
 
 
