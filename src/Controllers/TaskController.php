@@ -47,11 +47,6 @@ class TaskController extends Controller
             $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
         }
 
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?page=connexion');
-            exit;
-        }
-
         $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
 
         foreach ($offres as &$offre) {
@@ -347,9 +342,13 @@ class TaskController extends Controller
     }
 
     public function modifierOffrePage() {
-        // Vérification que l'utilisateur est connecté et est pilote ou admin
-        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+        if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        if ($_SESSION['user']['id_role'] == 0) {
+            header('Location: index.php?page=offres');
             exit;
         }
 
@@ -368,6 +367,29 @@ class TaskController extends Controller
         ]);
 
         unset($_SESSION['success'], $_SESSION['error']);
+    }
+
+    public function ajouterOffrePage() {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $entreprises = $this->model->getAllEntreprises();
+        $competences = $this->model->getAllCompetences();
+
+        $error = $_SESSION['error'] ?? null;
+        $success = $_SESSION['success'] ?? null;
+        unset($_SESSION['error'], $_SESSION['success']);
+
+        echo $this->templateEngine->render('ajouterOffre.twig.html', [
+            'entreprises' => $entreprises,
+            'competences' => $competences,
+            'user' => $_SESSION['user'] ?? null,
+            'session' => $_SESSION,
+            'error' => $error,
+            'success' => $success,
+        ]);
     }
 
 

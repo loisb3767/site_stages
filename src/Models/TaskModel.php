@@ -75,15 +75,15 @@ class TaskModel extends Model
 
         return $this->geocodeAdresseIfNeeded($offre);
     }
-    public function getTotalCountEntreprises(array $secteurIds = []): int{
-        if (empty($secteurIds)) {
+    public function getTotalCountEntreprises(array $competenceId = []): int{
+        if (empty($competenceId)) {
             return (int) $this->pdo->query("SELECT COUNT(*) FROM entreprise")->fetchColumn();
         }
 
         $placeholders = [];
         $namedParams = [];
 
-        foreach ($secteurIds as $index => $id) {
+        foreach ($competenceId as $index => $id) {
             $param = ':secteur' . $index;
             $placeholders[] = $param;
             $namedParams[$param] = $id;
@@ -95,50 +95,51 @@ class TaskModel extends Model
             WHERE e.id_secteur IN (" . implode(',', $placeholders) . ")
             ";
 
-            $stmt = $this->pdo->prepare($sql);
-            foreach ($namedParams as $param => $value) {
-            $stmt->bindValue($param, $value, PDO::PARAM_INT);
-            }
-            $stmt->execute();
-            return (int) $stmt->fetchColumn();
-            }
-            public function getPaginatedOffres(int $page, int $parPage, array $SecteurIds = []): array{
-                $offset = ($page - 1) * $parPage;
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($namedParams as $param => $value) {
+        $stmt->bindValue($param, $value, PDO::PARAM_INT);
+        }
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+            
+    public function getPaginatedOffres(int $page, int $parPage, array $competenceIds = []): array{
+        $offset = ($page - 1) * $parPage;
 
-                if (empty($SecteurIds)) {
-                    $sql = "
-                    SELECT
-                        o.id_offre,
-                        o.titre,
-                        o.description,
-                        o.gratification,
-                        o.date_offre,
-                        o.duree,
-                        e.nom_entreprise,
-                        s.nom_secteur
-                        FROM offre o
-                        INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
-                        LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
-                        WHERE o.date_offre >= CURDATE()
-                        ORDER BY o.date_offre ASC, o.id_offre ASC
-                        LIMIT :limit OFFSET :offset
-                        ";
+        if (empty($competenceIds)) {
+            $sql = "
+            SELECT
+                o.id_offre,
+                o.titre,
+                o.description,
+                o.gratification,
+                o.date_offre,
+                o.duree,
+                e.nom_entreprise,
+                s.nom_secteur
+                FROM offre o
+                INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+                LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
+                WHERE o.date_offre >= CURDATE()
+                ORDER BY o.date_offre ASC, o.id_offre ASC
+                LIMIT :limit OFFSET :offset
+                ";
 
-                        $stmt = $this->pdo->prepare($sql);
-                        $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
-                        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-                        $stmt->execute();
-                        return $stmt->fetchAll();
-                        }
-                // paramètres dynamiques
-                $namedParams = [];
-                $placeholders = [];
-                foreach ($SecteurIds as $index => $id) {
-                    $param = ':comp' . $index;
-                    $placeholders[] = $param;
-                    $namedParams[$param] = $id;
-                    }
-                $sql = "
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
+                $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+                $stmt->execute();
+                return $stmt->fetchAll();
+                }
+        // paramètres dynamiques
+        $namedParams = [];
+        $placeholders = [];
+        foreach ($competenceIds as $index => $id) {
+            $param = ':comp' . $index;
+            $placeholders[] = $param;
+            $namedParams[$param] = $id;
+            }
+        $sql = "
                 SELECT
                 o.id_offre,
                 o.titre,
@@ -770,5 +771,45 @@ class TaskModel extends Model
                 ':duree' => $duree
             ]);
         }
-        
+
+       public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise, array $competences = []): bool {
+            // Insérer l'offre
+            $sql = "INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise)
+                    VALUES (:titre, :description, :gratification, :date_offre, :duree, :id_entreprise)";
+
+            $stmt = $this->pdo->prepare($sql);
+            $result = $stmt->execute([
+                ':titre' => $titre,
+                ':description' => $description,
+                ':gratification' => $gratification,
+                ':date_offre' => $date_offre,
+                ':duree' => $duree,
+                ':id_entreprise' => $id_entreprise
+            ]);
+
+            if (!$result) return false;
+
+            // Récupérer l'id de l'offre créée
+            $id_offre = (int)$this->pdo->lastInsertId();
+
+            // Insérer les compétences
+            if (!empty($competences)) {
+                $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
+                foreach ($competences as $id_competence) {
+                    $stmt->execute([
+                        ':id_offre' => $id_offre,
+                        ':id_competence' => $id_competence
+                    ]);
+                }
+            }
+
+            return true;
+        }
+
+        public function getAllEntreprises(): array {
+            $sql = "SELECT id_entreprise, nom_entreprise FROM entreprise ORDER BY nom_entreprise ASC";
+            $stmt = $this->pdo->query($sql);
+            return $stmt->fetchAll();
+        }
+                
 }

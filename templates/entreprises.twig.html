@@ -31,7 +31,7 @@
             </ul>
 
             <button type="submit">Filtrer</button>
-            <a href="index.php?page=entreprises">Réinitialiser</a>
+            <a href="index.php?page=entreprises" class="Reinitialiser-btn">Réinitialiser</a>
         </form>
     </aside>
 
@@ -57,33 +57,27 @@
 
         </article>
         {% else %}
-        <p>Aucune entreprise disponible pour le moment.</p>
+            <p>Aucune entreprise disponible pour le moment.</p>
         {% endfor %}
-        {% if nbPages > 1 %}
-        <nav class="pagination">
+
+        <div class="pagination">
             {% if page > 1 %}
-                <a href="index.php?page=entreprises&p={{ page - 1 }}{% for s in selectedSecteurs %}&secteurs[]={{ s }}{% endfor %}">
-                    &laquo; Précédent
+                <a href="?page=offres&p={{ page - 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                    Précédent
                 </a>
             {% endif %}
 
-            {% for i in 1..nbPages %}
-                <a href="index.php?page=entreprises&p={{ i }}{% for s in selectedSecteurs %}&secteurs[]={{ s }}{% endfor %}"
-                class="{% if i == page %}active{% endif %}">
-                    {{ i }}
-                </a>
-            {% endfor %}
+            <span class="page-info">Page {{ page }} sur {{ nbPages }}</span>
 
             {% if page < nbPages %}
-                <a href="index.php?page=entreprises&p={{ page + 1 }}{% for s in selectedSecteurs %}&secteurs[]={{ s }}{% endfor %}">
-                    Suivant &raquo;
+                <a href="?page=offres&p={{ page + 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                    Suivant
                 </a>
-                {% endif %}
-            </nav>
             {% endif %}
-            {% if session.user is defined and session.user.id_role in [1, 2] %}
+        </div>
+        
+        {% if session.user is defined and session.user.id_role > 0 %}
             <a href="index.php?page=creer-entreprise" class="btn-creer-entreprise">+ Créer une entreprise</a>
-            {% endif %}
-        </section>
+        {% endif %}
 </div>
 {% endblock %}
