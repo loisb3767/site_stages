@@ -342,7 +342,31 @@ class TaskController extends Controller
         exit;
     }
 
-    
+    public function modifierOffrePage() {
+        // Vérification que l'utilisateur est connecté et est pilote ou admin
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $id = (int)($_GET['id'] ?? 0);
+        $offre = $this->model->getOffreById($id);
+
+        if (!$offre) {
+            header('Location: index.php?page=offres');
+            exit;
+        }
+
+        echo $this->templateEngine->render('modifierOffre.twig.html', [
+            'offre' => $offre,
+            'user' => $_SESSION['user'] ?? null,
+            'session' => $_SESSION
+        ]);
+
+        unset($_SESSION['success'], $_SESSION['error']);
+    }
+
+
 
 }
 

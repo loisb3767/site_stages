@@ -671,6 +671,24 @@ class TaskModel extends Model
             return $stmt->execute([':id' => $id]);
         }
 
-        
+        public function updateOffre(int $id, string $titre, string $description, ?float $gratification, string $date_offre, string $duree): bool {
+            $sql = "UPDATE offre SET
+                        titre = :titre,
+                        description = :description,
+                        gratification = :gratification,
+                        date_offre = :date_offre,
+                        duree = :duree
+                    WHERE id_offre = :id";
+
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([
+                ':id' => $id,
+                ':titre' => $titre,
+                ':description' => $description,
+                ':gratification' => $gratification,
+                ':date_offre' => $date_offre,
+                ':duree' => $duree
+            ]);
+        }
         
 }
