@@ -47,11 +47,6 @@ class TaskController extends Controller
             $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
         }
 
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?page=connexion');
-            exit;
-        }
-
         $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
 
         foreach ($offres as &$offre) {
