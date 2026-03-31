@@ -70,39 +70,43 @@ switch ($page) {
         break;
 
     case 'logout':
-        $controller->logoutPage();
+        $controller -> logoutPage();
         break;
 
     case 'modifier_profil':
-        $controller->modifierProfilPage();
+        $controller -> modifierProfilPage();
         break;
     
     case 'mes_offres':
-        $controller->mes_offres();
+        $controller -> mes_offres();
         break;
 
     case 'entreprises':
-        $controller->entreprises();
+        $controller -> entreprises();
         break;
 
     case 'supprimer-wishlist':
-        $controller->supprimerWishlist();
+        $controller -> supprimerWishlist();
         break;
 
     case 'supprimer_offre':
-        $controller->supprimerOffre();
+        $controller -> supprimerOffre();
         break;
 
     case 'ajouter_wishlist':
-        $controller->ajouterWishlist();
+        $controller -> ajouterWishlist();
         break;
 
     case 'modifier_offre':
-        $controller->modifierOffrePage();
+        $controller -> modifierOffrePage();
+        break;
+
+    case 'ajouter_offre':
+        $controller -> ajouterOffrePage();
         break;
 
     default:
-        $controller->e404Page();
+        $controller -> e404Page();
         break;
 
     

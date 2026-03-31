@@ -341,6 +341,27 @@ class TaskController extends Controller
         unset($_SESSION['success'], $_SESSION['error']);
     }
 
+    public function ajouterOffrePage() {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $entreprises = $this->model->getAllEntreprises();
+
+        $error = $_SESSION['error'] ?? null;
+        $success = $_SESSION['success'] ?? null;
+        unset($_SESSION['error'], $_SESSION['success']);
+
+        echo $this->templateEngine->render('ajouterOffre.twig.html', [
+            'entreprises' => $entreprises,
+            'user' => $_SESSION['user'] ?? null,
+            'session' => $_SESSION,
+            'error' => $error,
+            'success' => $success,
+        ]);
+    }
+
 
 
 }

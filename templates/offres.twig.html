@@ -68,9 +68,14 @@
                 </a>
                 
             </article>
+            
         {% else %}
             <p>Aucune offre disponible pour le moment.</p>
         {% endfor %}
+
+        {% if user.id_role == 1 or user.id_role == 2 %}
+            <a href="index.php?page=ajouter_offre" class="btn-deco">+ Ajouter une offre</a>
+        {% endif %}
 
         <div class="pagination">
             {% if page > 1 %}
