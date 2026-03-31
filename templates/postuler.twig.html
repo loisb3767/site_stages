@@ -40,6 +40,20 @@
             </div>
 
         {% endif %}
+
+        
+        {% if status == 'success' %}
+            <script>
+                alert("Votre candidature a été envoyée avec succès !");
+            </script>
+        {% endif %}
+
+        {% if error %}
+            <script>
+                alert("{{ error }}");
+            </script>
+        {% endif %}
+
         </section>
     {% endif %}
 {% endblock %}

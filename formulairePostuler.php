@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!isset($_SESSION['user'])) {
             throw new Exception("Vous devez être connecté pour postuler.");
         }
+
         $userId = $_SESSION['user']['id_utilisateur'];
         $idOffre = isset($_POST['id_offre']) ? (int) $_POST['id_offre'] : 0;
         $motivation = Validator::sanitize($_POST['motivation'] ?? '');
