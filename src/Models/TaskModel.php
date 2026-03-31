@@ -761,12 +761,13 @@ class TaskModel extends Model
             ]);
         }
 
-        public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise): bool {
+       public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise, array $competences = []): bool {
+            // Insérer l'offre
             $sql = "INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise)
                     VALUES (:titre, :description, :gratification, :date_offre, :duree, :id_entreprise)";
 
             $stmt = $this->pdo->prepare($sql);
-            return $stmt->execute([
+            $result = $stmt->execute([
                 ':titre' => $titre,
                 ':description' => $description,
                 ':gratification' => $gratification,
@@ -774,6 +775,24 @@ class TaskModel extends Model
                 ':duree' => $duree,
                 ':id_entreprise' => $id_entreprise
             ]);
+
+            if (!$result) return false;
+
+            // Récupérer l'id de l'offre créée
+            $id_offre = (int)$this->pdo->lastInsertId();
+
+            // Insérer les compétences
+            if (!empty($competences)) {
+                $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
+                foreach ($competences as $id_competence) {
+                    $stmt->execute([
+                        ':id_offre' => $id_offre,
+                        ':id_competence' => $id_competence
+                    ]);
+                }
+            }
+
+            return true;
         }
 
         public function getAllEntreprises(): array {

@@ -46,7 +46,10 @@ if ($id_entreprise <= 0) {
     exit;
 }
 
-$success = $model->createOffre($titre, $description, $gratification, $date_offre, $duree, $id_entreprise);
+$competences = isset($_POST['competences']) && is_array($_POST['competences']) ? array_map('intval', $_POST['competences']) : [];
+
+
+$success = $model->createOffre($titre, $description, $gratification, $date_offre, $duree, $id_entreprise, $competences);
 
 if ($success) {
     $_SESSION['success'] = "Offre ajoutée avec succès.";

@@ -1501,4 +1501,38 @@ main.game-mode #e404-num {
 .Reinitialiser-btn:hover {
     background-color: #00bcd4;
     color: white;
+
+button.btn-supprimer {
+    background-color: var(--error-color);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.btn-supprimer:hover {
+    background-color: color-mix(in srgb, var(--error-color), var(--secondary-color) 20%);
+}
+
+button.btn-supprimer:disabled {
+    background-color: color-mix(in srgb, var(--error-color), var(--secondary-color) 50%);
+    cursor: not-allowed;
+}
+
+.offer-suppr-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.offer-suppr-info form {
+    margin: 0;
+    max-width: none;
+}
+
+.info-btn {
+    text-decoration: none;
 }
