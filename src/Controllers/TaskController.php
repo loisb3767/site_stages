@@ -115,7 +115,7 @@ class TaskController extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $this->model->getUserByEmail($_POST['email']);
-            if ($user && $_POST['password'] === $user['mot_de_passe']) { 
+            if ($user && password_verify($_POST['password'], $user['mot_de_passe'])) {
                 $_SESSION['user'] = $user;
                 header('Location: index.php?page=profil');
                 exit;
@@ -465,6 +465,25 @@ class TaskController extends Controller
             'offres' => $offres,
             'user' => $_SESSION['user'] ?? null,
             'session' => $_SESSION,
+        ]);
+    }
+
+    public function creerEntreprisePage(): void {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $error = $_SESSION['error'] ?? null;
+        $success = $_SESSION['success'] ?? null;
+        unset($_SESSION['error'], $_SESSION['success']);
+
+        echo $this->templateEngine->render('creerEntreprise.twig.html', [
+            'secteurs' => $this->model->getAllSecteurs(),
+            'user' => $_SESSION['user'] ?? null,
+            'session' => $_SESSION,
+            'error' => $error,
+            'success' => $success,
         ]);
     }
 

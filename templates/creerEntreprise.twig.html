@@ -1,0 +1,78 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Créer une entreprise - Job2main{% endblock %}
+{% block description %}Créer une entreprise Job2main{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <a href="index.php?page=entreprises" class="tab">Entreprises</a>
+                <div class="tab active">Créer une entreprise</div>
+            </div>
+
+            <div class="card-body">
+                <form action="formulaireCreerEntreprise.php" method="post">
+
+                    <div class="input-group">
+                        <label for="nom_entreprise">Nom</label>
+                        <input id="nom_entreprise" name="nom_entreprise" type="text" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="5"></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="telephone">Téléphone</label>
+                        <input id="telephone" name="telephone" type="text">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="id_secteur">Secteur</label>
+                        <select id="id_secteur" name="id_secteur">
+                            <option value="">-- Choisir un secteur --</option>
+                            {% for secteur in secteurs %}
+                                <option value="{{ secteur.id_secteur }}">{{ secteur.nom_secteur }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="nom_rue">Rue</label>
+                        <input id="nom_rue" name="nom_rue" type="text">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="code_postal">Code postal</label>
+                        <input id="code_postal" name="code_postal" type="text">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="ville">Ville</label>
+                        <input id="ville" name="ville" type="text">
+                    </div>
+
+                    {% if error %}
+                        <span class="alert alert-danger">{{ error }}</span>
+                    {% endif %}
+
+                    {% if success %}
+                        <span class="alert alert-success">{{ success }}</span>
+                    {% endif %}
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-deco">CRÉER</button>
+                        <a href="index.php?page=entreprises" class="btn-deco">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
