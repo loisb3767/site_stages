@@ -345,9 +345,13 @@ class TaskController extends Controller
     }
 
     public function modifierOffrePage() {
-        // Vérification que l'utilisateur est connecté et est pilote ou admin
-        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+        if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        if ($_SESSION['user']['id_role'] == 0) {
+            header('Location: index.php?page=offres');
             exit;
         }
 

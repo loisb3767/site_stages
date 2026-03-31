@@ -41,7 +41,7 @@
                 <div class="offer-info">
                     <div class="offer-actions">
                         <h3>{{ offre.titre }}</h3>
-                        {% if user.id_role == 0 %}
+                        {% if user.id_role != 0 %}
                                 <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-deco">MODIFIER</a>
                         {% endif %}
                     </div>
