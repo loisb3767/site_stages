@@ -413,12 +413,15 @@ class TaskController extends Controller
             exit;
         }
 
+        $adresse = $this->model->getAdresseByEntrepriseId($id);
+
         $error = $_SESSION['error'] ?? null;
         $success = $_SESSION['success'] ?? null;
         unset($_SESSION['error'], $_SESSION['success']);
 
         echo $this->templateEngine->render('modifierEntreprise.twig.html', [
             'entreprise' => $entreprise,
+            'adresse' => $adresse,
             'secteurs' => $this->model->getAllSecteurs(),
             'user' => $_SESSION['user'] ?? null,
             'session' => $_SESSION,

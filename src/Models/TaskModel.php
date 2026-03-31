@@ -928,5 +928,83 @@ class TaskModel extends Model
             $stmt = $this->pdo->prepare("UPDATE utilisateur SET mot_de_passe = :password WHERE id_utilisateur = :id");
             return $stmt->execute([':password' => $password, ':id' => $id]);
         }
+
+        public function getAdresseByEntrepriseId(int $id): array|null {
+            $sql = "SELECT a.*
+                    FROM adresse a
+                    JOIN entreprise_adresse ea ON a.id_adresse = ea.id_adresse
+                    WHERE ea.id_entreprise = :id
+                    LIMIT 1";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            $result = $stmt->fetch();
+            return $result ?: null;
+        }
+
+        public function updateEntrepriseWithAdresse(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur, ?int $id_adresse, string $nom_rue, string $code_postal, string $ville): bool {
+            // Mettre à jour l'entreprise
+            $sql = "UPDATE entreprise SET
+                        nom_entreprise = :nom,
+                        description = :description,
+                        email = :email,
+                        telephone = :telephone,
+                        id_secteur = :id_secteur
+                    WHERE id_entreprise = :id";
+
+            $stmt = $this->pdo->prepare($sql);
+            $result = $stmt->execute([
+                ':id' => $id,
+                ':nom' => $nom,
+                ':description' => $description,
+                ':email' => $email,
+                ':telephone' => $telephone,
+                ':id_secteur' => $id_secteur
+            ]);
+
+            if (!$result) return false;
+
+            // Adresse existante → on la met à jour
+            if ($id_adresse) {
+                $sql = "UPDATE adresse SET
+                            nom_rue = :nom_rue,
+                            code_postal = :code_postal,
+                            ville = :ville
+                        WHERE id_adresse = :id_adresse";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':nom_rue' => $nom_rue,
+                    ':code_postal' => $code_postal ?: '00000',
+                    ':ville' => $ville,
+                    ':id_adresse' => $id_adresse
+                ]);
+
+            // Pas d'adresse on en crée une si renseignée
+            } elseif (!empty($nom_rue) || !empty($code_postal)) {
+                $sql = "INSERT INTO adresse (nom_rue, code_postal, ville)
+                        VALUES (:nom_rue, :code_postal, :ville)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':nom_rue' => $nom_rue,
+                    ':code_postal' => $code_postal ?: '00000',
+                    ':ville' => $ville
+                ]);
+
+                $new_id_adresse = (int)$this->pdo->lastInsertId();
+
+                $sql = "INSERT INTO entreprise_adresse (id_entreprise, id_adresse)
+                        VALUES (:id_entreprise, :id_adresse)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':id_entreprise' => $id,
+                    ':id_adresse' => $new_id_adresse
+                ]);
+            }
+
+            return true;
+        }
                 
 }
