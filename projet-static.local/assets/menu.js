@@ -57,7 +57,10 @@ var searchBtn = document.querySelector('.search-btn');
 
 function doSearch() {
   var q = searchInput.value.trim();
-  if (q.length === 0) return;
+  var params = new URLSearchParams(window.location.search);
+  if (q.length === 0) {
+    window.location.href = 'index.php?' + params.toString();
+  };
 
   var params = new URLSearchParams(window.location.search);
   var page = params.get('page') || 'accueil';
