@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
   var nav = document.querySelector('.navbar');
   if (!header || !nav) return;
 
-  // Bouton sur mobile
   var toggle = document.createElement('button');
   toggle.className = 'menu-toggle';
   toggle.setAttribute('aria-label', 'Ouvrir le menu');
@@ -11,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
   toggle.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span>';
   header.appendChild(toggle);
 
-  // Menu navbar sur Mobile — inclure la search-bar de l'en-tête si présente
   var mobile = document.createElement('nav');
   mobile.className = 'mobile-menu';
   mobile.setAttribute('aria-hidden', 'true');
@@ -51,22 +49,31 @@ document.addEventListener('DOMContentLoaded', function() {
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
-
   // Recherche
   var searchInput = document.getElementById('searchInput');
+  var searchBtn = document.querySelector('.search-btn');
+
+  function doSearch() {
+    var q = searchInput.value.trim();
+    if (q.length === 0) return;
+
+    var params = new URLSearchParams(window.location.search);
+    var page = params.get('page') || 'accueil';
+
+    if (page === 'offres' || page === 'entreprises') {
+      params.set('q', q);
+      params.delete('p');
+      window.location.href = 'index.php?' + params.toString();
+    }
+  }
+
   if (searchInput) {
-    var items = document.querySelectorAll('#itemList li');
-    searchInput.addEventListener('input', function () {
-      var filter = searchInput.value.toLowerCase().trim();
-      items.forEach(function(item) {
-        var text = item.textContent.toLowerCase();
-        if (text.includes(filter)) {
-          item.classList.remove('hidden');
-        } else {
-          item.classList.add('hidden');
-        }
-      });
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') doSearch();
     });
+  }
+  if (searchBtn) {
+    searchBtn.addEventListener('click', doSearch);
   }
 });
 
@@ -136,7 +143,7 @@ document.querySelectorAll(".carousel-wrapper-stats").forEach(function(wrapper) {
     });
 });
 
-// Postuler — uniquement sur la page postuler
+// Postuler
 document.addEventListener('DOMContentLoaded', function () {
     var cvInput = document.getElementById('cv');
     var formPostuler = document.getElementById('formPostuler');

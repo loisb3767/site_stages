@@ -631,14 +631,14 @@ class TaskModel extends Model
         }
     }
 
-        public function getNbOffres(): int
+    public function getNbOffres(): int
         {
             $sql = "SELECT COUNT(*) FROM offre";
             $stmt = $this->pdo->query($sql);
             return (int) $stmt->fetchColumn();
         }
 
-        public function getNbCandidaturesParOffre(): float
+    public function getNbCandidaturesParOffre(): float
         {
             $sql = "
                 SELECT AVG(nb_candidatures) FROM (
@@ -651,6 +651,73 @@ class TaskModel extends Model
 
             $stmt = $this->pdo->query($sql);
             return round((float) $stmt->fetchColumn(), 1);
-        }
-        
+    }
+    public function getPaginatedOffresSearch(int $page, int $parPage, string $q): array
+    {
+        $offset = ($page - 1) * $parPage;
+        $like = '%' . $q . '%';
+
+        $sql = "
+            SELECT o.id_offre, o.titre, o.description, o.gratification,
+                o.date_offre, o.duree, e.nom_entreprise, s.nom_secteur
+            FROM offre o
+            INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+            LEFT JOIN secteur s ON e.id_secteur = s.id_secteur
+            WHERE (o.titre LIKE :q OR o.description LIKE :q OR e.nom_entreprise LIKE :q)
+            ORDER BY o.date_offre ASC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':q', $like);
+        $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getTotalCountSearch(string $q): int
+    {
+        $like = '%' . $q . '%';
+
+        $sql = "
+            SELECT COUNT(*)
+            FROM offre o
+            INNER JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+            WHERE (o.titre LIKE :q OR o.description LIKE :q OR e.nom_entreprise LIKE :q)
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':q', $like);
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    } 
+    public function getPaginatedEntreprisesSearch(int $page, int $parPage, string $q): array
+    {
+        $offset = ($page - 1) * $parPage;
+        $like = '%' . $q . '%';
+
+        $sql = "
+            SELECT *
+            FROM entreprise
+            WHERE nom_entreprise LIKE :q
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':q', $like);
+        $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function getTotalEntreprisesSearch(string $q): int
+    {
+        $like = '%' . $q . '%';
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM entreprise WHERE nom_entreprise LIKE :q");
+        $stmt->bindValue(':q', $like);
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
 }
