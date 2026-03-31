@@ -1491,16 +1491,13 @@ main.game-mode #e404-num {
     justify-content: space-between;
 }
 .Reinitialiser-btn{
-    background-color: white;
+    background-color: var(--background-color);
     color: #00bcd4; /* cyan */
-    border: 2px solid #00bcd4;
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
+    text-decoration: none;
 }
-.Reinitialiser-btn:hover {
-    background-color: #00bcd4;
-    color: white;
 
 button.btn-supprimer {
     background-color: var(--error-color);
