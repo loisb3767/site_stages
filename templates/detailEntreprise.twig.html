@@ -1,0 +1,111 @@
+{% extends "base.twig.html" %}
+
+{% block title %}{{ entreprise.nom_entreprise }} - Job2main{% endblock %}
+{% block description %}Détail de l'entreprise {{ entreprise.nom_entreprise }}{% endblock %}
+
+{% block body %}
+<section>
+    <h1 class="text-center">DÉTAIL DE L'ENTREPRISE</h1>
+    
+
+    <article class="offer-card-detail">
+        <div class="offer-info">
+            <h3>{{ entreprise.nom_entreprise }}</h3>
+
+            {% if entreprise.secteurs is not empty %}
+                {% for secteur in entreprise.secteurs %}
+                    <div class="competence-bar">{{ secteur }}</div>
+                {% endfor %}
+            {% else %}
+                <p class="secteur"><strong>Secteur :</strong> Non renseigné</p>
+            {% endif %}
+
+            {% if entreprise.description %}
+                <hr>
+                <p class="resume">{{ entreprise.description }}</p>
+            {% else %}
+                <hr>
+                <p class="resume">Aucune description disponible.</p>
+            {% endif %}
+
+            <p>
+                <strong>Email :</strong>
+                {{ entreprise.email ?: 'Non renseigné' }}
+            </p>
+
+            <p>
+                <strong>Téléphone :</strong>
+                {{ entreprise.telephone ?: 'Non renseigné' }}
+            </p>
+
+            <p>
+                <strong>Lieu :</strong>
+                {% if entreprise.nom_rue %}
+                    {{ entreprise.nom_rue }}
+                    {% if entreprise.ville %}, {{ entreprise.ville }}{% endif %}
+                    {% if entreprise.code_postal %} ({{ entreprise.code_postal }}){% endif %}
+                {% else %}
+                    Non renseigné
+                {% endif %}
+            </p>
+
+            {% if entreprise.latitude and entreprise.longitude %}
+                <div
+                    id="offre-map"
+                    data-lat="{{ entreprise.latitude }}"
+                    data-lng="{{ entreprise.longitude }}"
+                    data-title="{{ entreprise.nom_entreprise|e('html_attr') }}"
+                    style="height: 350px; width: 100%; margin-top: 20px; border-radius: 12px;">
+                </div>
+            {% else %}
+                <p>Carte indisponible : coordonnées manquantes.</p>
+            {% endif %}
+
+            <hr>
+
+            <h3>Offres de l'entreprise</h3>
+
+            {% if offres is not empty %}
+                {% for offre in offres %}
+                    <article class="offer-card">
+                        <div class="offer-info">
+                            <h3>{{ offre.titre }}</h3>
+                            <p>
+                                <strong>Date :</strong>
+                                {{ offre.date_offre ? offre.date_offre|date("d/m/Y") : 'Non précisée' }}
+                            </p>
+                            <p>
+                                <strong>Durée :</strong>
+                                {{ offre.duree ?: 'Non précisée' }}
+                            </p>
+                            <p>
+                                <strong>Gratification :</strong>
+                                {% if offre.gratification and offre.gratification > 0 %}
+                                    {{ offre.gratification }} €
+                                {% else %}
+                                    Non précisée
+                                {% endif %}
+                            </p>
+                            <p class="resume">
+                                {{ offre.description ? offre.description|slice(0, 140) ~ '...' : 'Aucun résumé disponible.' }}
+                            </p>
+                        </div>
+
+                        <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
+                            Plus d'info
+                        </a>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p>Aucune offre disponible pour cette entreprise.</p>
+            {% endif %}
+        </div>
+        {% if user.id_role > 0 %}
+            <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-modifier">MODIFIER</a>
+        {% endif %}
+        <a href="index.php?page=entreprises" class="btn-postuler">
+            Retour aux entreprises
+        </a>
+    </article>
+</section>
+{% endblock %}

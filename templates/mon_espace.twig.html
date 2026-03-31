@@ -1,0 +1,62 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Parcours des offres - Job2main{% endblock %}
+{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+
+{% block body %}
+        <div class="mes-offres-container">
+            <div class="flex-item">
+                <h1>Ma Wishlist</h1>
+                {% if wishlist is empty %}
+                    <p>Vous n'avez aucune offre dans votre wishlist.</p>
+                {% else %}
+                    <div class="wishlist-grid">
+                    {% for offre in wishlist %}
+                        <div class="wishlist-card">
+                            <h2>{{ offre.titre }}</h2>
+                            <p><strong>Description :</strong> {{ offre.description }}</p>
+                            <p>
+                                {% if offre.gratification and offre.gratification > 0 %}
+                                    <strong>Gratification :</strong> {{ offre.gratification }} €
+                                {% else %}
+                                    <strong>Gratification :</strong> Non précisée
+                                {% endif %}
+                            </p>
+                            <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="btn-wishlist-offre">
+                                Voir l'offre
+                            </a>
+                            <a href="index.php?page=supprimer-wishlist&id={{ offre.id_offre }}" class="btn-wishlist-supprimer">
+                                Retirer
+                            </a>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="flex-item">
+                <h1>Mes Offres</h1>
+                {% if offresDejaPostules is empty %}
+                    <p>Vous n'avez postulé à aucune offre.</p>
+                {% else %}
+                    <div class="wishlist-grid">
+                    {% for offre in offresDejaPostules %}
+                        <div class="wishlist-card">
+                            <h2>{{ offre.titre }}</h2>
+                            <p><strong>Description :</strong> {{ offre.description }}</p>
+                            <p><strong>Date de candidature :</strong> {{ offre.date_candidature }}</p>
+                            <p><strong>Statut :</strong> {{ offre.statut }}</p>
+                            <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="btn-wishlist-offre">
+                                Voir l'offre
+                            </a>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+{% endblock %}
+
+
+
+        
+            

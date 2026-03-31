@@ -1,0 +1,87 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Modifier une entreprise - Job2main{% endblock %}
+{% block description %}Modifier une entreprise Job2main{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <a href="index.php?page=entreprises" class="tab">Entreprises</a>
+                <div class="tab active">Modifier une entreprise</div>
+            </div>
+
+            <div class="card-body">
+                {% if entreprise %}
+                    <form action="formulaireModifEntreprise.php" method="post">
+                        <input type="hidden" name="id_entreprise" value="{{ entreprise.id_entreprise }}">
+                        <input type="hidden" name="id_adresse" value="{{ adresse.id_adresse ?? '' }}">
+
+                        <div class="input-group">
+                            <label for="nom_entreprise">Nom</label>
+                            <input id="nom_entreprise" name="nom_entreprise" type="text" value="{{ entreprise.nom_entreprise }}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" rows="5">{{ entreprise.description }}</textarea>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" value="{{ entreprise.email }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="telephone">Téléphone</label>
+                            <input id="telephone" name="telephone" type="text" value="{{ entreprise.telephone }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="id_secteur">Secteur</label>
+                            <select id="id_secteur" name="id_secteur">
+                                <option value="">-- Choisir un secteur --</option>
+                                {% for secteur in secteurs %}
+                                    <option value="{{ secteur.id_secteur }}"
+                                        {% if secteur.id_secteur == entreprise.id_secteur %}selected{% endif %}>
+                                        {{ secteur.nom_secteur }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="nom_rue">Rue</label>
+                            <input id="nom_rue" name="nom_rue" type="text" value="{{ adresse.nom_rue ?? '' }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="code_postal">Code postal</label>
+                            <input id="code_postal" name="code_postal" type="text" value="{{ adresse.code_postal ?? '' }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="ville">Ville</label>
+                            <input id="ville" name="ville" type="text" value="{{ adresse.ville ?? '' }}">
+                        </div>
+
+                        {% if session.success %}
+                            <span class="alert alert-success">{{ session.success }}</span>
+                        {% endif %}
+
+                        {% if session.error %}
+                            <span class="alert alert-danger">{{ session.error }}</span>
+                        {% endif %}
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-deco">SAUVEGARDER</button>
+                            <a href="index.php?page=entreprises" class="btn-deco">Annuler</a>
+                        </div>
+                    </form>
+                {% else %}
+                    <p>Entreprise introuvable. <a href="index.php?page=entreprises">Retour aux entreprises</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
