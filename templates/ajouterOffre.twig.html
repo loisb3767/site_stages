@@ -49,6 +49,23 @@
                         </select>
                     </div>
 
+                    <div class="input-group">
+                        <label>Compétences</label>
+                        <ul class="specialites">
+                            {% for competence in competences %}
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        name="competences[]"
+                                        value="{{ competence.id_competence }}"
+                                        id="comp{{ competence.id_competence }}"
+                                    >
+                                    <label for="comp{{ competence.id_competence }}">{{ competence.nom_competence }}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
                     {% if session.success %}
                         <span class="alert alert-success">{{ session.success }}</span>
                     {% endif %}
