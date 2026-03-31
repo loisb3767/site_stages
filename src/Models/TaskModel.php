@@ -670,5 +670,7 @@ class TaskModel extends Model
             $stmt = $this->pdo->prepare("DELETE FROM offre WHERE id_offre = :id");
             return $stmt->execute([':id' => $id]);
         }
+
+        
         
 }
