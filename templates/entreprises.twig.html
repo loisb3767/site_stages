@@ -3,6 +3,15 @@
 {% block title %}Parcours des offres - Job2main{% endblock %}
 {% block description %}Parcourez nos entreprises !{% endblock %}
 
+{% block search_bar %}
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="recherche précise" aria-label="Recherche">
+        <button class="search-btn" aria-label="Rechercher">
+            <img src="projet-static.local/images/search_icon.png" alt="Rechercher">
+        </button>
+    </div>
+{% endblock %}
+
 {% block body %}
 <div class="offers-page">
     <aside class="sidebar">
@@ -53,6 +62,15 @@
                 {% if entreprise.description %}
                     <p class="resume">{{ entreprise.description }}</p>
                 {% endif %}
+
+                {% if user.id_role == 1 or user.id_role == 2 %}
+                    <form method="POST" action="index.php?page=supprimer_entreprise" style="display:inline;">
+                        <input type="hidden" name="id_entreprise" value="{{ entreprise.id_entreprise }}">
+                        <button type="submit" class="btn-deco">SUPPRIMER</button>
+                    </form>
+                    <a href="index.php?page=modifier_entreprise&id={{ entreprise.id_entreprise }}" class="btn-deco">MODIFIER</a>
+                {% endif %}
+
             </div>
 
         </article>
@@ -62,7 +80,7 @@
 
         <div class="pagination">
             {% if page > 1 %}
-                <a href="?page=offres&p={{ page - 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                <a href="?page=entreprises&p={{ page - 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
                     Précédent
                 </a>
             {% endif %}
@@ -70,7 +88,7 @@
             <span class="page-info">Page {{ page }} sur {{ nbPages }}</span>
 
             {% if page < nbPages %}
-                <a href="?page=offres&p={{ page + 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                <a href="?page=entreprises&p={{ page + 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
                     Suivant
                 </a>
             {% endif %}

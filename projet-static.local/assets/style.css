@@ -606,6 +606,7 @@ input[type="radio"] {
     width: auto;
     margin-right: 0.5rem;
     margin-bottom: 0.7rem;
+    cursor: pointer;
 }
 
 form p {
@@ -1258,6 +1259,7 @@ body.menu-open {
     display: inline-flex;
     justify-content: center;
     font-weight: 600;
+    margin-bottom: 2rem;
 }
 
 .btn-wishlist-offre:hover,
@@ -1308,7 +1310,7 @@ body.menu-open {
 
 .btn-mes-offres {
     background-color: var(--secondary-color);
-    color: #fff;
+    color: var(--secondary-text-color);
     padding: 0.3rem 1rem;
     border-radius: 20px;
     text-decoration: none;
@@ -1532,4 +1534,29 @@ button.btn-supprimer:disabled {
 
 .info-btn {
     text-decoration: none;
+}
+
+.btn-ajouter-offre, .btn-ajouter-offre:visited {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-ajouter-offre:hover {
+    background-color: color-mix(in srgb, var(--primary-color), var(--secondary-color) 25%);
+}
+
+.btn-mes-offres-supprimer {
+    background-color: var(--error-color);
+    color: #fff;
+}
+
+.btn-mes-offres-supprimer:hover {
+    background-color: color-mix(in srgb, var(--error-color), var(--secondary-color) 20%);
 }
