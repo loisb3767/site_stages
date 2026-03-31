@@ -113,6 +113,10 @@ switch ($page) {
         $controller -> supprimerEntreprise();
         break;
 
+    case 'detail_entreprise':
+        $controller -> detailEntreprisePage();
+        break;
+
     default:
         $controller -> e404Page();
         break;

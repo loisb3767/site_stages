@@ -878,5 +878,16 @@ class TaskModel extends Model
 
             return array_map('intval', $rows);
         }
+
+        public function getOffresByEntrepriseId(int $id): array {
+            $sql = "SELECT id_offre, titre, description, gratification, date_offre, duree
+                    FROM offre
+                    WHERE id_entreprise = :id
+                    ORDER BY date_offre DESC";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetchAll();
+        }
                 
 }

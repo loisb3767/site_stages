@@ -448,6 +448,31 @@ class TaskController extends Controller
         exit;
     }
 
+    public function detailEntreprisePage(): void {
+        $id = (int)($_GET['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: index.php?page=entreprises');
+            exit;
+        }
+
+        $entreprise = $this->model->getEntrepriseById($id);
+
+        if (!$entreprise) {
+            header('Location: index.php?page=entreprises');
+            exit;
+        }
+
+        $offres = $this->model->getOffresByEntrepriseId($id);
+
+        echo $this->templateEngine->render('detailEntreprise.twig.html', [
+            'entreprise' => $entreprise,
+            'offres' => $offres,
+            'user' => $_SESSION['user'] ?? null,
+            'session' => $_SESSION,
+        ]);
+    }
+
 
 }
 

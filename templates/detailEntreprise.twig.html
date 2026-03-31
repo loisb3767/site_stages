@@ -1,0 +1,79 @@
+{% extends "base.twig.html" %}
+
+{% block title %}{{ entreprise.nom_entreprise }} - Job2main{% endblock %}
+{% block description %}Détail de l'entreprise {{ entreprise.nom_entreprise }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <a href="index.php?page=entreprises" class="tab">Entreprises</a>
+                <div class="tab active">{{ entreprise.nom_entreprise }}</div>
+            </div>
+
+            <div class="card-body">
+                <div class="input-group">
+                    <label>Nom</label>
+                    <p>{{ entreprise.nom_entreprise }}</p>
+                </div>
+
+                {% if entreprise.description %}
+                    <div class="input-group">
+                        <label>Description</label>
+                        <p>{{ entreprise.description }}</p>
+                    </div>
+                {% endif %}
+
+                {% if entreprise.email %}
+                    <div class="input-group">
+                        <label>Email</label>
+                        <p>{{ entreprise.email }}</p>
+                    </div>
+                {% endif %}
+
+                {% if entreprise.telephone %}
+                    <div class="input-group">
+                        <label>Téléphone</label>
+                        <p>{{ entreprise.telephone }}</p>
+                    </div>
+                {% endif %}
+
+                {% if entreprise.nom_secteur %}
+                    <div class="input-group">
+                        <label>Secteur</label>
+                        <p>{{ entreprise.nom_secteur }}</p>
+                    </div>
+                {% endif %}
+
+                <hr>
+
+                <h3>Offres de l'entreprise</h3>
+
+                {% if offres is not empty %}
+                    {% for offre in offres %}
+                        <article class="offer-card">
+                            <div class="offer-info">
+                                <h3>{{ offre.titre }}</h3>
+                                <p><strong>Date :</strong> {{ offre.date_offre|date("d/m/Y") }}</p>
+                                <p><strong>Durée :</strong> {{ offre.duree ?: 'Non précisée' }}</p>
+                                <p><strong>Gratification :</strong>
+                                    {% if offre.gratification and offre.gratification > 0 %}
+                                        {{ offre.gratification }} €
+                                    {% else %}
+                                        Non précisée
+                                    {% endif %}
+                                </p>
+                                <p class="resume">{{ offre.description }}</p>
+                            </div>
+                            <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">Plus d'info</a>
+                        </article>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucune offre disponible pour cette entreprise.</p>
+                {% endif %}
+
+                <a href="index.php?page=entreprises" class="btn-deco">Retour</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
