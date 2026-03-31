@@ -84,11 +84,15 @@ switch ($page) {
     case 'entreprises':
         $controller->entreprises();
         break;
-    /*case 'supprimer-wishlist':
-        $controller->supprimerWishlist();
-        break;*/
 
-    
+    case 'supprimer-wishlist':
+        $controller->supprimerWishlist();
+        break;
+
+    case 'ajouter_wishlist':
+        $controller->ajouterWishlist();
+        break;
+
     default:
         $controller->e404Page();
         break;
