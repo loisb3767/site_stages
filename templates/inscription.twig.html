@@ -63,7 +63,6 @@
 									<option value="">-- Choisir un rôle --</option>
 								
 									{% if user and user.id_role == 2 %}
-										{# ADMIN → tous les rôles #}
 										{% for role in roles %}
 											<option value="{{ role.id_role }}">
 												{{ role.nom_role|capitalize }}
@@ -71,7 +70,6 @@
 										{% endfor %}
 
 									{% elseif user and user.id_role == 1 %}
-										{# PILOTE → uniquement étudiant #}
 										<option value="0">Étudiant</option>
 
 									{% endif %}
