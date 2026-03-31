@@ -547,7 +547,7 @@ class TaskModel extends Model
     }
 
     public function getPaginatedEntreprises(int $page, int $parPage, array $secteurs = []): array
-{
+    {
     $offset = ($page - 1) * $parPage;
 
     if (empty($secteurs)) {
@@ -631,4 +631,26 @@ class TaskModel extends Model
         }
     }
 
+        public function getNbOffres(): int
+        {
+            $sql = "SELECT COUNT(*) FROM offre";
+            $stmt = $this->pdo->query($sql);
+            return (int) $stmt->fetchColumn();
+        }
+
+        public function getNbCandidaturesParOffre(): float
+        {
+            $sql = "
+                SELECT AVG(nb_candidatures) FROM (
+                    SELECT COUNT(c.id_candidature) AS nb_candidatures
+                    FROM offre o
+                    LEFT JOIN candidature c ON c.id_offre = o.id_offre
+                    GROUP BY o.id_offre
+                ) AS sous_requete
+            ";
+
+            $stmt = $this->pdo->query($sql);
+            return round((float) $stmt->fetchColumn(), 1);
+        }
+        
 }

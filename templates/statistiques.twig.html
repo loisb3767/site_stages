@@ -30,7 +30,11 @@
 								<p>Aucune donnée disponible.</p>
 							{% endfor %}
 						</div>
-						<canvas id="chartDuree" style="max-height: 200px; margin-top: 1rem;"></canvas>
+						<canvas id="chartDuree" 
+							data-labels='{{ offresByDuree|map(item => item.tranche)|json_encode }}'
+							data-values='{{ offresByDuree|map(item => item.total)|json_encode }}'
+							style="max-height: 200px; margin-top: 1rem;">
+						</canvas>
 					</div>
 
 					<!-- Slide 2 : Top Wishlist -->
@@ -51,13 +55,24 @@
 					</div>
 					
 					<!-- Slide 3 -->
-                    <div class="card-stats">Bloc 3</div>
+                    <div class="card-stats">
+						<h2 class="card-stats-title">Nombre d'offres actuellement</h2>
+						<div class="card-stats-content">
+							<div class="stat-block">
+								<span class="stat-total">{{ nbOffres }} offres</span>
+							</div>
+						</div>
+					</div>
 
                     <!-- Slide 4 -->
-                    <div class="card-stats">Bloc 4</div>
-
-                    <!-- Slide 5 -->
-                    <div class="card-stats">Bloc 5</div>
+					<div class="card-stats">
+						<h2 class="card-stats-title">Nombre de candidatures moyenne par offre</h2>
+						<div class="card-stats-content">
+							<div class="stat-block">
+								<span class="stat-total">{{ nbCandidaturesMoy }} candidatures </span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<button class="carousel-btn-stats next">›</button>
@@ -68,33 +83,5 @@
 
 {% block javascripts %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('chartDuree').getContext('2d');
-        new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: [
-                    {% for item in offresByDuree %}'{{ item.tranche }}'{% if not loop.last %},{% endif %}{% endfor %}
-                ],
-                datasets: [{
-                    data: [
-                        {% for item in offresByDuree %}{{ item.total }}{% if not loop.last %},{% endif %}{% endfor %}
-                    ],
-                    backgroundColor: [
-                        '#00a5cf',
-                        '#004e64',
-                        '#58c7e7'
-                    ],
-					borderColor: '#0f262c',
-					borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
-    </script>
+    <script src="/projet-static.local/assets/camembert.js"></script>
 {% endblock %}
