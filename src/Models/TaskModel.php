@@ -547,7 +547,7 @@ class TaskModel extends Model
     }
 
     public function getPaginatedEntreprises(int $page, int $parPage, array $secteurs = []): array
-{
+    {
     $offset = ($page - 1) * $parPage;
 
     if (empty($secteurs)) {
