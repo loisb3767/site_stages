@@ -598,4 +598,59 @@ class TaskModel extends Model
 
         return $stmt->fetchAll();
     }
+
+    public function removeFromWishlist($userId, $offreId) {
+        try {
+        $sql = "DELETE FROM wishlist WHERE id_utilisateur = :userId AND id_offre = :offreId";
+        $stmt = $this->pdo->prepare($sql);
+        $params = [
+            'userId' => $userId,
+            'offreId' => $offreId
+        ];
+        $stmt->execute($params);
+        } catch (Exception $e) {
+            die("Erreur lors de la suppression de la wishlist : " . $e->getMessage());
+        }
+    }
+
+    public function addToWishlist($userId, $offreId) {
+        if($userId != 0) {
+            try {
+            
+                $sql = "INSERT IGNORE INTO wishlist (id_utilisateur, id_offre) VALUES (:userId, :offreId)";
+                $stmt = $this->pdo->prepare($sql);
+                $params = [
+                    'userId' => $userId,
+                    'offreId' => $offreId
+                ];
+                $stmt->execute($params);
+            }
+            catch (Exception $e) {
+                die("Erreur lors de l'ajout à la wishlist : " . $e->getMessage());
+            }
+        }
+    }
+
+        public function getNbOffres(): int
+        {
+            $sql = "SELECT COUNT(*) FROM offre";
+            $stmt = $this->pdo->query($sql);
+            return (int) $stmt->fetchColumn();
+        }
+
+        public function getNbCandidaturesParOffre(): float
+        {
+            $sql = "
+                SELECT AVG(nb_candidatures) FROM (
+                    SELECT COUNT(c.id_candidature) AS nb_candidatures
+                    FROM offre o
+                    LEFT JOIN candidature c ON c.id_offre = o.id_offre
+                    GROUP BY o.id_offre
+                ) AS sous_requete
+            ";
+
+            $stmt = $this->pdo->query($sql);
+            return round((float) $stmt->fetchColumn(), 1);
+        }
+        
 }

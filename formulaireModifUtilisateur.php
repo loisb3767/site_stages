@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// Vérifier que l'utilisateur est connecté
+
 if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 0) {
     $_SESSION['error'] = "Accès non autorisé.";
     header('Location: index.php?page=connexion');

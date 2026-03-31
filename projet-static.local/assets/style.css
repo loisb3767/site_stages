@@ -1437,6 +1437,7 @@ main.game-mode #e404-num {
     100% { transform: translate(0, 0); }
 }
 
+<<<<<<< HEAD
 .miseEnpageAcc {
     padding: 1rem;
 }
@@ -1475,4 +1476,18 @@ main.game-mode #e404-num {
 .Card-acc:hover {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     transform: translateY(-2px);
+=======
+.class-offer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.offer-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+>>>>>>> c2f85c246b5ad461fee255f73f407a3b6382000f
 }

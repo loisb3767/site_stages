@@ -209,7 +209,9 @@ class TaskController extends Controller
     {
         echo $this->templateEngine->render('statistiques.twig.html', [
             'offresByDuree'   => $this->model->getOffresByDuree(),
-            'topWishlist'   => $this->model->getTopWishlist()
+            'topWishlist'   => $this->model->getTopWishlist(),
+            'nbOffres'   => $this->model->getNbOffres(),
+            'nbCandidaturesMoy' => $this->model->getNbCandidaturesParOffre()
         ]);
     }    
 
@@ -284,6 +286,40 @@ class TaskController extends Controller
             'active_page' => 'entreprises',
             'session' => $_SESSION,
         ]);
+    }
+
+    public function supprimerWishlist() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $idOffre = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+
+        if ($idOffre <= 0) {
+            die("ID offre invalide.");
+        }
+
+        $this->model->removeFromWishlist($_SESSION['user']['id_utilisateur'], $idOffre);
+        header('Location: index.php?page=mes_offres');
+        exit;
+    }
+
+    public function ajouterWishlist() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $idOffre = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+
+        if ($idOffre <= 0) {
+            die("ID offre invalide.");
+        }
+        $p=isset($_GET['p']) ? (int) $_GET['p'] : 1;
+        $this->model->addToWishlist($_SESSION['user']['id_utilisateur'], $idOffre);
+        header('Location: index.php?page=offres&p=' . $p);
+        exit;
     }
 
 }
