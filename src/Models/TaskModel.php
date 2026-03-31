@@ -651,6 +651,7 @@ class TaskModel extends Model
 
             $stmt = $this->pdo->query($sql);
             return round((float) $stmt->fetchColumn(), 1);
+<<<<<<< HEAD
     }
     public function getPaginatedOffresSearch(int $page, int $parPage, string $q): array
     {
@@ -720,4 +721,28 @@ class TaskModel extends Model
         $stmt->execute();
         return (int) $stmt->fetchColumn();
     }
+=======
+        }
+
+        public function deleteOffre(int $id): bool {
+            // Supprimer les compétences liées à l'offre
+            $stmt = $this->pdo->prepare("DELETE FROM offre_competence WHERE id_offre = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer les candidatures liées à l'offre
+            $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_offre = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer les wishlists liées à l'offre
+            $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_offre = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer l'offre
+            $stmt = $this->pdo->prepare("DELETE FROM offre WHERE id_offre = :id");
+            return $stmt->execute([':id' => $id]);
+        }
+
+        
+        
+>>>>>>> 3c3516b804553fa1868cc64413be2d238089bfbe
 }

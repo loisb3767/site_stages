@@ -306,6 +306,19 @@ class TaskController extends Controller
         exit;
     }
 
+    public function supprimerOffre() {
+        $id = $_POST['id_offre'] ?? null;
+        
+        if ($id) {
+            $this->model->deleteOffre((int)$id);
+        }
+        
+        header('Location: index.php?page=offres');
+        exit;
+    }
+
+    
+
 }
 
 
