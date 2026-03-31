@@ -526,6 +526,17 @@ class TaskModel extends Model
         $stmt->execute(['id' => $id]);
         return $stmt->fetchAll();
     }
+
+    public function offresDejaPostules($id) {
+    $sql = "SELECT o.titre, o.description, c.date_candidature, c.id_offre
+            FROM candidature c
+            JOIN offre o ON c.id_offre = o.id_offre
+            WHERE c.id_utilisateur = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetchAll();
+    }
+    
     public function getTotalEntreprises(array $secteurs = []): int
     {
         if (empty($secteurs)) {

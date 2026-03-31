@@ -77,8 +77,8 @@ switch ($page) {
         $controller->modifierProfilPage();
         break;
     
-    case 'mes_offres':
-        $controller->mes_offres();
+    case 'mon_espace':
+        $controller->mon_espace();
         break;
 
     case 'entreprises':

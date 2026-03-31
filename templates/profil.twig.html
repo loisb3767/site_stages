@@ -18,9 +18,9 @@
                             <label>Nom</label>
             
                             {% if user.id_role == 0 %}
-                                <a href="index.php?page=mes_offres" class="btn-mes-offres">Mes offres</a>
+                                <a href="index.php?page=mon_espace" class="btn-mes-offres">Mon espace</a>
                             {% else %}
-                                <a href="index.php?page=mes_offres" class="btn-mes-offres">Candidatures</a>
+                                <a href="index.php?page=mon_espace" class="btn-mes-offres">Candidatures</a>
                             {% endif %}
                         </div>
                         <p>{{ user.nom_utilisateur }}</p>
