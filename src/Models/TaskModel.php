@@ -842,22 +842,22 @@ class TaskModel extends Model
         }
 
         public function deleteEntreprise(int $id): bool {
-            // 1. Supprimer les adresses liées
+            // Supprimer les adresses liées
             $stmt = $this->pdo->prepare("DELETE FROM entreprise_adresse WHERE id_entreprise = :id");
             $stmt->execute([':id' => $id]);
 
-            // 2. Supprimer les avis liés
+            // Supprimer les avis liés
             $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_entreprise = :id");
             $stmt->execute([':id' => $id]);
 
-            // 3. Supprimer les offres liées (et leurs dépendances)
+            // Supprimer les offres liées (et leurs dépendances)
             $offres = $this->pdo->prepare("SELECT id_offre FROM offre WHERE id_entreprise = :id");
             $offres->execute([':id' => $id]);
             foreach ($offres->fetchAll() as $offre) {
                 $this->deleteOffre($offre['id_offre']);
             }
 
-            // 4. Supprimer l'entreprise
+            // Supprimer l'entreprise
             $stmt = $this->pdo->prepare("DELETE FROM entreprise WHERE id_entreprise = :id");
             return $stmt->execute([':id' => $id]);
         }

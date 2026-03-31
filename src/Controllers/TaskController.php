@@ -260,6 +260,12 @@ class TaskController extends Controller
 
     public function entreprises(): void
     {
+
+        $user = null;
+        if (isset($_SESSION['user']['id_utilisateur'])) {
+            $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+        }
+
         $parPage = 10;
         $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 
@@ -297,6 +303,7 @@ class TaskController extends Controller
             'nbPages' => $nbPages,
             'active_page' => 'entreprises',
             'session' => $_SESSION,
+            'user' => $user, 
             'q' => $q,
         ]);
     }
