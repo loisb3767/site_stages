@@ -279,31 +279,31 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-    private function geocodeAdresseIfNeeded(array $offre): array
+    private function geocodeAdresseIfNeeded(array $entity): array
     {
         if (
-            empty($offre['id_adresse']) ||
+            empty($entity['id_adresse']) ||
             (
-                !empty($offre['latitude']) &&
-                !empty($offre['longitude']) &&
-                !empty($offre['ville'])
+                !empty($entity['latitude']) &&
+                !empty($entity['longitude']) &&
+                !empty($entity['ville'])
             )
         ) {
-            return $offre;
+            return $entity;
         }
 
-        $street = trim((string)($offre['nom_rue'] ?? ''));
-        $postalCode = trim((string)($offre['code_postal'] ?? ''));
-        $existingCity = trim((string)($offre['ville'] ?? ''));
+        $street = trim((string)($entity['nom_rue'] ?? ''));
+        $postalCode = trim((string)($entity['code_postal'] ?? ''));
+        $existingCity = trim((string)($entity['ville'] ?? ''));
 
         if ($street === '' && $postalCode === '' && $existingCity === '') {
-            return $offre;
+            return $entity;
         }
 
         $geocoded = $this->fetchGeocodingData($street, $postalCode, $existingCity);
 
         if (!$geocoded) {
-            return $offre;
+            return $entity;
         }
 
         $sql = "
@@ -318,30 +318,53 @@ class TaskModel extends Model
         $stmt->bindValue(':ville', $geocoded['ville'], PDO::PARAM_STR);
         $stmt->bindValue(':latitude', $geocoded['latitude']);
         $stmt->bindValue(':longitude', $geocoded['longitude']);
-        $stmt->bindValue(':id_adresse', $offre['id_adresse'], PDO::PARAM_INT);
+        $stmt->bindValue(':id_adresse', $entity['id_adresse'], PDO::PARAM_INT);
         $stmt->execute();
 
-        $offre['ville'] = $geocoded['ville'];
-        $offre['latitude'] = $geocoded['latitude'];
-        $offre['longitude'] = $geocoded['longitude'];
+        $entity['ville'] = $geocoded['ville'];
+        $entity['latitude'] = $geocoded['latitude'];
+        $entity['longitude'] = $geocoded['longitude'];
 
-        return $offre;
+        return $entity;
     }
 
-    private function fetchGeocodingData(string $street, string $postalCode): ?array
+    private function fetchGeocodingData(string $street, string $postalCode, string $existingCity = ''): ?array
     {
         $queries = [];
 
+        if ($street || $postalCode || $existingCity) {
+            $queries[] = trim(implode(', ', array_filter([
+                $street,
+                $postalCode,
+                $existingCity,
+                'France'
+            ])));
+        }
+
         if ($street || $postalCode) {
-            $queries[] = trim("$street, $postalCode, France");
+            $query = trim(implode(', ', array_filter([
+                $street,
+                $postalCode,
+                'France'
+            ])));
+
+            if (!in_array($query, $queries, true)) {
+                $queries[] = $query;
+            }
         }
 
         if ($postalCode) {
-            $queries[] = "$postalCode, France";
+            $query = trim(implode(', ', array_filter([
+                $postalCode,
+                'France'
+            ])));
+
+            if (!in_array($query, $queries, true)) {
+                $queries[] = $query;
+            }
         }
 
         foreach ($queries as $query) {
-
             $url = 'https://nominatim.openstreetmap.org/search?' . http_build_query([
                 'q' => $query,
                 'format' => 'jsonv2',
@@ -356,39 +379,47 @@ class TaskModel extends Model
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'User-Agent: job2main/1.0 (contact: test@test.com)',
             ]);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
             $response = curl_exec($ch);
             curl_close($ch);
 
-            if (!$response) continue;
+            if (!$response) {
+                continue;
+            }
 
             $data = json_decode($response, true);
 
-            if (empty($data[0])) continue;
+            if (empty($data[0])) {
+                continue;
+            }
 
             $result = $data[0];
             $address = $result['address'] ?? [];
 
-            // récupération intelligente de la ville
             $city =
                 $address['city']
                 ?? $address['town']
                 ?? $address['village']
                 ?? $address['municipality']
                 ?? $address['hamlet']
-                ?? null;
+                ?? $existingCity
+                ?? '';
 
-            if (!isset($result['lat'], $result['lon'])) continue;
+            if (!isset($result['lat'], $result['lon'])) {
+                continue;
+            }
 
             return [
-                'latitude' => (float)$result['lat'],
-                'longitude' => (float)$result['lon'],
-                'ville' => $city ?? '',
+                'latitude' => (float) $result['lat'],
+                'longitude' => (float) $result['lon'],
+                'ville' => $city,
             ];
         }
 
         return null;
     }
+    
     //Données Carrousel nombre d'offres par durée
     public function getOffresByDuree(): array
     {
@@ -717,94 +748,260 @@ class TaskModel extends Model
         return (int) $stmt->fetchColumn();
     }
 
-        public function deleteOffre(int $id): bool {
-            // Supprimer les compétences liées à l'offre
-            $stmt = $this->pdo->prepare("DELETE FROM offre_competence WHERE id_offre = :id");
-            $stmt->execute([':id' => $id]);
+    public function deleteOffre(int $id): bool {
+        // Supprimer les compétences liées à l'offre
+        $stmt = $this->pdo->prepare("DELETE FROM offre_competence WHERE id_offre = :id");
+        $stmt->execute([':id' => $id]);
 
-            // Supprimer les candidatures liées à l'offre
-            $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_offre = :id");
-            $stmt->execute([':id' => $id]);
+        // Supprimer les candidatures liées à l'offre
+        $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_offre = :id");
+        $stmt->execute([':id' => $id]);
 
-            // Supprimer les wishlists liées à l'offre
-            $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_offre = :id");
-            $stmt->execute([':id' => $id]);
+        // Supprimer les wishlists liées à l'offre
+        $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_offre = :id");
+        $stmt->execute([':id' => $id]);
 
-            // Supprimer l'offre
-            $stmt = $this->pdo->prepare("DELETE FROM offre WHERE id_offre = :id");
-            return $stmt->execute([':id' => $id]);
+        // Supprimer l'offre
+        $stmt = $this->pdo->prepare("DELETE FROM offre WHERE id_offre = :id");
+        return $stmt->execute([':id' => $id]);
+    }
+
+    public function updateOffre(int $id, string $titre, string $description, ?float $gratification, string $date_offre, string $duree): bool {
+        $sql = "UPDATE offre SET
+                    titre = :titre,
+                    description = :description,
+                    gratification = :gratification,
+                    date_offre = :date_offre,
+                    duree = :duree
+                WHERE id_offre = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id,
+            ':titre' => $titre,
+            ':description' => $description,
+            ':gratification' => $gratification,
+            ':date_offre' => $date_offre,
+            ':duree' => $duree
+        ]);
+    }
+
+    public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise, array $competences = []): bool {
+        // Insérer l'offre
+        $sql = "INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise)
+                VALUES (:titre, :description, :gratification, :date_offre, :duree, :id_entreprise)";
+
+        $stmt = $this->pdo->prepare($sql);
+        $result = $stmt->execute([
+            ':titre' => $titre,
+            ':description' => $description,
+            ':gratification' => $gratification,
+            ':date_offre' => $date_offre,
+            ':duree' => $duree,
+            ':id_entreprise' => $id_entreprise
+        ]);
+
+        if (!$result) return false;
+
+        // Récupérer l'id de l'offre créée
+        $id_offre = (int)$this->pdo->lastInsertId();
+
+        // Insérer les compétences
+        if (!empty($competences)) {
+            $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
+            foreach ($competences as $id_competence) {
+                $stmt->execute([
+                    ':id_offre' => $id_offre,
+                    ':id_competence' => $id_competence
+                ]);
+            }
         }
 
-        public function updateOffre(int $id, string $titre, string $description, ?float $gratification, string $date_offre, string $duree): bool {
-            $sql = "UPDATE offre SET
-                        titre = :titre,
-                        description = :description,
-                        gratification = :gratification,
-                        date_offre = :date_offre,
-                        duree = :duree
-                    WHERE id_offre = :id";
+        return true;
+    }
 
-            $stmt = $this->pdo->prepare($sql);
-            return $stmt->execute([
-                ':id' => $id,
-                ':titre' => $titre,
-                ':description' => $description,
-                ':gratification' => $gratification,
-                ':date_offre' => $date_offre,
-                ':duree' => $duree
-            ]);
+    public function getAllEntreprises(): array {
+        $sql = "SELECT id_entreprise, nom_entreprise FROM entreprise ORDER BY nom_entreprise ASC";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
+
+
+    public function getEntrepriseById(int $id): array|null
+    {
+        $sql = "
+            SELECT
+                e.id_entreprise,
+                e.nom_entreprise,
+                e.description,
+                e.email,
+                e.telephone,
+                a.id_adresse,
+                a.nom_rue,
+                a.code_postal,
+                a.ville,
+                a.latitude,
+                a.longitude
+            FROM entreprise e
+            LEFT JOIN entreprise_adresse ea ON e.id_entreprise = ea.id_entreprise
+            LEFT JOIN adresse a ON ea.id_adresse = a.id_adresse
+            WHERE e.id_entreprise = :id
+            LIMIT 1
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $entreprise = $stmt->fetch();
+
+        if (!$entreprise) {
+            return null;
         }
 
-       public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise, array $competences = []): bool {
-            // Insérer l'offre
-            $sql = "INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise)
-                    VALUES (:titre, :description, :gratification, :date_offre, :duree, :id_entreprise)";
+        return $this->geocodeAdresseIfNeeded($entreprise);
+    }
+
+    public function updateEntreprise(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur): bool {
+        $sql = "UPDATE entreprise SET
+                    nom_entreprise = :nom,
+                    description = :description,
+                    email = :email,
+                    telephone = :telephone,
+                    id_secteur = :id_secteur
+                WHERE id_entreprise = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id,
+            ':nom' => $nom,
+            ':description' => $description,
+            ':email' => $email,
+            ':telephone' => $telephone,
+            ':id_secteur' => $id_secteur
+        ]);
+    }
+
+    public function deleteEntreprise(int $id): bool {
+        // Supprimer les adresses liées
+        $stmt = $this->pdo->prepare("DELETE FROM entreprise_adresse WHERE id_entreprise = :id");
+        $stmt->execute([':id' => $id]);
+
+        // Supprimer les avis liés
+        $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_entreprise = :id");
+        $stmt->execute([':id' => $id]);
+
+        // Supprimer les offres liées (et leurs dépendances)
+        $offres = $this->pdo->prepare("SELECT id_offre FROM offre WHERE id_entreprise = :id");
+        $offres->execute([':id' => $id]);
+        foreach ($offres->fetchAll() as $offre) {
+            $this->deleteOffre($offre['id_offre']);
+        }
+
+        // Supprimer l'entreprise
+        $stmt = $this->pdo->prepare("DELETE FROM entreprise WHERE id_entreprise = :id");
+        return $stmt->execute([':id' => $id]);
+    }
+
+    public function getWishlistOffreIdsByUserId(int $userId): array
+    {
+        $sql = "
+            SELECT id_offre
+            FROM wishlist
+            WHERE id_utilisateur = :id_utilisateur
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id_utilisateur', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        return array_map('intval', $rows);
+    }
+
+    public function getOffresByEntrepriseId(int $id): array {
+        $sql = "SELECT id_offre, titre, description, gratification, date_offre, duree
+                FROM offre
+                WHERE id_entreprise = :id
+                ORDER BY date_offre DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchAll();
+    }
+
+        public function createEntreprise(string $nom, string $description, string $email, string $telephone, ?int $id_secteur, string $nom_rue = '', string $code_postal = '', string $ville = ''): bool {
+            // Créer l'entreprise
+            $sql = "INSERT INTO entreprise (nom_entreprise, description, email, telephone, id_secteur)
+                    VALUES (:nom, :description, :email, :telephone, :id_secteur)";
 
             $stmt = $this->pdo->prepare($sql);
             $result = $stmt->execute([
-                ':titre' => $titre,
+                ':nom' => $nom,
                 ':description' => $description,
-                ':gratification' => $gratification,
-                ':date_offre' => $date_offre,
-                ':duree' => $duree,
-                ':id_entreprise' => $id_entreprise
+                ':email' => $email,
+                ':telephone' => $telephone,
+                ':id_secteur' => $id_secteur
             ]);
 
             if (!$result) return false;
 
-            // Récupérer l'id de l'offre créée
-            $id_offre = (int)$this->pdo->lastInsertId();
+            $id_entreprise = (int)$this->pdo->lastInsertId();
 
-            // Insérer les compétences
-            if (!empty($competences)) {
-                $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
-                foreach ($competences as $id_competence) {
-                    $stmt->execute([
-                        ':id_offre' => $id_offre,
-                        ':id_competence' => $id_competence
-                    ]);
-                }
+            // Créer l'adresse 
+            if (!empty($nom_rue) || !empty($code_postal)) {
+                $sql = "INSERT INTO adresse (nom_rue, code_postal, ville)
+                        VALUES (:nom_rue, :code_postal, :ville)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':nom_rue' => $nom_rue,
+                    ':code_postal' => $code_postal ?: '00000',
+                    ':ville' => $ville
+                ]);
+
+                $id_adresse = (int)$this->pdo->lastInsertId();
+
+                // Lier l'adresse à l'entreprise
+                $sql = "INSERT INTO entreprise_adresse (id_entreprise, id_adresse)
+                        VALUES (:id_entreprise, :id_adresse)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':id_entreprise' => $id_entreprise,
+                    ':id_adresse' => $id_adresse
+                ]);
             }
 
             return true;
         }
 
-        public function getAllEntreprises(): array {
-            $sql = "SELECT id_entreprise, nom_entreprise FROM entreprise ORDER BY nom_entreprise ASC";
-            $stmt = $this->pdo->query($sql);
+        public function getAllUsers(): array {
+            $stmt = $this->pdo->query("SELECT id_utilisateur, mot_de_passe FROM utilisateur");
             return $stmt->fetchAll();
         }
 
+        public function updatePasswordById(int $id, string $password): bool {
+            $stmt = $this->pdo->prepare("UPDATE utilisateur SET mot_de_passe = :password WHERE id_utilisateur = :id");
+            return $stmt->execute([':password' => $password, ':id' => $id]);
+        }
 
-        public function getEntrepriseById(int $id): array|null {
-            $sql = "SELECT * FROM entreprise WHERE id_entreprise = :id";
+        public function getAdresseByEntrepriseId(int $id): array|null {
+            $sql = "SELECT a.*
+                    FROM adresse a
+                    JOIN entreprise_adresse ea ON a.id_adresse = ea.id_adresse
+                    WHERE ea.id_entreprise = :id
+                    LIMIT 1";
+
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
             $result = $stmt->fetch();
             return $result ?: null;
         }
 
-        public function updateEntreprise(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur): bool {
+        public function updateEntrepriseWithAdresse(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur, ?int $id_adresse, string $nom_rue, string $code_postal, string $ville): bool {
+            // Mettre à jour l'entreprise
             $sql = "UPDATE entreprise SET
                         nom_entreprise = :nom,
                         description = :description,
@@ -814,7 +1011,7 @@ class TaskModel extends Model
                     WHERE id_entreprise = :id";
 
             $stmt = $this->pdo->prepare($sql);
-            return $stmt->execute([
+            $result = $stmt->execute([
                 ':id' => $id,
                 ':nom' => $nom,
                 ':description' => $description,
@@ -822,55 +1019,50 @@ class TaskModel extends Model
                 ':telephone' => $telephone,
                 ':id_secteur' => $id_secteur
             ]);
-        }
 
-        public function deleteEntreprise(int $id): bool {
-            // Supprimer les adresses liées
-            $stmt = $this->pdo->prepare("DELETE FROM entreprise_adresse WHERE id_entreprise = :id");
-            $stmt->execute([':id' => $id]);
+            if (!$result) return false;
 
-            // Supprimer les avis liés
-            $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_entreprise = :id");
-            $stmt->execute([':id' => $id]);
+            // Adresse existante → on la met à jour
+            if ($id_adresse) {
+                $sql = "UPDATE adresse SET
+                            nom_rue = :nom_rue,
+                            code_postal = :code_postal,
+                            ville = :ville
+                        WHERE id_adresse = :id_adresse";
 
-            // Supprimer les offres liées (et leurs dépendances)
-            $offres = $this->pdo->prepare("SELECT id_offre FROM offre WHERE id_entreprise = :id");
-            $offres->execute([':id' => $id]);
-            foreach ($offres->fetchAll() as $offre) {
-                $this->deleteOffre($offre['id_offre']);
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':nom_rue' => $nom_rue,
+                    ':code_postal' => $code_postal ?: '00000',
+                    ':ville' => $ville,
+                    ':id_adresse' => $id_adresse
+                ]);
+
+            // Pas d'adresse on en crée une si renseignée
+            } elseif (!empty($nom_rue) || !empty($code_postal)) {
+                $sql = "INSERT INTO adresse (nom_rue, code_postal, ville)
+                        VALUES (:nom_rue, :code_postal, :ville)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':nom_rue' => $nom_rue,
+                    ':code_postal' => $code_postal ?: '00000',
+                    ':ville' => $ville
+                ]);
+
+                $new_id_adresse = (int)$this->pdo->lastInsertId();
+
+                $sql = "INSERT INTO entreprise_adresse (id_entreprise, id_adresse)
+                        VALUES (:id_entreprise, :id_adresse)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':id_entreprise' => $id,
+                    ':id_adresse' => $new_id_adresse
+                ]);
             }
 
-            // Supprimer l'entreprise
-            $stmt = $this->pdo->prepare("DELETE FROM entreprise WHERE id_entreprise = :id");
-            return $stmt->execute([':id' => $id]);
-        }
-
-        public function getWishlistOffreIdsByUserId(int $userId): array
-        {
-            $sql = "
-                SELECT id_offre
-                FROM wishlist
-                WHERE id_utilisateur = :id_utilisateur
-            ";
-
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':id_utilisateur', $userId, PDO::PARAM_INT);
-            $stmt->execute();
-
-            $rows = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-            return array_map('intval', $rows);
-        }
-
-        public function getOffresByEntrepriseId(int $id): array {
-            $sql = "SELECT id_offre, titre, description, gratification, date_offre, duree
-                    FROM offre
-                    WHERE id_entreprise = :id
-                    ORDER BY date_offre DESC";
-
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            return $stmt->fetchAll();
+            return true;
         }
                 
 }

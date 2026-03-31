@@ -83,7 +83,12 @@ class TaskController extends Controller
         if (!$offre) {
             die('Offre introuvable.');
         }
-
+        $user = null;
+        $wishlistOffreIds = null;
+        if (isset($_SESSION['user']['id_utilisateur'])) {
+            $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+            $wishlistOffreIds = $this->model->getWishlistOffreIdsByUserId($_SESSION['user']['id_utilisateur']);
+        }
         $competences = $this->model->getCompetencesByOffreId($id);
 
         $offre['competences'] = array_map(
@@ -94,6 +99,9 @@ class TaskController extends Controller
         echo $this->templateEngine->render('detailOffre.twig.html', [
             'offre' => $offre,
             'active_page' => 'offres',
+            'user' => $user,
+            'session' => $_SESSION,
+            'wishlistOffreIds' => $wishlistOffreIds,
         ]);
     }
 
@@ -115,7 +123,7 @@ class TaskController extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $this->model->getUserByEmail($_POST['email']);
-            if ($user && $_POST['password'] === $user['mot_de_passe']) { 
+            if ($user && password_verify($_POST['password'], $user['mot_de_passe'])) {
                 $_SESSION['user'] = $user;
                 header('Location: index.php?page=profil');
                 exit;
@@ -414,12 +422,15 @@ class TaskController extends Controller
             exit;
         }
 
+        $adresse = $this->model->getAdresseByEntrepriseId($id);
+
         $error = $_SESSION['error'] ?? null;
         $success = $_SESSION['success'] ?? null;
         unset($_SESSION['error'], $_SESSION['success']);
 
         echo $this->templateEngine->render('modifierEntreprise.twig.html', [
             'entreprise' => $entreprise,
+            'adresse' => $adresse,
             'secteurs' => $this->model->getAllSecteurs(),
             'user' => $_SESSION['user'] ?? null,
             'session' => $_SESSION,
@@ -444,28 +455,53 @@ class TaskController extends Controller
         exit;
     }
 
-    public function detailEntreprisePage(): void {
-        $id = (int)($_GET['id'] ?? 0);
+    public function detailEntreprisePage(): void
+    {
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
         if ($id <= 0) {
-            header('Location: index.php?page=entreprises');
-            exit;
+            $this->e404Page();
+            return;
         }
 
         $entreprise = $this->model->getEntrepriseById($id);
 
         if (!$entreprise) {
-            header('Location: index.php?page=entreprises');
-            exit;
+            $this->e404Page();
+            return;
         }
+
+        $secteurs = $this->model->getSecteursByEntrepriseId($id);
+        $entreprise['secteurs'] = array_map(
+            fn($s) => $s['nom_secteur'],
+            $secteurs
+        );
 
         $offres = $this->model->getOffresByEntrepriseId($id);
 
         echo $this->templateEngine->render('detailEntreprise.twig.html', [
             'entreprise' => $entreprise,
             'offres' => $offres,
+            'active_page' => 'entreprises',
+        ]);
+    }
+
+    public function creerEntreprisePage(): void {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $error = $_SESSION['error'] ?? null;
+        $success = $_SESSION['success'] ?? null;
+        unset($_SESSION['error'], $_SESSION['success']);
+
+        echo $this->templateEngine->render('creerEntreprise.twig.html', [
+            'secteurs' => $this->model->getAllSecteurs(),
             'user' => $_SESSION['user'] ?? null,
             'session' => $_SESSION,
+            'error' => $error,
+            'success' => $success,
         ]);
     }
 

@@ -44,11 +44,14 @@
         </form>
     </aside>
 
-    <section class="entreprise-content">
+    <section class="offers-content">
     {% for entreprise in entreprises %}
         <article class="offer-card">
             <div class="offer-info">
                 <h3>{{ entreprise.nom_entreprise }}</h3>
+                {% if user.id_role > 0 %}
+                    <a href="index.php?page=modifier_entreprise&id={{ entreprise.id_entreprise }}" class="btn-modifier">MODIFIER</a>
+                {% endif %}
 
                 {% if entreprise.secteurs is not empty %}
                     <p><strong>Secteurs :</strong></p>
@@ -63,16 +66,18 @@
                     <p class="resume">{{ entreprise.description }}</p>
                 {% endif %}
 
-                {% if user.id_role == 1 or user.id_role == 2 %}
-                    <form method="POST" action="index.php?page=supprimer_entreprise" style="display:inline;">
-                        <input type="hidden" name="id_entreprise" value="{{ entreprise.id_entreprise }}">
-                        <button type="submit" class="btn-deco">SUPPRIMER</button>
-                    </form>
-                    <a href="index.php?page=modifier_entreprise&id={{ entreprise.id_entreprise }}" class="btn-deco">MODIFIER</a>
-                    
-                {% endif %}
-                <a href="index.php?page=detail_entreprise&id={{ entreprise.id_entreprise }}" class="info-btn">Plus d'info</a>
-            </div>
+                <div class="offer-suppr-info">
+                    <a href="index.php?page=detail_entreprise&id={{ entreprise.id_entreprise }}" class="info-btn">
+                        plus d'info
+                    </a>
+
+                    {% if user.id_role > 0 %}
+                        <form method="POST" action="index.php?page=supprimer_entreprise">
+                            <input type="hidden" name="id_entreprise" value="{{ entreprise.id_entreprise }}">
+                            <button type="submit" class="btn-supprimer">SUPPRIMER</button>
+                        </form>
+                    {% endif %}
+                </div>
 
         </article>
         {% else %}
@@ -96,7 +101,7 @@
         </div>
         
         {% if session.user is defined and session.user.id_role > 0 %}
-            <a href="index.php?page=creer-entreprise" class="btn-creer-entreprise">+ Créer une entreprise</a>
+            <a href="index.php?page=creer_entreprise" class="btn-creer-entreprise">Créer une entreprise</a>
         {% endif %}
 </div>
 {% endblock %}

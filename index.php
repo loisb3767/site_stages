@@ -117,6 +117,10 @@ switch ($page) {
         $controller -> detailEntreprisePage();
         break;
 
+    case 'creer_entreprise':
+        $controller -> creerEntreprisePage();
+        break;
+
     default:
         $controller -> e404Page();
         break;
