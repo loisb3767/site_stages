@@ -209,7 +209,9 @@ class TaskController extends Controller
     {
         echo $this->templateEngine->render('statistiques.twig.html', [
             'offresByDuree'   => $this->model->getOffresByDuree(),
-            'topWishlist'   => $this->model->getTopWishlist()
+            'topWishlist'   => $this->model->getTopWishlist(),
+            'nbOffres'   => $this->model->getNbOffres(),
+            'nbCandidaturesMoy' => $this->model->getNbCandidaturesParOffre()
         ]);
     }    
 
