@@ -75,6 +75,33 @@ class TaskController extends Controller
         ]);
     }
 
+    public function detailOffrePage(): void
+    {
+        $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+
+        if ($id <= 0) {
+            die('ID offre invalide.');
+        }
+
+        $offre = $this->model->getOffreById($id);
+
+        if (!$offre) {
+            die('Offre introuvable.');
+        }
+
+        $competences = $this->model->getCompetencesByOffreId($id);
+
+        $offre['competences'] = array_map(
+            fn($comp) => $comp['nom_competence'],
+            $competences
+        );
+
+        echo $this->templateEngine->render('detailOffre.twig.html', [
+            'offre' => $offre,
+            'active_page' => 'offres',
+        ]);
+    }
+
     public function contactPage() {
 
         echo $this->templateEngine->render('contact.twig.html');
