@@ -49,33 +49,34 @@ document.addEventListener('DOMContentLoaded', function() {
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
 
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
-  // Recherche
-  var searchInput = document.getElementById('searchInput');
-  var searchBtn = document.querySelector('.search-btn');
-
-  function doSearch() {
-    var q = searchInput.value.trim();
-    if (q.length === 0) return;
-
-    var params = new URLSearchParams(window.location.search);
-    var page = params.get('page') || 'accueil';
-
-    if (page === 'offres' || page === 'entreprises') {
-      params.set('q', q);
-      params.delete('p');
-      window.location.href = 'index.php?' + params.toString();
-    }
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') doSearch();
-    });
-  }
-  if (searchBtn) {
-    searchBtn.addEventListener('click', doSearch);
-  }
 });
+
+// Recherche
+var searchInput = document.getElementById('searchInput');
+var searchBtn = document.querySelector('.search-btn');
+
+function doSearch() {
+  var q = searchInput.value.trim();
+  if (q.length === 0) return;
+
+  var params = new URLSearchParams(window.location.search);
+  var page = params.get('page') || 'accueil';
+
+  if (page === 'offres' || page === 'entreprises') {
+    params.set('q', q);
+    params.delete('p');
+    window.location.href = 'index.php?' + params.toString();
+  }
+}
+
+if (searchInput) {
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doSearch();
+  });
+}
+if (searchBtn) {
+  searchBtn.addEventListener('click', doSearch);
+}
 
 // Header sticky sur desktop
 var lastScroll = 0;
