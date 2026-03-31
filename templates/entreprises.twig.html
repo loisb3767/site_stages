@@ -55,9 +55,6 @@
                 {% endif %}
             </div>
 
-            <!--<a href="index.php?page=detail-entreprise&id={{ entreprise.id_entreprise }}" class="info-btn">
-                plus d'info
-            </a>-->
         </article>
         {% else %}
         <p>Aucune entreprise disponible pour le moment.</p>
@@ -81,9 +78,12 @@
                 <a href="index.php?page=entreprises&p={{ page + 1 }}{% for s in selectedSecteurs %}&secteurs[]={{ s }}{% endfor %}">
                     Suivant &raquo;
                 </a>
-    {% endif %}
-</nav>
-{% endif %}
-    </section>
+                {% endif %}
+            </nav>
+            {% endif %}
+            {% if session.user is defined and session.user.id_role in [1, 2] %}
+            <a href="index.php?page=creer-entreprise" class="btn-creer-entreprise">+ Créer une entreprise</a>
+            {% endif %}
+        </section>
 </div>
 {% endblock %}
