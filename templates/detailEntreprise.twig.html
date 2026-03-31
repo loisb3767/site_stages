@@ -6,6 +6,7 @@
 {% block body %}
 <section>
     <h1 class="text-center">DÉTAIL DE L'ENTREPRISE</h1>
+    
 
     <article class="offer-card-detail">
         <div class="offer-info">
@@ -36,6 +37,29 @@
                 <strong>Téléphone :</strong>
                 {{ entreprise.telephone ?: 'Non renseigné' }}
             </p>
+
+            <p>
+                <strong>Lieu :</strong>
+                {% if entreprise.nom_rue %}
+                    {{ entreprise.nom_rue }}
+                    {% if entreprise.ville %}, {{ entreprise.ville }}{% endif %}
+                    {% if entreprise.code_postal %} ({{ entreprise.code_postal }}){% endif %}
+                {% else %}
+                    Non renseigné
+                {% endif %}
+            </p>
+
+            {% if entreprise.latitude and entreprise.longitude %}
+                <div
+                    id="offre-map"
+                    data-lat="{{ entreprise.latitude }}"
+                    data-lng="{{ entreprise.longitude }}"
+                    data-title="{{ entreprise.nom_entreprise|e('html_attr') }}"
+                    style="height: 350px; width: 100%; margin-top: 20px; border-radius: 12px;">
+                </div>
+            {% else %}
+                <p>Carte indisponible : coordonnées manquantes.</p>
+            {% endif %}
 
             <hr>
 
@@ -76,7 +100,9 @@
                 <p>Aucune offre disponible pour cette entreprise.</p>
             {% endif %}
         </div>
-
+        {% if user.id_role > 0 %}
+            <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-modifier">MODIFIER</a>
+        {% endif %}
         <a href="index.php?page=entreprises" class="btn-postuler">
             Retour aux entreprises
         </a>
