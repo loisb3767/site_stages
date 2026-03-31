@@ -39,11 +39,15 @@
         {% for offre in offres %}
             <article class="offer-card">
                 <div class="offer-info">
-                    <h3>{{ offre.titre }}</h3>
+                    <div class="offer-actions">
+                        <h3>{{ offre.titre }}</h3>
+                        <a href="index.php?page=ajouter_wishlist&id={{ offre.id_offre }}&p={{ page }}" class="btn-mes-offres">Ajouter wishlist</a>
+                    </div>
+                    
                     <p><strong>Entreprise :</strong> {{ offre.nom_entreprise }}</p>
                     <p class="secteur"><strong>Secteur :</strong> {{ offre.nom_secteur ?: 'Non renseigné' }}</p>
                     <p><strong>Date de l'offre :</strong> {{ offre.date_offre|date("d/m/Y") }}</p>
-
+                    
                     {% if offre.competences is not empty %}
                         {% for comp in offre.competences %}
                             <div class="competence-bar">{{ comp }}</div>
@@ -58,6 +62,7 @@
                 <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
                     plus d'info
                 </a>
+                
             </article>
         {% else %}
             <p>Aucune offre disponible pour le moment.</p>
