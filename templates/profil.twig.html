@@ -16,7 +16,6 @@
                     <div class="input-group">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <label>Nom</label>
-                            <a href="index.php?page=mes_offres" class="btn-mes-offres">Mes offres</a>
                         </div>
                         <p>{{ user.nom_utilisateur }}</p>
                     </div>
@@ -35,19 +34,29 @@
                         <label>Téléphone</label>
                         <p>{{ user.telephone }}</p>
                     </div>
-                    
-                    {% if user.role == 0 %}
+
+                    {% if user.id_role == 0 %}
                         <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon mot de passe</a>
-                    {% else %}
-                        <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon profil</a>
+                        <a href="index.php?page=mes_offres" class="btn-deco">Mes offres</a>
+                    {% elseif user.id_role == 1 %}
+                        <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon mot de passe</a>
+                        <a href="index.php?page=inscription" class="btn-deco">Ajouter étudiant</a>
+                        <a href="index.php?page=entreprises" class="btn-deco">Entreprises</a>
+                    {% elseif user.id_role == 2 %}
+                        <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon compte</a>
+                        <a href="index.php?page=inscription" class="btn-deco">Ajouter utilisateurs</a>
+                        <a href="index.php?page=entreprises" class="btn-deco">Entreprises</a>
                     {% endif %}
+
                     <a href="index.php?page=logout" class="btn-deco">Se déconnecter</a>
 
-                {% else %}
-                    <p>Impossible de charger les informations.</p>
-                {% endif %}
+                    {% else %}
+                        <p>Impossible de charger les informations.</p>
+                    {% endif %}
+
+                
 
             </div>
-        </div>
+        </div> 
     </div>
 {% endblock %}
