@@ -760,5 +760,26 @@ class TaskModel extends Model
                 ':duree' => $duree
             ]);
         }
-        
+
+        public function createOffre(string $titre, string $description, ?float $gratification, string $date_offre, string $duree, int $id_entreprise): bool {
+            $sql = "INSERT INTO offre (titre, description, gratification, date_offre, duree, id_entreprise)
+                    VALUES (:titre, :description, :gratification, :date_offre, :duree, :id_entreprise)";
+
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([
+                ':titre' => $titre,
+                ':description' => $description,
+                ':gratification' => $gratification,
+                ':date_offre' => $date_offre,
+                ':duree' => $duree,
+                ':id_entreprise' => $id_entreprise
+            ]);
+        }
+
+        public function getAllEntreprises(): array {
+            $sql = "SELECT id_entreprise, nom_entreprise FROM entreprise ORDER BY nom_entreprise ASC";
+            $stmt = $this->pdo->query($sql);
+            return $stmt->fetchAll();
+        }
+                
 }
