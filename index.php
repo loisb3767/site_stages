@@ -77,8 +77,8 @@ switch ($page) {
         $controller -> modifierProfilPage();
         break;
     
-    case 'mes_offres':
-        $controller -> mes_offres();
+    case 'mon_espace':
+        $controller->mon_espace();
         break;
 
     case 'entreprises':
@@ -103,6 +103,14 @@ switch ($page) {
 
     case 'ajouter_offre':
         $controller -> ajouterOffrePage();
+        break;
+
+    case 'modifier_entreprise':
+        $controller -> modifierEntreprisePage();
+        break;
+
+    case 'supprimer_entreprise':
+        $controller -> supprimerEntreprise();
         break;
 
     default:

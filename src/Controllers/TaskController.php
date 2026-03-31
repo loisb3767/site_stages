@@ -47,12 +47,10 @@ class TaskController extends Controller
             $offres = $this->model->getPaginatedOffres($currentPage, $parPage, $selectedCompetences);
         }
 
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?page=connexion');
-            exit;
+        $user = null;
+        if (isset($_SESSION['user']['id_utilisateur'])) {
+            $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
         }
-
-        $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
         $wishlistOffreIds = $this->model->getWishlistOffreIdsByUserId($_SESSION['user']['id_utilisateur']);
 
         foreach ($offres as &$offre) {
@@ -243,7 +241,7 @@ class TaskController extends Controller
             'session' => $_SESSION
         ]);
     }
-    public function mes_offres() {
+    public function mon_espace() {
         if (!isset($_SESSION['user'])) {
             header('Location: index.php?page=connexion');
             exit;
@@ -251,12 +249,14 @@ class TaskController extends Controller
 
         $id_utilisateur = $_SESSION['user']['id_utilisateur'];
         $wishlist = $this->model->getWishlistByUserId($id_utilisateur);
+        $offresDejaPostules = $this->model->offresDejaPostules($id_utilisateur);
 
-        echo $this->templateEngine->render('mes_offres.twig.html', [
+        echo $this->templateEngine->render('mon_espace.twig.html', [
             'wishlist' => $wishlist,
+            'offresDejaPostules' => $offresDejaPostules,
             'session' => $_SESSION
         ]);
-    }
+    }   
 
     public function entreprises(): void
     {
@@ -395,6 +395,50 @@ class TaskController extends Controller
             'error' => $error,
             'success' => $success,
         ]);
+    }
+
+    public function modifierEntreprisePage() {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $id = (int)($_GET['id'] ?? 0);
+        $entreprise = $this->model->getEntrepriseById($id);
+
+        if (!$entreprise) {
+            header('Location: index.php?page=entreprises');
+            exit;
+        }
+
+        $error = $_SESSION['error'] ?? null;
+        $success = $_SESSION['success'] ?? null;
+        unset($_SESSION['error'], $_SESSION['success']);
+
+        echo $this->templateEngine->render('modifierEntreprise.twig.html', [
+            'entreprise' => $entreprise,
+            'secteurs' => $this->model->getAllSecteurs(),
+            'user' => $_SESSION['user'] ?? null,
+            'session' => $_SESSION,
+            'error' => $error,
+            'success' => $success,
+        ]);
+    }
+
+    public function supprimerEntreprise() {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $id = (int)($_POST['id_entreprise'] ?? 0);
+
+        if ($id > 0) {
+            $this->model->deleteEntreprise($id);
+        }
+
+        header('Location: index.php?page=entreprises');
+        exit;
     }
 
 

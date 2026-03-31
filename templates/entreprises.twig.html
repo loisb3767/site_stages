@@ -40,7 +40,7 @@
             </ul>
 
             <button type="submit">Filtrer</button>
-            <a href="index.php?page=entreprises">Réinitialiser</a>
+            <a href="index.php?page=entreprises" class="Reinitialiser-btn">Réinitialiser</a>
         </form>
     </aside>
 
@@ -62,6 +62,15 @@
                 {% if entreprise.description %}
                     <p class="resume">{{ entreprise.description }}</p>
                 {% endif %}
+
+                {% if user.id_role == 1 or user.id_role == 2 %}
+                    <form method="POST" action="index.php?page=supprimer_entreprise" style="display:inline;">
+                        <input type="hidden" name="id_entreprise" value="{{ entreprise.id_entreprise }}">
+                        <button type="submit" class="btn-deco">SUPPRIMER</button>
+                    </form>
+                    <a href="index.php?page=modifier_entreprise&id={{ entreprise.id_entreprise }}" class="btn-deco">MODIFIER</a>
+                {% endif %}
+
             </div>
 
         </article>
