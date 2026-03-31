@@ -97,6 +97,10 @@ switch ($page) {
         $controller->ajouterWishlist();
         break;
 
+    case 'modifier_offre':
+        $controller->modifierOffrePage();
+        break;
+
     default:
         $controller->e404Page();
         break;
