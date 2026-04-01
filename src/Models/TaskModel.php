@@ -930,7 +930,7 @@ class TaskModel extends Model
     }
 
 
-    public function getEntrepriseById(int $id): array|null {
+    public function getEntrepriseParId(int $id): array|null {
         $sql = "SELECT * FROM entreprise WHERE id_entreprise = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
