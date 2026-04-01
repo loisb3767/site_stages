@@ -33,7 +33,7 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-   public function getOffreById(int $id): array|null
+    public function getOffreById(int $id): array|null
     {
         $sql = "
             SELECT
@@ -1099,87 +1099,87 @@ class TaskModel extends Model
             ]);
         }}
 
-        public function getUserFullById(int $id): array|null {
-            $sql = "SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, telephone, id_role
-                    FROM utilisateur WHERE id_utilisateur = :id";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            $result = $stmt->fetch();
-            return $result ?: null;
+    public function getUserFullById(int $id): array|null {
+        $sql = "SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, telephone, id_role
+                FROM utilisateur WHERE id_utilisateur = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }
+
+    public function deleteUser(int $id): bool {
+        // Si c'est un pilote, supprimer ses étudiants d'abord
+        $etudiants = $this->pdo->prepare("SELECT id_utilisateur FROM utilisateur WHERE referent_id = :id");
+        $etudiants->execute([':id' => $id]);
+        foreach ($etudiants->fetchAll() as $etudiant) {
+            $this->deleteUser($etudiant['id_utilisateur']);
         }
 
-        public function deleteUser(int $id): bool {
-            // Si c'est un pilote, supprimer ses étudiants d'abord
-            $etudiants = $this->pdo->prepare("SELECT id_utilisateur FROM utilisateur WHERE referent_id = :id");
-            $etudiants->execute([':id' => $id]);
-            foreach ($etudiants->fetchAll() as $etudiant) {
-                $this->deleteUser($etudiant['id_utilisateur']);
-            }
+        // Supprimer la wishlist
+        $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_utilisateur = :id");
+        $stmt->execute([':id' => $id]);
 
-            // Supprimer la wishlist
-            $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_utilisateur = :id");
-            $stmt->execute([':id' => $id]);
+        // Supprimer les candidatures
+        $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_utilisateur = :id");
+        $stmt->execute([':id' => $id]);
 
-            // Supprimer les candidatures
-            $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_utilisateur = :id");
-            $stmt->execute([':id' => $id]);
+        // Supprimer les avis
+        $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_utilisateur = :id");
+        $stmt->execute([':id' => $id]);
 
-            // Supprimer les avis
-            $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_utilisateur = :id");
-            $stmt->execute([':id' => $id]);
+        // Supprimer l'utilisateur
+        $stmt = $this->pdo->prepare("DELETE FROM utilisateur WHERE id_utilisateur = :id");
+        return $stmt->execute([':id' => $id]);
+    }
 
-            // Supprimer l'utilisateur
-            $stmt = $this->pdo->prepare("DELETE FROM utilisateur WHERE id_utilisateur = :id");
-            return $stmt->execute([':id' => $id]);
-        }
+    public function getPaginatedUsers(int $page, int $parPage, int $role = 0): array {
+        $offset = ($page - 1) * $parPage;
+        $sql = "SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, telephone
+                FROM utilisateur
+                WHERE id_role = :role
+                ORDER BY nom_utilisateur ASC
+                LIMIT :limit OFFSET :offset";
 
-        public function getPaginatedUsers(int $page, int $parPage, int $role = 0): array {
-            $offset = ($page - 1) * $parPage;
-            $sql = "SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, telephone
-                    FROM utilisateur
-                    WHERE id_role = :role
-                    ORDER BY nom_utilisateur ASC
-                    LIMIT :limit OFFSET :offset";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':role', $role, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':role', $role, PDO::PARAM_INT);
-            $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
-            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-            $stmt->execute();
-            return $stmt->fetchAll();
-        }
+    public function getTotalUsers(int $role = 0): int {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM utilisateur WHERE id_role = :role");
+        $stmt->execute([':role' => $role]);
+        return (int) $stmt->fetchColumn();
+    }
 
-        public function getTotalUsers(int $role = 0): int {
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM utilisateur WHERE id_role = :role");
-            $stmt->execute([':role' => $role]);
-            return (int) $stmt->fetchColumn();
-        }
+    public function getCandidaturesByUserId(int $id): array {
+        $sql = "SELECT c.id_offre, c.date_candidature, c.statut,
+                    o.titre, e.nom_entreprise
+                FROM candidature c
+                JOIN offre o ON c.id_offre = o.id_offre
+                JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+                WHERE c.id_utilisateur = :id
+                ORDER BY c.date_candidature DESC";
 
-        public function getCandidaturesByUserId(int $id): array {
-            $sql = "SELECT c.id_offre, c.date_candidature, c.statut,
-                        o.titre, e.nom_entreprise
-                    FROM candidature c
-                    JOIN offre o ON c.id_offre = o.id_offre
-                    JOIN entreprise e ON o.id_entreprise = e.id_entreprise
-                    WHERE c.id_utilisateur = :id
-                    ORDER BY c.date_candidature DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchAll();
+    }
 
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            return $stmt->fetchAll();
-        }
+    public function getAvisByEntrepriseId(int $id): array {
+        $sql = "SELECT a.id_avis, a.commentaire, a.note, a.date_avis,
+                    u.nom_utilisateur, u.prenom_utilisateur
+                FROM avis a
+                JOIN utilisateur u ON a.id_utilisateur = u.id_utilisateur
+                WHERE a.id_entreprise = :id
+                ORDER BY a.date_avis DESC";
 
-        public function getAvisByEntrepriseId(int $id): array {
-            $sql = "SELECT a.id_avis, a.commentaire, a.note, a.date_avis,
-                        u.nom_utilisateur, u.prenom_utilisateur
-                    FROM avis a
-                    JOIN utilisateur u ON a.id_utilisateur = u.id_utilisateur
-                    WHERE a.id_entreprise = :id
-                    ORDER BY a.date_avis DESC";
-
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':id' => $id]);
-            return $stmt->fetchAll();
-        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchAll();
+    }
                 
 }
