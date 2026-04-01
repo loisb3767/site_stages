@@ -535,8 +535,7 @@ class TaskController extends Controller
         ]);
     }
 
-    public function detailEntreprisePage(): void
-    {
+    public function detailEntreprisePage(): void {
         $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
         if ($id <= 0) {
@@ -544,22 +543,30 @@ class TaskController extends Controller
             return;
         }
 
-        $entreprise = $this->model->getEntrepriseParId($id);
+        $entreprise = $this->model->getEntrepriseById($id);
 
         if (!$entreprise) {
             $this->e404Page();
             return;
         }
 
+        $user = null;
+        if (isset($_SESSION['user']['id_utilisateur'])) {
+            $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+        }
+
         $secteurs = $this->model->getSecteursByEntrepriseId($id);
-        $entreprise['secteurs'] = array_map(
-            fn($s) => $s['nom_secteur'], $secteurs);
+        $entreprise['secteurs'] = array_map(fn($s) => $s['nom_secteur'], $secteurs);
 
         $offres = $this->model->getOffresByEntrepriseId($id);
+        $avis = $this->model->getAvisByEntrepriseId($id);
 
         echo $this->templateEngine->render('detailEntreprise.twig.html', [
             'entreprise' => $entreprise,
             'offres' => $offres,
+            'avis' => $avis,
+            'user' => $user,
+            'session' => $_SESSION,
             'active_page' => 'entreprises',
         ]);
     }

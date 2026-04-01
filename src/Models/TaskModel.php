@@ -1166,5 +1166,18 @@ class TaskModel extends Model
             $stmt->execute([':id' => $id]);
             return $stmt->fetchAll();
         }
+
+        public function getAvisByEntrepriseId(int $id): array {
+            $sql = "SELECT a.id_avis, a.commentaire, a.note, a.date_avis,
+                        u.nom_utilisateur, u.prenom_utilisateur
+                    FROM avis a
+                    JOIN utilisateur u ON a.id_utilisateur = u.id_utilisateur
+                    WHERE a.id_entreprise = :id
+                    ORDER BY a.date_avis DESC";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetchAll();
+        }
                 
 }
