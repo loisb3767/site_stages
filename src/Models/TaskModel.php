@@ -930,13 +930,13 @@ class TaskModel extends Model
     }
 
 
-    public function getEntrepriseById(int $id): array|null {
+    /*public function getEntrepriseById(int $id): array|null {
         $sql = "SELECT * FROM entreprise WHERE id_entreprise = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':id' => $id]);
         $result = $stmt->fetch();
         return $result ?: null;
-    }
+    }*/     
 
     public function updateEntreprise(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur): bool {
         $sql = "UPDATE entreprise SET
