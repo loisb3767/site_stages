@@ -336,7 +336,7 @@ class TaskController extends Controller
         }
 
         $this->model->removeFromWishlist($_SESSION['user']['id_utilisateur'], $idOffre);
-        header('Location: index.php?page=mes_offres');
+        header('Location: index.php?page=mon_espace');
         exit;
     }
 
