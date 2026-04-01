@@ -1560,3 +1560,28 @@ button.btn-supprimer:disabled {
 .btn-mes-offres-supprimer:hover {
     background-color: color-mix(in srgb, var(--error-color), var(--secondary-color) 20%);
 }
+
+.pilotes-container {
+    margin-top: 15px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.pilotes-title {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.pilote-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.pilote-item label {
+    margin: 0;
+    cursor: pointer;
+}

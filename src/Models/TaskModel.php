@@ -457,7 +457,7 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-    public function createUser($nom, $prenom, $email, $password, $id_role, $telephone = NULL) {
+    public function createUser($nom, $prenom, $email, $password, $id_role, $telephone = NULL, $id_referent = NULL) {
 
     $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -467,14 +467,16 @@ class TaskModel extends Model
                 email,
                 telephone,
                 mot_de_passe,
-                id_role
+                id_role,
+                id_referent
             ) VALUES (
                 :nom,
                 :prenom,
                 :email,
                 :telephone,
                 :password,
-                :id_role
+                :id_role,
+                :id_referent
             )";
 
     $stmt = $this->pdo->prepare($sql);
@@ -485,7 +487,8 @@ class TaskModel extends Model
         ':email' => $email,
         ':telephone' => $telephone,
         ':password' => $password,
-        ':id_role' => $id_role
+        ':id_role' => $id_role,
+        ':id_referent' => $id_referent
     ]);
     }
 

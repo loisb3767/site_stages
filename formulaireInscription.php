@@ -24,9 +24,10 @@ $email = trim($_POST['email'] ?? '');
 $telephone = trim($_POST['telephone'] ?? '');
 $password = trim($_POST['password'] ?? '');
 $id_role = isset($_POST['id_role']) ? (int) $_POST['id_role'] : -1;
+$id_referent = isset($_POST['id_referent']) ? (int) $_POST['id_referent'] : null;
 
-if (empty($email) || empty($password)) {
-    $_SESSION['error'] = "L'email et le mot de passe sont obligatoires.";
+if (empty($nom) || empty($prenom) || empty($email) || empty($password) || $id_role < 0) {
+    $_SESSION['error'] = "Tous les champs obligatoires doivent être renseignés.";
     header('Location: index.php?page=inscription');
     exit;
 }
@@ -56,13 +57,15 @@ if ($_SESSION['user']['id_role'] == 1 && $id_role != 0) {
     exit;
 }
 
+
 $success = $model->createUser(
     $nom,
     $prenom,
     $email,
-    $id_role,
     $password,
-    $telephone
+    $id_role,
+    $telephone,
+    $id_referent
 );
 
 if ($success) {
