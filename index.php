@@ -127,6 +127,14 @@ switch ($page) {
         $controller -> creerEntreprisePage();
         break;
 
+    case 'modifier_etudiant':
+        $controller -> modifierEtudiantPage();
+        break;
+
+    case 'supprimer_etudiant':
+        $controller -> supprimerEtudiant();
+        break;
+
     default:
         $controller -> e404Page();
         break;
