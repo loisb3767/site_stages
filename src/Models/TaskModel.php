@@ -33,11 +33,12 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-    public function getOffreById(int $id): array|null
+   public function getOffreById(int $id): array|null
     {
         $sql = "
             SELECT
                 o.id_offre,
+                o.id_entreprise,
                 o.titre,
                 o.description,
                 o.gratification,
@@ -75,6 +76,7 @@ class TaskModel extends Model
 
         return $this->geocodeAdresseIfNeeded($offre);
     }
+
     public function getTotalCountEntreprises(array $competenceId = []): int{
         if (empty($competenceId)) {
             return (int) $this->pdo->query("SELECT COUNT(*) FROM entreprise")->fetchColumn();
@@ -457,7 +459,7 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-    public function createUser($nom, $prenom, $email, $password, $id_role, $telephone = NULL) {
+    public function createUser($nom, $prenom, $email, $password, $id_role, $telephone = NULL, $id_referent = NULL) {
 
     $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -467,14 +469,16 @@ class TaskModel extends Model
                 email,
                 telephone,
                 mot_de_passe,
-                id_role
+                id_role,
+                id_referent
             ) VALUES (
                 :nom,
                 :prenom,
                 :email,
                 :telephone,
                 :password,
-                :id_role
+                :id_role,
+                :id_referent
             )";
 
     $stmt = $this->pdo->prepare($sql);
@@ -485,9 +489,10 @@ class TaskModel extends Model
         ':email' => $email,
         ':telephone' => $telephone,
         ':password' => $password,
-        ':id_role' => $id_role
+        ':id_role' => $id_role,
+        ':id_referent' => $id_referent
     ]);
-}
+    }
 
     public function getAllRoles() {
         $sql = "SELECT id_role, nom_role FROM role ORDER BY id_role";
@@ -572,41 +577,40 @@ class TaskModel extends Model
         return (int) $stmt->fetchColumn();
     }
 
-    public function getPaginatedEntreprises(int $page, int $parPage, array $secteurs = []): array
-    {
-    $offset = ($page - 1) * $parPage;
+    public function getPaginatedEntreprises(int $page, int $parPage, array $secteurs = []): array{
+        $offset = ($page - 1) * $parPage;
 
-    if (empty($secteurs)) {
-        $sql = "SELECT * FROM entreprise LIMIT ? OFFSET ?";
+        if (empty($secteurs)) {
+            $sql = "SELECT * FROM entreprise LIMIT ? OFFSET ?";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(1, $parPage, PDO::PARAM_INT);
+            $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+
+        $placeholders = implode(',', array_fill(0, count($secteurs), '?'));
+
+        $sql = "
+            SELECT *
+            FROM entreprise
+            WHERE id_secteur IN ($placeholders)
+            LIMIT ? OFFSET ?
+        ";
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(1, $parPage, PDO::PARAM_INT);
-        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+
+        $i = 1;
+        foreach ($secteurs as $secteur) {
+            $stmt->bindValue($i++, $secteur, PDO::PARAM_INT);
+        }
+
+        $stmt->bindValue($i++, $parPage, PDO::PARAM_INT);
+        $stmt->bindValue($i, $offset, PDO::PARAM_INT);
+
         $stmt->execute();
+
         return $stmt->fetchAll();
-    }
-
-    $placeholders = implode(',', array_fill(0, count($secteurs), '?'));
-
-    $sql = "
-        SELECT *
-        FROM entreprise
-        WHERE id_secteur IN ($placeholders)
-        LIMIT ? OFFSET ?
-    ";
-
-    $stmt = $this->pdo->prepare($sql);
-
-    $i = 1;
-    foreach ($secteurs as $secteur) {
-        $stmt->bindValue($i++, $secteur, PDO::PARAM_INT);
-    }
-
-    $stmt->bindValue($i++, $parPage, PDO::PARAM_INT);
-    $stmt->bindValue($i, $offset, PDO::PARAM_INT);
-
-    $stmt->execute();
-
-    return $stmt->fetchAll();
     }
 
     public function getSecteursByEntrepriseId(int $id): array
@@ -665,18 +669,18 @@ class TaskModel extends Model
         }
 
     public function getNbCandidaturesParOffre(): float
-        {
-            $sql = "
-                SELECT AVG(nb_candidatures) FROM (
-                    SELECT COUNT(c.id_candidature) AS nb_candidatures
-                    FROM offre o
-                    LEFT JOIN candidature c ON c.id_offre = o.id_offre
-                    GROUP BY o.id_offre
-                ) AS sous_requete
-            ";
+    {
+        $sql = "
+            SELECT AVG(nb_candidatures) FROM (
+                SELECT COUNT(c.id_candidature) AS nb_candidatures
+                FROM offre o
+                LEFT JOIN candidature c ON c.id_offre = o.id_offre
+                GROUP BY o.id_offre
+            ) AS sous_requete
+        ";
 
-            $stmt = $this->pdo->query($sql);
-            return round((float) $stmt->fetchColumn(), 1);
+        $stmt = $this->pdo->query($sql);
+        return round((float) $stmt->fetchColumn(), 1);
     }
 
     public function getPaginatedOffresSearch(int $page, int $parPage, string $q): array
@@ -862,6 +866,83 @@ class TaskModel extends Model
         return $this->geocodeAdresseIfNeeded($entreprise);
     }
 
+    public function getOffresByEntrepriseId(int $id): array {
+        $sql = "SELECT id_offre, titre, description, gratification, date_offre, duree
+                FROM offre
+                WHERE id_entreprise = :id
+                ORDER BY date_offre DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchAll();
+    }
+
+    public function createEntreprise(string $nom, string $description, string $email, string $telephone, ?int $id_secteur, string $nom_rue = '', string $code_postal = '', string $ville = ''): bool {
+        // Créer l'entreprise
+        $sql = "INSERT INTO entreprise (nom_entreprise, description, email, telephone, id_secteur)
+                VALUES (:nom, :description, :email, :telephone, :id_secteur)";
+
+        $stmt = $this->pdo->prepare($sql);
+        $result = $stmt->execute([
+            ':nom' => $nom,
+            ':description' => $description,
+            ':email' => $email,
+            ':telephone' => $telephone,
+            ':id_secteur' => $id_secteur
+        ]);
+
+        // Récupérer l'id de l'offre créée
+        $id_offre = (int)$this->pdo->lastInsertId();
+
+        // Insérer les compétences
+        if (!empty($competences)) {
+        $stmt = $this->pdo->prepare("INSERT INTO offre_competence (id_offre, id_competence) VALUES (:id_offre, :id_competence)");
+        foreach ($competences as $id_competence) {
+                $stmt->execute([
+                    ':id_offre' => $id_offre,
+                    ':id_competence' => $id_competence]);
+            $id_entreprise = (int)$this->pdo->lastInsertId();
+
+            // Créer l'adresse 
+            if (!empty($nom_rue) || !empty($code_postal)) {
+                $sql = "INSERT INTO adresse (nom_rue, code_postal, ville)
+                        VALUES (:nom_rue, :code_postal, :ville)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':nom_rue' => $nom_rue,
+                    ':code_postal' => $code_postal ?: '00000',
+                    ':ville' => $ville
+                ]);
+
+                $id_adresse = (int)$this->pdo->lastInsertId();
+
+                // Lier l'adresse à l'entreprise
+                $sql = "INSERT INTO entreprise_adresse (id_entreprise, id_adresse)
+                        VALUES (:id_entreprise, :id_adresse)";
+
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute([
+                    ':id_entreprise' => $id_entreprise,
+                '   :id_adresse' => $id_adresse
+                ]);
+            }
+        }
+
+        return true;
+        }
+
+    }
+
+
+    public function getEntrepriseParId(int $id): array|null {
+        $sql = "SELECT * FROM entreprise WHERE id_entreprise = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }   
+
     public function updateEntreprise(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur): bool {
         $sql = "UPDATE entreprise SET
                     nom_entreprise = :nom,
@@ -903,8 +984,7 @@ class TaskModel extends Model
         return $stmt->execute([':id' => $id]);
     }
 
-    public function getWishlistOffreIdsByUserId(int $userId): array
-    {
+    public function getWishlistOffreIdsByUserId(int $userId): array {
         $sql = "
             SELECT id_offre
             FROM wishlist
@@ -920,149 +1000,186 @@ class TaskModel extends Model
         return array_map('intval', $rows);
     }
 
-    public function getOffresByEntrepriseId(int $id): array {
-        $sql = "SELECT id_offre, titre, description, gratification, date_offre, duree
-                FROM offre
-                WHERE id_entreprise = :id
-                ORDER BY date_offre DESC";
-
+    public function getAllEtudiants() : array {
+        $sql = "SELECT * FROM utilisateur WHERE id_role = 0"; 
+        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getEtudiantsByPiloteId($role) {
+        $sql = "SELECT * FROM utilisateur WHERE id_role = 0 AND referent_id = :role";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':id' => $id]);
+        $stmt->execute([':role' => $role]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } 
+    public function getAllPilote() : array {
+        $sql = "SELECT * FROM utilisateur WHERE id_role = 1"; 
+        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getAllUsers(): array {
+        $stmt = $this->pdo->query("SELECT id_utilisateur, mot_de_passe FROM utilisateur");
         return $stmt->fetchAll();
     }
 
-        public function createEntreprise(string $nom, string $description, string $email, string $telephone, ?int $id_secteur, string $nom_rue = '', string $code_postal = '', string $ville = ''): bool {
-            // Créer l'entreprise
-            $sql = "INSERT INTO entreprise (nom_entreprise, description, email, telephone, id_secteur)
-                    VALUES (:nom, :description, :email, :telephone, :id_secteur)";
+    public function updatePasswordById(int $id, string $password): bool {
+        $stmt = $this->pdo->prepare("UPDATE utilisateur SET mot_de_passe = :password WHERE id_utilisateur = :id");
+        return $stmt->execute([':password' => $password, ':id' => $id]);
+    }
+
+    public function getAdresseByEntrepriseId(int $id): array|null {
+        $sql = "SELECT a.*
+                FROM adresse a
+                JOIN entreprise_adresse ea ON a.id_adresse = ea.id_adresse
+                WHERE ea.id_entreprise = :id
+                LIMIT 1";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $result = $stmt->fetch();
+        return $result ?: null;
+    }
+
+    public function updateEntrepriseWithAdresse(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur, ?int $id_adresse, string $nom_rue, string $code_postal, string $ville): bool {
+        // Mettre à jour l'entreprise
+        $sql = "UPDATE entreprise SET
+                    nom_entreprise = :nom,
+                    description = :description,
+                    email = :email,
+                    telephone = :telephone,
+                    id_secteur = :id_secteur
+                WHERE id_entreprise = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+        $result = $stmt->execute([
+            ':id' => $id,
+            ':nom' => $nom,
+            ':description' => $description,
+            ':email' => $email,
+            ':telephone' => $telephone,
+            ':id_secteur' => $id_secteur
+        ]);
+
+        if (!$result) return false;
+
+        // Adresse existante → on la met à jour
+        if ($id_adresse) {
+            $sql = "UPDATE adresse SET
+                        nom_rue = :nom_rue,
+                        code_postal = :code_postal,
+                        ville = :ville
+                    WHERE id_adresse = :id_adresse";
 
             $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute([
-                ':nom' => $nom,
-                ':description' => $description,
-                ':email' => $email,
-                ':telephone' => $telephone,
-                ':id_secteur' => $id_secteur
+            $stmt->execute([
+                ':nom_rue' => $nom_rue,
+                ':code_postal' => $code_postal ?: '00000',
+                ':ville' => $ville,
+                ':id_adresse' => $id_adresse
             ]);
 
-            if (!$result) return false;
+        // Pas d'adresse on en crée une si renseignée
+        } elseif (!empty($nom_rue) || !empty($code_postal)) {
+            $sql = "INSERT INTO adresse (nom_rue, code_postal, ville)
+                    VALUES (:nom_rue, :code_postal, :ville)";
 
-            $id_entreprise = (int)$this->pdo->lastInsertId();
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':nom_rue' => $nom_rue,
+                ':code_postal' => $code_postal ?: '00000',
+                ':ville' => $ville
+            ]);
 
-            // Créer l'adresse 
-            if (!empty($nom_rue) || !empty($code_postal)) {
-                $sql = "INSERT INTO adresse (nom_rue, code_postal, ville)
-                        VALUES (:nom_rue, :code_postal, :ville)";
+            $new_id_adresse = (int)$this->pdo->lastInsertId();
 
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->execute([
-                    ':nom_rue' => $nom_rue,
-                    ':code_postal' => $code_postal ?: '00000',
-                    ':ville' => $ville
-                ]);
+            $sql = "INSERT INTO entreprise_adresse (id_entreprise, id_adresse)
+                    VALUES (:id_entreprise, :id_adresse)";
 
-                $id_adresse = (int)$this->pdo->lastInsertId();
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                ':id_entreprise' => $id,
+                ':id_adresse' => $new_id_adresse
+            ]);
+        }}
 
-                // Lier l'adresse à l'entreprise
-                $sql = "INSERT INTO entreprise_adresse (id_entreprise, id_adresse)
-                        VALUES (:id_entreprise, :id_adresse)";
-
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->execute([
-                    ':id_entreprise' => $id_entreprise,
-                    ':id_adresse' => $id_adresse
-                ]);
-            }
-
-            return true;
-        }
-
-        public function getAllUsers(): array {
-            $stmt = $this->pdo->query("SELECT id_utilisateur, mot_de_passe FROM utilisateur");
-            return $stmt->fetchAll();
-        }
-
-        public function updatePasswordById(int $id, string $password): bool {
-            $stmt = $this->pdo->prepare("UPDATE utilisateur SET mot_de_passe = :password WHERE id_utilisateur = :id");
-            return $stmt->execute([':password' => $password, ':id' => $id]);
-        }
-
-        public function getAdresseByEntrepriseId(int $id): array|null {
-            $sql = "SELECT a.*
-                    FROM adresse a
-                    JOIN entreprise_adresse ea ON a.id_adresse = ea.id_adresse
-                    WHERE ea.id_entreprise = :id
-                    LIMIT 1";
-
+        public function getUserFullById(int $id): array|null {
+            $sql = "SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, telephone, id_role
+                    FROM utilisateur WHERE id_utilisateur = :id";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([':id' => $id]);
             $result = $stmt->fetch();
             return $result ?: null;
         }
 
-        public function updateEntrepriseWithAdresse(int $id, string $nom, string $description, string $email, string $telephone, ?int $id_secteur, ?int $id_adresse, string $nom_rue, string $code_postal, string $ville): bool {
-            // Mettre à jour l'entreprise
-            $sql = "UPDATE entreprise SET
-                        nom_entreprise = :nom,
-                        description = :description,
-                        email = :email,
-                        telephone = :telephone,
-                        id_secteur = :id_secteur
-                    WHERE id_entreprise = :id";
-
-            $stmt = $this->pdo->prepare($sql);
-            $result = $stmt->execute([
-                ':id' => $id,
-                ':nom' => $nom,
-                ':description' => $description,
-                ':email' => $email,
-                ':telephone' => $telephone,
-                ':id_secteur' => $id_secteur
-            ]);
-
-            if (!$result) return false;
-
-            // Adresse existante → on la met à jour
-            if ($id_adresse) {
-                $sql = "UPDATE adresse SET
-                            nom_rue = :nom_rue,
-                            code_postal = :code_postal,
-                            ville = :ville
-                        WHERE id_adresse = :id_adresse";
-
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->execute([
-                    ':nom_rue' => $nom_rue,
-                    ':code_postal' => $code_postal ?: '00000',
-                    ':ville' => $ville,
-                    ':id_adresse' => $id_adresse
-                ]);
-
-            // Pas d'adresse on en crée une si renseignée
-            } elseif (!empty($nom_rue) || !empty($code_postal)) {
-                $sql = "INSERT INTO adresse (nom_rue, code_postal, ville)
-                        VALUES (:nom_rue, :code_postal, :ville)";
-
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->execute([
-                    ':nom_rue' => $nom_rue,
-                    ':code_postal' => $code_postal ?: '00000',
-                    ':ville' => $ville
-                ]);
-
-                $new_id_adresse = (int)$this->pdo->lastInsertId();
-
-                $sql = "INSERT INTO entreprise_adresse (id_entreprise, id_adresse)
-                        VALUES (:id_entreprise, :id_adresse)";
-
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->execute([
-                    ':id_entreprise' => $id,
-                    ':id_adresse' => $new_id_adresse
-                ]);
+        public function deleteUser(int $id): bool {
+            // Si c'est un pilote, supprimer ses étudiants d'abord
+            $etudiants = $this->pdo->prepare("SELECT id_utilisateur FROM utilisateur WHERE referent_id = :id");
+            $etudiants->execute([':id' => $id]);
+            foreach ($etudiants->fetchAll() as $etudiant) {
+                $this->deleteUser($etudiant['id_utilisateur']);
             }
 
-            return true;
+            // Supprimer la wishlist
+            $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_utilisateur = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer les candidatures
+            $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_utilisateur = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer les avis
+            $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_utilisateur = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer l'utilisateur
+            $stmt = $this->pdo->prepare("DELETE FROM utilisateur WHERE id_utilisateur = :id");
+            return $stmt->execute([':id' => $id]);
+        }
+
+        public function getPaginatedUsers(int $page, int $parPage, int $role = 0): array {
+            $offset = ($page - 1) * $parPage;
+            $sql = "SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, telephone
+                    FROM utilisateur
+                    WHERE id_role = :role
+                    ORDER BY nom_utilisateur ASC
+                    LIMIT :limit OFFSET :offset";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':role', $role, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+
+        public function getTotalUsers(int $role = 0): int {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM utilisateur WHERE id_role = :role");
+            $stmt->execute([':role' => $role]);
+            return (int) $stmt->fetchColumn();
+        }
+
+        public function getCandidaturesByUserId(int $id): array {
+            $sql = "SELECT c.id_offre, c.date_candidature, c.statut,
+                        o.titre, e.nom_entreprise
+                    FROM candidature c
+                    JOIN offre o ON c.id_offre = o.id_offre
+                    JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+                    WHERE c.id_utilisateur = :id
+                    ORDER BY c.date_candidature DESC";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetchAll();
+        }
+
+        public function getAvisByEntrepriseId(int $id): array {
+            $sql = "SELECT a.id_avis, a.commentaire, a.note, a.date_avis,
+                        u.nom_utilisateur, u.prenom_utilisateur
+                    FROM avis a
+                    JOIN utilisateur u ON a.id_utilisateur = u.id_utilisateur
+                    WHERE a.id_entreprise = :id
+                    ORDER BY a.date_avis DESC";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetchAll();
         }
                 
 }

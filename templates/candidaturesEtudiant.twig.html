@@ -1,0 +1,34 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Candidatures de {{ etudiant.nom_utilisateur }} - Job2main{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <a href="index.php?page=liste_admin" class="tab">Administration</a>
+                <div class="tab active">Candidatures de {{ etudiant.nom_utilisateur }} {{ etudiant.prenom_utilisateur }}</div>
+            </div>
+
+            <div class="card-body">
+                {% if candidatures is not empty %}
+                    {% for candidature in candidatures %}
+                        <div class="offer-card">
+                            <div class="offer-info">
+                                <h3>{{ candidature.titre }}</h3>
+                                <p><strong>Entreprise :</strong> {{ candidature.nom_entreprise }}</p>
+                                <p><strong>Date :</strong> {{ candidature.date_candidature|date("d/m/Y") }}</p>
+                                <p><strong>Statut :</strong> {{ candidature.statut }}</p>
+                            </div>
+                            <a href="index.php?page=detail-offre&id={{ candidature.id_offre }}" class="info-btn">Plus d'info</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Cet étudiant n'a aucune candidature.</p>
+                {% endif %}
+
+                <a href="index.php?page=inscription" class="btn-deco">Retour</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

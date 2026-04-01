@@ -113,12 +113,30 @@ switch ($page) {
         $controller -> supprimerEntreprise();
         break;
 
+    case 'liste_etudiant':
+        $controller -> liste_etudiantPage();
+        break;
+    case 'liste_admin':
+        $controller -> liste_adminPage();
+        break;
     case 'detail_entreprise':
         $controller -> detailEntreprisePage();
         break;
 
     case 'creer_entreprise':
         $controller -> creerEntreprisePage();
+        break;
+
+    case 'modifier_etudiant':
+        $controller -> modifierEtudiantPage();
+        break;
+
+    case 'candidatures_etudiant':
+        $controller -> candidaturesEtudiantPage();
+        break;
+
+    case 'supprimer_etudiant':
+        $controller -> supprimerEtudiant();
         break;
 
     default:

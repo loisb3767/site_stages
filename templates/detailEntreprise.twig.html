@@ -99,6 +99,43 @@
             {% else %}
                 <p>Aucune offre disponible pour cette entreprise.</p>
             {% endif %}
+            <hr>
+
+                <h3>Avis sur l'entreprise</h3>
+                {% if avis is not empty %}
+                    <p>
+                        <strong>Note générale : </strong>
+                        {% set total = 0 %}
+                        {% for avi in avis %}
+                            {% set total = total + avi.note %}
+                        {% endfor %}
+                        {% set moyenne = (total / avis|length)|round(1) %}
+                        {{ moyenne }}/5
+                        {% for i in 1..5 %}
+                            {% if i <= moyenne %}⭐{% else %}☆{% endif %}
+                        {% endfor %}
+                        <small>({{ avis|length }} avis)</small>
+                    </p>
+                    <hr>
+                    {% for avi in avis %}
+                        <div class="offer-card">
+                            <div class="offer-info">
+                                <p><strong>{{ avi.nom_utilisateur }} {{ avi.prenom_utilisateur }}</strong>
+                                <small>— {{ avi.date_avis|date("d/m/Y") }}</small></p>
+                                <p>
+                                    {% for i in 1..5 %}
+                                        {% if i <= avi.note %}⭐{% else %}☆{% endif %}
+                                    {% endfor %}
+                                </p>
+                                {% if avi.commentaire %}
+                                    <p>{{ avi.commentaire }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun avis pour cette entreprise.</p>
+                {% endif %}
         </div>
         {% if user.id_role > 0 %}
             <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-modifier">MODIFIER</a>

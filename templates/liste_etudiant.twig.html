@@ -1,0 +1,66 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Parcours des étudiants - Job2main{% endblock %}
+{% block description %}Parcourez vos étudiants assignés !{% endblock %}
+
+{% block search_bar %}
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="recherche précise" aria-label="Recherche">
+        <button class="search-btn" aria-label="Rechercher">
+            <img src="projet-static.local/images/search_icon.png" alt="Rechercher">
+        </button>
+    </div>
+{% endblock %}
+
+{% block body %}
+<div class="offers-page">
+    <aside class="sidebar">
+        <div class="sidebar-title">Mes étudiants</div>
+        
+        <section class="entreprise-content">
+        {% for etudiant in etudiants %}
+            <article class="offer-card">
+                <div class="offer-info">
+                    <h3>{{ etudiant.nom_utilisateur }} {{ etudiant.prenom_utilisateur }}</h3>
+                    <h4>{{ etudiant.email}}</h4>
+
+                    {% if etudiant.description %}
+                        <p class="resume">{{ etudiant.description }}</p>
+                    {% endif %}
+
+                    {% if user.id_role == 1 %}
+                        <a href="index.php?page=candidatures_etudiant&id={{ etudiant.id_utilisateur }}" class="btn-wishlist-offre">Candidatures</a>
+                        <form method="POST" action="index.php?page=supprimer_etudiant" style="display:inline;">
+                            <input type="hidden" name="id_etudiant" value="{{ etudiant.id_utilisateur }}">
+                            <button type="submit" class="btn-deco">SUPPRIMER</button>
+                        </form>
+                        <a href="index.php?page=modifier_etudiant&id={{ etudiant.id_utilisateur }}" class="btn-deco">MODIFIER</a>
+                    {% endif %}
+                </div>
+            </article>
+        {% else %}
+            <p>Aucun étudiant disponible pour le moment.</p>
+        {% endfor %}
+
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="?page=liste_etudiant&p={{ page - 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                    Précédent
+                </a>
+            {% endif %}
+
+            <span class="page-info">Page {{ page }} sur {{ nbPages }}</span>
+
+            {% if page < nbPages %}
+                <a href="?page=liste_etudiant&p={{ page + 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                    Suivant
+                </a>
+            {% endif %}
+        </div>
+
+        {% if session.user is defined and session.user.id_role > 0 %}
+            <a href="index.php?page=inscription" class="btn-deco">Ajouter un étudiant</a>
+        {% endif %}
+    </aside>
+</div>
+{% endblock %}

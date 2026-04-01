@@ -7,25 +7,32 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Event\Code\IssueTrigger;
+namespace PHPUnit\Event\TestRunner;
+
+use PHPUnit\Event\Event;
+use PHPUnit\Event\Telemetry;
 
 /**
  * @immutable
  *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class DirectTrigger extends IssueTrigger
+final readonly class ChildProcessStarted implements Event
 {
-    /**
-     * Your own code triggers an issue in third-party code.
-     */
-    public function isDirect(): true
+    private Telemetry\Info $telemetryInfo;
+
+    public function __construct(Telemetry\Info $telemetryInfo)
     {
-        return true;
+        $this->telemetryInfo = $telemetryInfo;
+    }
+
+    public function telemetryInfo(): Telemetry\Info
+    {
+        return $this->telemetryInfo;
     }
 
     public function asString(): string
     {
-        return 'issue triggered by first-party code calling into third-party code';
+        return 'Child Process Started';
     }
 }
