@@ -487,6 +487,7 @@ class TaskController extends Controller
             'session' => $_SESSION,
         ]);
     }
+    
     public function detailEntreprisePage(): void
     {
         $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
