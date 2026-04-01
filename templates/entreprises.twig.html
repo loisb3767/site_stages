@@ -1,0 +1,107 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Parcours des offres - Job2main{% endblock %}
+{% block description %}Parcourez nos entreprises !{% endblock %}
+
+{% block search_bar %}
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="recherche précise" aria-label="Recherche">
+        <button class="search-btn" aria-label="Rechercher">
+            <img src="projet-static.local/images/search_icon.png" alt="Rechercher">
+        </button>
+    </div>
+{% endblock %}
+
+{% block body %}
+<div class="offers-page">
+    <aside class="sidebar">
+        <div class="sidebar-title">Catégories</div>
+
+        <form method="GET" action="index.php">
+            <input type="hidden" name="page" value="entreprises">
+
+            <ul class="specialites">
+                {% for categorie in categories %}
+                    <li>
+                        <input
+                            type="checkbox"
+                            name="secteurs[]"
+                            value="{{ categorie.id_secteur }}"
+                            id="categorie{{ categorie.id_secteur}}"
+                            {% if categorie.id_secteur in selectedSecteurs %}checked{% endif %}
+                        >
+                        <label for="categorie{{ categorie.id_secteur }}">
+                            {{ categorie.nom_secteur }}
+                        </label>
+                    </li>
+                {% else %}
+                    <li>Aucune catégorie disponible</li>
+                {% endfor %}
+            </ul>
+
+            <button type="submit">Filtrer</button>
+            <a href="index.php?page=entreprises" class="Reinitialiser-btn">Réinitialiser</a>
+        </form>
+    </aside>
+
+    <section class="offers-content">
+    {% for entreprise in entreprises %}
+        <article class="offer-card">
+            <div class="offer-info">
+                <h3>{{ entreprise.nom_entreprise }}</h3>
+                {% if user.id_role > 0 %}
+                    <a href="index.php?page=modifier_entreprise&id={{ entreprise.id_entreprise }}" class="btn-modifier">MODIFIER</a>
+                {% endif %}
+
+                {% if entreprise.secteurs is not empty %}
+                    <p><strong>Secteurs :</strong></p>
+                    {% for secteur in entreprise.secteurs %}
+                        <div class="competence-bar">{{ secteur }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p>Aucun secteur renseigné</p>
+                {% endif %}
+
+                {% if entreprise.description %}
+                    <p class="resume">{{ entreprise.description }}</p>
+                {% endif %}
+
+                <div class="offer-suppr-info">
+                    <a href="index.php?page=detail_entreprise&id={{ entreprise.id_entreprise }}" class="info-btn">
+                        plus d'info
+                    </a>
+
+                    {% if user.id_role > 0 %}
+                        <form method="POST" action="index.php?page=supprimer_entreprise">
+                            <input type="hidden" name="id_entreprise" value="{{ entreprise.id_entreprise }}">
+                            <button type="submit" class="btn-supprimer">SUPPRIMER</button>
+                        </form>
+                    {% endif %}
+                </div>
+
+        </article>
+        {% else %}
+            <p>Aucune entreprise disponible pour le moment.</p>
+        {% endfor %}
+
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="?page=entreprises&p={{ page - 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                    Précédent
+                </a>
+            {% endif %}
+
+            <span class="page-info">Page {{ page }} sur {{ nbPages }}</span>
+
+            {% if page < nbPages %}
+                <a href="?page=entreprises&p={{ page + 1 }}{% for id in selectedSecteurs %}&secteurs[]={{ id }}{% endfor %}" class="btn-pagination">
+                    Suivant
+                </a>
+            {% endif %}
+        </div>
+        
+        {% if session.user is defined and session.user.id_role > 0 %}
+            <a href="index.php?page=creer_entreprise" class="btn-creer-entreprise">Créer une entreprise</a>
+        {% endif %}
+</div>
+{% endblock %}

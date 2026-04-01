@@ -9,13 +9,31 @@
     <article class="offer-card-detail">
         <div class="offer-info">
             <h3>{{ offre.titre }}</h3>
-            <p><strong>Entreprise :</strong> {{ offre.nom_entreprise }}</p>
-            <p class="secteur"><strong>Catégorie :</strong> {{ offre.nom_secteur ?: 'Non renseignée' }}</p>
 
-            {% if offre.competences is not empty %}
-                {% for comp in offre.competences %}
-                    <div class="competence-bar">{{ comp }}</div>
-                {% endfor %}
+            <p>
+                <strong>Entreprise :</strong>
+                {% if offre.id_entreprise is defined and offre.id_entreprise %}
+                    <a href="index.php?page=detail_entreprise&id={{ offre.id_entreprise }}"
+                       class="btn-modifier"
+                       style="color:var(--secondary-color); text-decoration: none;">
+                        {{ offre.nom_entreprise }}
+                    </a>
+                {% else %}
+                    {{ offre.nom_entreprise }}
+                {% endif %}
+            </p>
+
+            <p class="secteur">
+                <strong>Catégorie :</strong>
+                {{ offre.nom_secteur ?: 'Non renseignée' }}
+            </p>
+
+            {% if offre.competences is defined and offre.competences is not empty %}
+                <div class="competences-list">
+                    {% for comp in offre.competences %}
+                        <div class="competence-bar">{{ comp }}</div>
+                    {% endfor %}
+                </div>
             {% else %}
                 <p>Aucune compétence renseignée</p>
             {% endif %}
@@ -23,24 +41,90 @@
             <p>
                 <strong>Lieu :</strong>
                 {% if offre.nom_rue %}
-                    {{ offre.nom_rue }} ({{ offre.code_postal }})
+                    {{ offre.nom_rue }}
+                    {% if offre.ville %}, {{ offre.ville }}{% endif %}
+                    {% if offre.code_postal %} ({{ offre.code_postal }}){% endif %}
                 {% else %}
                     Non renseigné
                 {% endif %}
-                |
+            </p>
+
+            {% if offre.latitude and offre.longitude %}
+                <div
+                    id="offre-map"
+                    data-lat="{{ offre.latitude }}"
+                    data-lng="{{ offre.longitude }}"
+                    data-title="{{ offre.titre|e('html_attr') }}"
+                    style="height: 350px; margin-top: 20px; border-radius: 12px;">
+                </div>
+            {% endif %}
+
+            <p>
+                <strong>Date de l'offre :</strong>
+                {{ offre.date_offre ? offre.date_offre|date("d/m/Y") : 'Non précisée' }}
+            </p>
+
+            <p>
+                <strong>Durée :</strong>
+                {{ offre.duree ?: 'Non précisée' }}
+            </p>
+
+            <p>
                 <strong>Gratification :</strong>
-                {{ offre.gratification ? offre.gratification ~ '€/mois' : 'Non précisée' }}
+                {% if offre.gratification and offre.gratification > 0 %}
+                    {{ offre.gratification }} €
+                {% else %}
+                    Non précisée
+                {% endif %}
             </p>
 
             <hr>
+
             <p class="resume">
-                {{ offre.description ? offre.description|slice(0, 140) ~ '...' : 'Aucun résumé disponible.' }}
+                {% if offre.description %}
+                    {{ offre.description|length > 140
+                        ? offre.description|slice(0, 140) ~ '...'
+                        : offre.description }}
+                {% else %}
+                    Aucun résumé disponible.
+                {% endif %}
             </p>
         </div>
 
-        <a href="index.php?page=postuler&id={{ offre.id_offre }}" class="info-btn">
-            Postuler maintenant
-        </a>
+        <div>
+            {% if user is defined and user and user.id_role == 0 %}
+                {% if wishlistOffreIds is defined and offre.id_offre in wishlistOffreIds %}
+                    <a href="index.php?page=supprimer_wishlist&id={{ offre.id_offre }}"
+                       class="btn-mes-offres btn-mes-offres-supprimer">
+                        Supprimer wishlist
+                    </a>
+                {% else %}
+                    <a href="index.php?page=ajouter_wishlist&id={{ offre.id_offre }}"
+                       class="btn-mes-offres">
+                        Ajouter wishlist
+                    </a>
+                {% endif %}
+
+                <a href="index.php?page=postuler&id={{ offre.id_offre }}" class="btn-postuler">
+                    Postuler maintenant
+                </a>
+
+            {% elseif user is defined and user %}
+                <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}"
+                   class="btn-modifier"
+                   style="color:var(--primary-color); text-decoration: none;">
+                    MODIFIER
+                </a>
+            {% else %}
+                <a href="index.php?page=connexion" class="btn-postuler">
+                    Se connecter pour postuler
+                </a>
+            {% endif %}
+
+            <a href="index.php?page=offres" class="btn-postuler">
+                Retour aux offres
+            </a>
+        </div>
     </article>
 </section>
 {% endblock %}

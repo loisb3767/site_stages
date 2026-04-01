@@ -1,0 +1,85 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Ajouter une offre - Job2main{% endblock %}
+{% block description %}Ajouter une offre Job2main{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <a href="index.php?page=offres" class="tab">Offres</a>
+                <div class="tab active">Ajouter une offre</div>
+            </div>
+
+            <div class="card-body">
+                <form action="formulaireAjoutOffre.php" method="post">
+
+                    <div class="input-group">
+                        <label for="titre">Titre</label>
+                        <input id="titre" name="titre" type="text" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="5"></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="gratification">Gratification (€)</label>
+                        <input id="gratification" name="gratification" type="number" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="date_offre">Date de l'offre</label>
+                        <input id="date_offre" name="date_offre" type="date">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="duree">Durée</label>
+                        <input id="duree" name="duree" type="text">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="id_entreprise">Entreprise</label>
+                        <select id="id_entreprise" name="id_entreprise" required>
+                            <option value="">-- Choisir une entreprise --</option>
+                            {% for entreprise in entreprises %}
+                                <option value="{{ entreprise.id_entreprise }}">{{ entreprise.nom_entreprise }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Compétences</label>
+                        <ul class="specialites">
+                            {% for competence in competences %}
+                                <li>
+                                    <input
+                                        type="checkbox"
+                                        name="competences[]"
+                                        value="{{ competence.id_competence }}"
+                                        id="comp{{ competence.id_competence }}"
+                                    >
+                                    <label for="comp{{ competence.id_competence }}">{{ competence.nom_competence }}</label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    {% if session.success %}
+                        <span class="alert alert-success">{{ session.success }}</span>
+                    {% endif %}
+
+                    {% if session.error %}
+                        <span class="alert alert-danger">{{ session.error }}</span>
+                    {% endif %}
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-deco">AJOUTER</button>
+                        <a href="index.php?page=offres" class="btn-deco">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

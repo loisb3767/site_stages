@@ -4,52 +4,84 @@
 {% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
 
 {% block body %}	 
-    <section>
+    <section class="section-stats">
         <h1 class="text-center">STATISTIQUES</h1>
     </section>
 
-	<div class="carousels-container">
-		<div class="carousel-wrapper">
-			<button class="carousel-btn prev">‹</button>
-			<div class="carousel">
-				<div class="carousel-track">
-					<div class="card">Bloc 1</div>
-					<div class="card">Bloc 2</div>
-					<div class="card">Bloc 3</div>
-					<div class="card">Bloc 4</div>
-					<div class="card">Bloc 5</div>
-				</div>
-			</div>
-			<button class="carousel-btn next">›</button>
-		</div>
+	<div class="carousels-container-stats">
+		<div class="carousel-wrapper-stats">
+			<button class="carousel-btn-stats prev">‹</button>
+			<div class="carousel-stats">
+				
+				<div class="carousel-track-stats">
+				
+					<!-- Slide 1 : Offres par durée -->
+					<div class="card-stats">
+						<h2 class="card-stats-title">Offres par durée</h2>
+						<div class="card-stats-content">
+							{% for item in offresByDuree %}
+								<div class="legend-item">
+									<div class="stat-block">
+										<span class="stat-tranche">{{ item.tranche }}</span>
+										<span class="stat-total">{{ item.total }} offres</span>
+									</div>
+								</div>
+							{% else %}
+								<p>Aucune donnée disponible.</p>
+							{% endfor %}
+						</div>
+						<canvas id="chartDuree" 
+							data-labels='{{ offresByDuree|map(item => item.tranche)|json_encode }}'
+							data-values='{{ offresByDuree|map(item => item.total)|json_encode }}'
+							style="max-height: 200px; margin-top: 1rem;">
+						</canvas>
+					</div>
 
-		<div class="carousel-wrapper">
-			<button class="carousel-btn prev">‹</button>
-			<div class="carousel">
-				<div class="carousel-track">
-					<div class="card">Bloc 6</div>
-					<div class="card">Bloc 7</div>
-					<div class="card">Bloc 8</div>
-					<div class="card">Bloc 9</div>
-					<div class="card">Bloc 10</div>
-				</div>
-			</div>
-			<button class="carousel-btn next">›</button>
-		</div>
+					<!-- Slide 2 : Top Wishlist -->
+					<div class="card-stats">
+						<h2 class="card-stats-title">Top 3 offres les plus souhaitées</h2>
+						<div class="card-stats-content">
+							{% for item in topWishlist %}
+								<div class="legend-item">
+									<div class="stat-block">
+										<span class="stat-tranche">{{ item.titre }} — {{ item.nom_entreprise }}</span>
+										<span class="stat-total">{{ item.nb_wishlist }} ajouts</span>
+									</div>
+								</div>
+							{% else %}
+								<p>Aucune donnée disponible.</p>
+							{% endfor %}
+						</div>
+					</div>
+					
+					<!-- Slide 3 -->
+                    <div class="card-stats">
+						<h2 class="card-stats-title">Nombre d'offres actuellement</h2>
+						<div class="card-stats-content">
+							<div class="stat-block">
+								<span class="stat-total">{{ nbOffres }} offres</span>
+							</div>
+						</div>
+					</div>
 
-		<div class="carousel-wrapper">
-			<button class="carousel-btn prev">‹</button>
-			<div class="carousel">
-				<div class="carousel-track">
-					<div class="card">Bloc 11</div>
-					<div class="card">Bloc 12</div>
-					<div class="card">Bloc 13</div>
-					<div class="card">Bloc 14</div>
-					<div class="card">Bloc 15</div>
+                    <!-- Slide 4 -->
+					<div class="card-stats">
+						<h2 class="card-stats-title">Nombre de candidatures moyenne par offre</h2>
+						<div class="card-stats-content">
+							<div class="stat-block">
+								<span class="stat-total">{{ nbCandidaturesMoy }} candidatures </span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-			<button class="carousel-btn next">›</button>
+			<button class="carousel-btn-stats next">›</button>
 		</div>
 	</div>
 	
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/projet-static.local/assets/camembert.js"></script>
 {% endblock %}

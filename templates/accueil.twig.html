@@ -1,68 +1,49 @@
-{% extends "base.twig.html" %}
+	{% extends "base.twig.html" %}
 
-{% block title %}Parcours des offres - Job2main{% endblock %}
-{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+	{% block title %}Parcours des offres - Job2main{% endblock %}
+	{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
 
-{% block body %}
-	 
-	   <section>
-	   
-			<h1 class="text-center">Le meilleur endroit pour trouver ou déposer votre annonce !</h1>
-			
-			<article>
-				<h2>Catégories</h2>
-				<ul>
-					<a href="index.php?page=offres">VOIR TOUTES LES OFFRES DE STAGES</a>
-				</ul>
-			</article>
+	{% block body %}
+		
+		<section>
+		
+				<h1 class="text-center">Le meilleur endroit pour trouver ou déposer votre annonce !</h1>
+				
+				<article class="miseEnpageAcc">
+					<h2>Catégories</h2>
+					<ul>
+						<li><a href="index.php?page=offres" class="Card-acc">VOIR TOUTES LES OFFRES DE STAGES</a></li>
+						<li><a href="index.php?page=entreprises" class="Card-acc">VOIR TOUTES LES ENTREPRISES</a></li>
+					</ul>
+				</article>
 
-			<article>
-				<h2>Dernières offres ajoutées</h2>
+				<article class="article-accueil">
+					<h2>Dernières offres ajoutées</h2>
 
-				<div class="carousels-container accueil">
-					<div class="carousel-wrapper">
-						<button class="carousel-btn prev">‹</button>
-						<div class="carousel">
-							<div class="carousel-track">
-								<div class="card">Offre 1</div>
-								<div class="card">Offre 2</div>
-								<div class="card">Offre 3</div>
-								<div class="card">Offre 4</div>
-								<div class="card">Offre 5</div>
+					<div class="carousels-container accueil">
+						<div class="carousel-wrapper">
+							<button class="carousel-btn prev">‹</button>
+							<div class="carousel">
+								<div class="carousel-track">
+									{% for offre in latestOffres %}
+										<a class="card" href="index.php?page=detail-offre&id={{ offre.id_offre }}">
+											<div class="card-content">
+												<h3>{{ offre.titre }}</h3>
+												<div class="meta">
+													<span class="entreprise">{{ offre.nom_entreprise }}</span>
+													<span class="date">{{ offre.date_offre }}</span>
+												</div>
+											</div>
+										</a>
+									{% else %}
+										<div class="card">Aucune offre récente disponible.</div>
+									{% endfor %}
+								</div>
 							</div>
+							<button class="carousel-btn next">›</button>
 						</div>
-						<button class="carousel-btn next">›</button>
 					</div>
 
-					<div class="carousel-wrapper">
-						<button class="carousel-btn prev">‹</button>
-						<div class="carousel">
-							<div class="carousel-track">
-								<div class="card">Offre 6</div>
-								<div class="card">Offre 7</div>
-								<div class="card">Offre 8</div>
-								<div class="card">Offre 9</div>
-								<div class="card">Offre 10</div>
-							</div>
-						</div>
-						<button class="carousel-btn next">›</button>
-					</div>
-
-					<div class="carousel-wrapper">
-						<button class="carousel-btn prev">‹</button>
-						<div class="carousel">
-							<div class="carousel-track">
-								<div class="card">Offre 11</div>
-								<div class="card">Offre 12</div>
-								<div class="card">Offre 13</div>
-								<div class="card">Offre 14</div>
-								<div class="card">Offre 15</div>
-							</div>
-						</div>
-						<button class="carousel-btn next">›</button>
-					</div>
-				</div>
-
-        	</article>
-	   </section>
-{% endblock %}
+				</article>
+		</section>
+	{% endblock %}

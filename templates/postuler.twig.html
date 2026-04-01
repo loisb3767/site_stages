@@ -1,27 +1,63 @@
 {% extends "base.twig.html" %}
 
-{% block title %}Parcours des offres - Job2main{% endblock %}
-{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+{% block title %}Postuler - Job2main{% endblock %}
 
 {% block body %}
-	 
-	   <section>
-			<h1 class="text-center">POSTULER À L'OFFRE</h1>
-	   </section>
-       <section class="apply-section">
-            <h3>Postuler à cette offre</h3>
-            <form action="formulairePostuler.php" method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="cv">Votre CV (PDF uniquement) :</label>
-                    <input type="file" id="cv" name="cv" accept=".pdf" required>
-                </div>
 
-                <div class="form-group">
-                    <label for="motivation">Lettre de motivation :</label>
-                    <textarea id="motivation" name="motivation" rows="8" placeholder="Expliquez pourquoi ce stage vous intéresse..."></textarea>
-                </div>
+    {% if user %}
+        {% if user.id_role == 0 %}
+            <section>
+                <h1 class="text-center">Postuler à l'offre : {{ offre.titre }}</h1>
+            </section>
 
-                <button type="submit" class="submit-btn">Envoyer ma candidature</button>
-            </form>
+            <section class="apply-section">
+                    <h3>Postuler à cette offre</h3>
+
+
+
+                        <form id="formPostuler" action="formulairePostuler.php" method="POST" enctype="multipart/form-data" novalidate>
+                            <input type="hidden" name="id_offre" value="{{ offre.id_offre }}">
+
+                            <div class="form-group">
+                                <label for="cv">Votre CV :</label>
+                                <small>Formats : .pdf, .doc, .docx, .odt, .rtf, .jpg, .png — 2 Mo max</small>
+                                <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx,.odt,.rtf,.jpg,.jpeg,.png">
+                                <span id="err-cv" style="color:red; display:none;"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="motivation">Lettre de motivation (optionnel) :</label>
+                                <textarea id="motivation" name="motivation" rows="8" placeholder="Expliquez pourquoi ce stage vous intéresse..."></textarea>
+                            </div>
+
+                            <button type="submit" class="submit-btn">Envoyer ma candidature</button>
+                        </form>
+
+        {% else %}
+
+            <div class="alert alert-danger text-center" style="font-size: 35px;">
+                Votre rôle ne vous ne permet pas de postuler
+            </div>
+
+        {% endif %}
+
+        
+        {% if status == 'success' %}
+            <script>
+                alert("Votre candidature a été envoyée avec succès !");
+            </script>
+        {% endif %}
+
+        {% if error %}
+            <script>
+                alert("{{ error }}");
+            </script>
+        {% endif %}
+
         </section>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="projet-static.local/assets/menu.js"></script>
 {% endblock %}

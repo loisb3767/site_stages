@@ -1,0 +1,68 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Profil - Job2main{% endblock %}
+{% block description %}Mon profil Job2main{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <div class="tab active">Profil</div>
+                <a href="index.php?page=inscription" class="tab">Inscription</a>
+            </div>
+            
+            <div class="card-body">
+                {% if user %}
+                    <div class="input-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label>Nom</label>
+            
+                            {% if user.id_role == 0  %}
+                                <a href="index.php?page=mon_espace" class="btn-mes-offres">Mon Espace</a>
+                            {% elseif user.id_role == 1%}
+                                <a href="index.php?page=liste_etudiant" class="btn-mes-offres">Mes Etudiants</a>
+                            {% elseif user.id_role == 2%}
+                                <a href="index.php?page=liste_admin" class="btn-mes-offres">Candidatures</a>
+                            {% endif %}
+                        </div>
+                        <p>{{ user.nom_utilisateur }}</p>
+                    </div>
+                        
+                    <div class="input-group">
+                        <label>Prénom</label>
+                        <p>{{ user.prenom_utilisateur }}</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email</label>
+                        <p>{{ user.email }}</p>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Téléphone</label>
+                        <p>{{ user.telephone }}</p>
+                    </div>
+
+                    {% if user.id_role == 0 %}
+                        <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon mot de passe</a>
+                    {% elseif user.id_role == 1 %}
+                        <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon mot de passe</a>
+                        <a href="index.php?page=entreprises" class="btn-deco">Entreprises</a>
+                    {% elseif user.id_role == 2 %}
+                        <a href="index.php?page=modifier_profil" class="btn-deco">Modifier mon compte</a>
+                        <a href="index.php?page=entreprises" class="btn-deco">Entreprises</a>
+                    {% endif %}
+
+                    <a href="index.php?page=logout" class="btn-deco">Se déconnecter</a>
+
+                    
+                    {% else %}
+                        <p>Impossible de charger les informations.</p>
+                    {% endif %}
+
+                
+
+            </div>
+        </div> 
+    </div>
+{% endblock %}

@@ -7,25 +7,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Event\Code\IssueTrigger;
+namespace PHPUnit\Framework\MockObject\Runtime;
+
+use function sprintf;
 
 /**
- * @immutable
- *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class TestTrigger extends IssueTrigger
+final readonly class PropertyGetHook extends PropertyHook
 {
     /**
-     * Your test code triggers an issue.
+     * @return non-empty-string
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
      */
-    public function isTest(): true
-    {
-        return true;
-    }
-
     public function asString(): string
     {
-        return 'issue triggered by test code';
+        return sprintf(
+            '$%s::get',
+            $this->propertyName(),
+        );
     }
 }

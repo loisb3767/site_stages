@@ -13,6 +13,9 @@
     --secondary-text-color-rgb: 255, 255, 255;
     --light: color-mix(in srgb, #d8ecff 30%, var(--background-color) 70%);
     --light-rgb: 255, 255, 255;
+    --light-blue: #afe0ff;
+    --error-color: color-mix(in srgb, #f00 75%, var(--secondary-color) 25%);
+    --good-color: color-mix(in srgb, #0f0 75%, var(--primary-color) 25%);
 }
 
 /* Styles généraux */
@@ -204,8 +207,8 @@ header .search-bar .search-btn:hover img {
 .btn-pagination {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #004f66;
-    color: #ffffff;
+    background-color: color-mix(in srgb, var(--secondary-color), #0ff 10%);
+    color: var(--secondary-text-color);
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
@@ -214,14 +217,14 @@ header .search-bar .search-btn:hover img {
 
 
 .btn-pagination:hover {
-    background-color: #006a88;
+    background-color: color-mix(in srgb, var(--secondary-color), #000 10%);
     transform: translateY(-2px);
 }
 
 /* Style du texte "Page X sur Y" */
 .page-info {
     font-size: 1rem;
-    color: #333;
+    color: var(--text-color);
     font-weight: 500;
 }
 
@@ -281,6 +284,7 @@ header .search-bar .search-btn:hover img {
     max-width: 1200px;
     padding: 0 1rem;
     min-height: 25rem;
+    margin-bottom: 1.5rem;
 }
 
 .auth-card {
@@ -349,12 +353,12 @@ header .search-bar .search-btn:hover img {
 .card-body .input-group label {
     display: block;
     font-size: 0.9em;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.1rem;
     color: var(--primary-color)
 }
 
 .required {
-    color: color-mix(in srgb, var(--primary-color), #f00 33%);
+    color: color-mix(in srgb, var(--primary-color), var(--error-color) 33%);
 }
 
 .card-body input {
@@ -382,7 +386,28 @@ header .search-bar .search-btn:hover img {
     background-color: color-mix(in srgb, var(--primary-color), #000 20%);
 }
 
-/* ----------*/
+.btn-deco {
+    background-color: var(--primary-color);
+    color: var(--secondary-text-color);
+    border: none;
+    padding: 0.8rem 2rem;
+    width: 50%;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 0.7rem;
+    transition: var(--background-color) 0.3s;
+    text-decoration: none;
+    margin-top: 50px;
+    justify-content: center;
+    display: block;   
+    margin: 50px auto 0; 
+    font-weight: 600;
+}
+
+.btn-deco:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
+
 /* Page "A propos" */
 
 .propos{
@@ -581,6 +606,7 @@ input[type="radio"] {
     width: auto;
     margin-right: 0.5rem;
     margin-bottom: 0.7rem;
+    cursor: pointer;
 }
 
 form p {
@@ -654,11 +680,11 @@ button[type="login"] {
 }
 
 .alert.alert-success {
-    color: green;
+    color: var(--good-color);
 }
 
 .alert.alert-danger {
-    color: red;
+    color: var(--error-color);
 }
 
 /* ---------- */
@@ -875,82 +901,687 @@ body.menu-open {
 
 }
 
-    /* ───── TÉLÉPHONE ───── */
+/* --------- PAGE ACCUEIL ------------ */
+
+/* ───── BASE (TÉLÉPHONE) ───── */
+
+.carousels-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem 1rem;
+    margin-bottom: 3rem;
+}
+
+.carousel-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+.carousel {
+    overflow: hidden;
+}
+
+.carousel-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.4s ease;
+}
+
+/* CARDS */
+.card {
+    min-width: 100%;
+    height: 120px;
+    background: var(--light-blue);
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.2rem;
+
+    text-decoration: none;
+    color: inherit;
+}
+
+/* BOUTONS */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 50%;
+    background: var(--light);
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.carousel-btn.prev { left: -10px; }
+.carousel-btn.next { right: -10px; }
+
+
+/* ───── TABLETTE (≥ 600px) ───── */
+
+@media (min-width: 600px) {
+
     .carousels-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2rem;
-        padding: 1.5rem 1rem;
-        margin-bottom: 3rem;
+        padding: 2rem 1.5rem;
+        gap: 3rem;
     }
 
     .carousel-wrapper {
-        width: 100%;
-        max-width: 100%;
-        position: relative;
+        max-width: 500px;
     }
 
     .carousel-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
-        border: none;
-        border-radius: 50%;
-        background: white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        font-size: 1.2rem;
-        cursor: pointer;
-        z-index: 10;
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
     }
 
-    .carousel-btn.prev { left: -10px; }
-    .carousel-btn.next { right: -10px; }
-
-    .carousel { overflow: hidden; }
-
-    .carousel-track {
-        display: flex;
-        width: 100%;
-        transition: transform 0.4s ease;
-    }
+    .carousel-btn.prev { left: -15px; }
+    .carousel-btn.next { right: -15px; }
 
     .card {
-        min-width: 100%;
-        height: 120px;
-        background: #ccc;
-        border-radius: 12px;
+        height: 150px;
+        font-size: 1.4rem;
+    }
+}
+
+
+/* ───── ORDINATEUR (≥ 1024px) ───── */
+
+@media (min-width: 1024px) {
+
+    .article-accueil {
+        margin-top: 100px;
+    }
+
+    .carousels-container {
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 6rem;
+
+        padding: 3rem 2rem;
+        margin: 0.5rem 0 1.5rem;
+    }
+
+    .carousel-wrapper {
+        flex: 1;
+        max-width: 600px;
+        min-width: 250px;
+    }
+
+    .carousel-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.5rem;
+    }
+
+    .carousel-btn.prev { left: -20px; }
+    .carousel-btn.next { right: -20px; }
+
+    .card {
+        font-size: 1.5rem;
+    }
+}
+
+    .meta {
         display: flex;
         align-items: center;
+        margin-top: 10px;
+        gap: 15px;
+    }
+
+    .entreprise {
+        font-size: 14px;
+        color: var(--text-color);
+    }
+
+    .date {
+        font-size: 13px;
+        color: var(--text-color);
+    }
+
+    .btn-postuler {
+        background-color: var(--primary-color);
+        color: var(--secondary-text-color);
+        border: none;
+        padding: 0.7rem;
+        width: 15%;
+        border-radius: 10px;
+        cursor: pointer;
+        text-decoration: none;
         justify-content: center;
-        font-size: 1.2rem;
+        display: flex;   
+        margin: 0 auto 25px;
+        text-align: center;
     }
 
-    /* ───── TABLETTE (≥ 600px) ───── */
-    @media (min-width: 600px) {
-        .carousels-container { padding: 2rem 1.5rem; gap: 3rem; }
-        .carousel-wrapper { max-width: 500px; }
-        .carousel-btn { width: 40px; height: 40px; font-size: 1.4rem; }
-        .carousel-btn.prev { left: -15px; }
-        .carousel-btn.next { right: -15px; }
-        .card { height: 150px; font-size: 1.4rem; }
+
+
+
+/* --------- PAGE STATISTIQUES ------------ */
+
+/* ───── BASE (TÉLÉPHONE) ───── */
+
+.carousels-container-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 3rem;
+}
+
+.carousel-wrapper-stats {
+    width: 100%;
+    max-width: 95%;
+    position: relative;
+}
+
+.carousel-stats {
+    overflow: hidden;
+}
+
+.carousel-track-stats {
+    display: flex;
+    width: 100%;
+    transition: transform 0.4s ease;
+}
+
+.card-stats {
+    min-width: 100%;
+    height: auto;
+    background: var(--light-blue);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1.5rem;
+    font-size: 1.2rem;
+    color: inherit;
+    box-sizing: border-box;
+    padding: 1.5rem;
+    gap: 1rem;
+}
+
+.card-stats-title {
+    width: 100%;
+    text-align: center;
+    margin: 0 0 1rem 0;
+    font-size: 2rem;
+    color: var(--text-color);
+}
+
+.card-stats-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+}
+
+.stat-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.stat-tranche {
+    font-size: 1.2rem;
+}
+
+.stat-total {
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+/* BOUTONS */
+.carousel-btn-stats {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: var(--light);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 20;
+}
+
+.carousel-btn-stats.prev { left: -18px; }
+.carousel-btn-stats.next { right: -18px; }
+
+
+/* ───── TABLETTE (≥ 600px) ───── */
+
+@media (min-width: 600px) {
+    .card-stats {
+        min-height: 300px;
+        font-size: 1.4rem;
+        
+    }
+    .carousels-container-stats {
+        padding: 1rem 1.5rem;
+        gap: 3rem;
+    }
+    .carousel-wrapper-stats {
+        max-width: 85%;
+    }
+    .carousel-btn-stats {
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+    }
+    .carousel-btn-stats.prev { left: -20px; }
+    .carousel-btn-stats.next { right: -20px; }
+    .card-stats {
+        height: 300px;
+        font-size: 1.4rem;
+    }
+}
+
+
+/* ───── ORDINATEUR (≥ 1024px) ───── */
+
+@media (min-width: 1024px) {
+    .card-stats {
+        min-height: 350px;
+        font-size: 1.5rem;
+    }
+    .carousels-container-stats {
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 4rem;
+        margin: 0.5rem 0 1.5rem;
+        padding-top: 0;
+        padding-bottom: 1rem;
+    }
+    .carousel-wrapper-stats {
+        flex: 1;
+        max-width: 700px;
+        min-width: 250px;
+    }
+    .carousel-btn-stats {
+        width: 44px;
+        height: 44px;
+        font-size: 1.5rem;
+    }
+    .carousel-btn-stats.prev { left: -22px; }
+    .carousel-btn-stats.next { right: -22px; }
+    .card-stats {
+        height: 400px;
+        font-size: 1.5rem;
+    }
+    .card-stats-content {
+        gap: 3rem;
+    }
+}
+
+.mes-offres-container {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        flex-direction: row;
+        gap: 1rem;
+        margin: 0 0.7rem 0 0.7rem;
+}
+.flex-item {
+    flex: 1;                 
+}
+.btn-wishlist-offre,
+.btn-wishlist-supprimer {
+    background-color: var(--primary-color);
+    color: var(--secondary-text-color);
+    padding: 0.5rem 2rem;
+    width: fit-content;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.btn-wishlist-offre:hover,
+.btn-wishlist-supprimer:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
+
+@media (max-width: 1024px) {
+    .wishlist-card h2 {
+        font-size: 1rem;
     }
 
-    /* ───── ORDINATEUR (≥ 1024px) ───── */
-    @media (min-width: 1024px) {
-        .carousels-container {
-            flex-direction: row;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 6rem;
-            padding: 3rem 2rem;
-            margin-bottom: 7rem;
-        }
-        .carousel-wrapper { flex: 1; max-width: 400px; min-width: 250px; }
-        .carousel-btn { width: 44px; height: 44px; font-size: 1.5rem; }
-        .carousel-btn.prev { left: -20px; }
-        .carousel-btn.next { right: -20px; }
-        .card { height: 150px; font-size: 1.5rem; }
+    .wishlist-card p {
+        font-size: 0.85rem;
     }
+
+    .btn-wishlist-offre {
+        margin-right: 0.8rem;
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+    }
+    .btn-wishlist-supprimer {
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+}
+
+@media (max-width: 480px) {
+    .wishlist-card h2 {
+        font-size: 0.95rem;
+    }
+
+    .wishlist-card p {
+        font-size: 0.8rem;
+    }
+
+    .btn-wishlist-offre {
+        margin-right: 0.6rem;
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+    }
+    .btn-wishlist-supprimer {
+        margin-bottom: 0.6rem;
+        font-size: 0.85rem;
+    }
+}
+
+.btn-mes-offres {
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color);
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-mes-offres::before {
+    content: "⭐";
+    font-size: 1.1rem;
+}
+
+.btn-mes-offres:hover {
+    background-color: color-mix(in srgb, var(--primary-color), #000 20%);
+}
+
+/* ───── PAGE 404 ───── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.e404-title { animation: fadeDown 0.6s ease both; }
+.e404-text  { animation: slideUp 0.6s ease 0.2s both; }
+.e404-btn   { animation: slideUp 0.6s ease 0.4s both; transition: transform 0.2s; }
+.e404-btn:hover { transform: translateY(-3px); }
+
+.e404-num {
+  font-size: 7rem;
+  font-weight: 900;
+  color: var(--primary-color);
+  line-height: 1;
+  letter-spacing: 0.1em;
+  display: inline-block;
+}
+
+.e404-num span {
+  display: inline-block;
+  transition: transform 0.3s ease, color 0.3s ease;
+  cursor: default;
+}
+
+.e404-num span:hover {
+  transform: translateY(-15px) rotate(-8deg) scale(1.3);
+  color: var(--secondary-color);
+}
+
+.particle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+  0%   { opacity: 0.7; transform: translateY(0) scale(1); }
+  100% { opacity: 0;   transform: translateY(-120px) scale(0.3); }
+}
+
+main.game-mode {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--light-blue) !important;
+    border: 3px dashed var(--primary-color);
+    min-height: 400px;
+    transition: all 0.3s ease;
+}
+
+.falling-job {
+    position: absolute;
+    padding: 10px 15px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 100;
+}
+
+.falling-job:hover {
+    transform: scale(1.1);
+    background: var(--secondary-color);
+}
+
+@keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.win-flash {
+    animation: winRainbow 1s infinite;
+}
+
+@keyframes winRainbow {
+    0% { background-color: var(--background-color); }
+    50% { background-color: #d4edda; }
+    100% { background-color: var(--background-color); }
+}
+
+main.game-mode #e404-num {
+    opacity: 0.2;
+    transform: scale(0.5);
+    pointer-events: none;
+}
+
+.shake-hit {
+    animation: shake-anim 0.15s ease-in-out;
+}
+
+@keyframes shake-anim {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(5px, 5px); }
+    50% { transform: translate(-5px, -5px); }
+    75% { transform: translate(5px, -5px); }
+    100% { transform: translate(0, 0); }
+}
+
+.miseEnpageAcc {
+    padding: 1rem;
+}
+
+.miseEnpageAcc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.Card-acc {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+
+.Card-acc:link,
+.Card-acc:visited {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.Card-acc:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.class-offer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.offer-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+.Reinitialiser-btn{
+    background-color: var(--background-color);
+    color: #00bcd4; /* cyan */
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button.btn-supprimer {
+    background-color: var(--error-color);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button.btn-supprimer:hover {
+    background-color: color-mix(in srgb, var(--error-color), var(--secondary-color) 20%);
+}
+
+button.btn-supprimer:disabled {
+    background-color: color-mix(in srgb, var(--error-color), var(--secondary-color) 50%);
+    cursor: not-allowed;
+}
+
+.offer-suppr-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.offer-suppr-info form {
+    margin: 0;
+    max-width: none;
+}
+
+.info-btn {
+    text-decoration: none;
+}
+
+.btn-ajouter-offre, .btn-ajouter-offre:visited {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-ajouter-offre:hover {
+    background-color: color-mix(in srgb, var(--primary-color), var(--secondary-color) 25%);
+}
+
+.btn-mes-offres-supprimer {
+    background-color: var(--error-color);
+    color: #fff;
+}
+
+.btn-mes-offres-supprimer:hover {
+    background-color: color-mix(in srgb, var(--error-color), var(--secondary-color) 20%);
+}
+
+.pilotes-container {
+    margin-top: 15px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.pilotes-title {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.pilote-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.pilote-item label {
+    margin: 0;
+    cursor: pointer;
+}

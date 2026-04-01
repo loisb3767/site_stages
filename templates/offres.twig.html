@@ -3,6 +3,15 @@
 {% block title %}Parcours des offres - Job2main{% endblock %}
 {% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
 
+{% block search_bar %}
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="recherche précise" aria-label="Recherche">
+        <button class="search-btn" aria-label="Rechercher">
+            <img src="projet-static.local/images/search_icon.png" alt="Rechercher">
+        </button>
+    </div>
+{% endblock %}
+
 {% block body %}
 <div class="offers-page">
     <aside class="sidebar">
@@ -31,7 +40,7 @@
             </ul>
 
             <button type="submit">Filtrer</button>
-            <a href="index.php?page=offres">Réinitialiser</a>
+            <a href="index.php?page=offres" class="Reinitialiser-btn">Réinitialiser</a>
         </form>
     </aside>
 
@@ -39,9 +48,22 @@
         {% for offre in offres %}
             <article class="offer-card">
                 <div class="offer-info">
-                    <h3>{{ offre.titre }}</h3>
+                    <div class="offer-actions">
+                        <h3>{{ offre.titre }}</h3>
+                        {% if user.id_role > 0 %}
+                            <a href="index.php?page=modifier_offre&id={{ offre.id_offre }}" class="btn-modifier">MODIFIER</a>
+                        {% else %}
+                            {% if offre.id_offre in wishlistOffreIds %}
+                                <a href="index.php?page=supprimer_wishlist&id={{ offre.id_offre}}" class="btn-mes-offres btn-mes-offres-supprimer">Supprimer wishlist</a>
+                            {% else %}
+                                 <a href="index.php?page=ajouter_wishlist&id={{ offre.id_offre}}" class="btn-mes-offres">Ajouter wishlist</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    
                     <p><strong>Entreprise :</strong> {{ offre.nom_entreprise }}</p>
                     <p class="secteur"><strong>Secteur :</strong> {{ offre.nom_secteur ?: 'Non renseigné' }}</p>
+                    <p><strong>Date de l'offre :</strong> {{ offre.date_offre|date("d/m/Y") }}</p>
 
                     {% if offre.competences is not empty %}
                         {% for comp in offre.competences %}
@@ -54,13 +76,27 @@
                     <p class="resume">{{ offre.description }}</p>
                 </div>
 
-                <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
-                    plus d'info
-                </a>
+                <div class="offer-suppr-info">
+                    <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="info-btn">
+                        plus d'info
+                    </a>
+
+                    {% if user.id_role > 0 %}
+                        <form method="POST" action="index.php?page=supprimer_offre">
+                            <input type="hidden" name="id_offre" value="{{ offre.id_offre }}">
+                            <button type="submit" class="btn-supprimer">SUPPRIMER</button>
+                        </form>
+                    {% endif %}
+                </div>
             </article>
+            
         {% else %}
             <p>Aucune offre disponible pour le moment.</p>
         {% endfor %}
+
+        {% if user.id_role > 0 %}
+            <a href="index.php?page=ajouter_offre" class="btn-ajouter-offre">Ajouter une offre</a>
+        {% endif %}
 
         <div class="pagination">
             {% if page > 1 %}

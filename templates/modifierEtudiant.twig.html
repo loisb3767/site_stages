@@ -1,0 +1,68 @@
+{% extends "base.twig.html" %}
+
+{% block title %}Modifier un étudiant - Job2main{% endblock %}
+{% block description %}Modifier un étudiant Job2main{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="auth-card">
+            <div class="tabs">
+                <a href="index.php?page=liste_etudiant" class="tab">Étudiants</a>
+                <div class="tab active">Modifier un étudiant</div>
+            </div>
+
+            <div class="card-body">
+                {% if etudiant %}
+                    <form action="formulaireModifEEtudiant.php" method="post">
+                        <input type="hidden" name="id_etudiant" value="{{ etudiant.id_utilisateur }}">
+
+                        <div class="input-group">
+                            <label for="nom">Nom</label>
+                            <input id="nom" name="nom" type="text" value="{{ etudiant.nom_utilisateur }}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="prenom">Prénom</label>
+                            <input id="prenom" name="prenom" type="text" value="{{ etudiant.prenom_utilisateur }}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" value="{{ etudiant.email }}" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="telephone">Téléphone</label>
+                            <input id="telephone" name="telephone" type="text" value="{{ etudiant.telephone }}">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="password">Nouveau mot de passe</label>
+                            <input id="password" name="password" type="password">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="confirm_password">Confirmer le mot de passe</label>
+                            <input id="confirm_password" name="confirm_password" type="password">
+                        </div>
+
+                        {% if error %}
+                            <span class="alert alert-danger">{{ error }}</span>
+                        {% endif %}
+
+                        {% if success %}
+                            <span class="alert alert-success">{{ success }}</span>
+                        {% endif %}
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-deco">SAUVEGARDER</button>
+                            <a href="index.php?page=liste_etudiant" class="btn-deco">Annuler</a>
+                        </div>
+                    </form>
+                {% else %}
+                    <p>Étudiant introuvable. <a href="index.php?page=liste_etudiant">Retour</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

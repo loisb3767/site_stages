@@ -7,6 +7,7 @@
         <meta name="description" content="{% block meta_description %}Venez trouver votre stage de rêve !{% endblock %}">
         <title>{% block title %}Job2main{% endblock %}</title> 
         <link rel="stylesheet" href="projet-static.local/assets/style.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
         {% block stylesheets %}{% endblock %}
     </head> 
     <body>
@@ -17,12 +18,7 @@
                     <img src="projet-static.local/images/JOB_2_MAIN_mini.png" alt="Logo Job2main">
                 </div>
                 </a>
-                <div class="search-bar">
-                    <input type="text" placeholder="recherche précise" aria-label="Recherche">
-                    <button class="search-btn" aria-label="Rechercher">
-                        <img src="projet-static.local/images/search_icon.png" alt="Rechercher">
-                    </button>
-                </div>
+                {% block search_bar %}{% endblock %}
             </div>
             <nav class="navbar">
                 {% if page_active == 'accueil' %}
@@ -37,7 +33,6 @@
                         <img src="projet-static.local/images/user_icon.png" alt="">
                         Profil ({{ session.user.prenom_utilisateur }})
                     </a>
-                    <a href="index.php?page=logout">Déconnexion</a>
                 {% else %}
                     <a class="login" href="index.php?page=connexion">
                     <img src="projet-static.local/images/user_icon.png" alt="">
@@ -73,5 +68,8 @@
 
         <script src="projet-static.local/assets/menu.js"></script>
         {% block javascripts %}{% endblock %}
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script src="projet-static.local/assets/map-offre.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </body> 
 </html>

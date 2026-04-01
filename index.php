@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();
 require_once 'vendor/autoload.php';
 
@@ -53,10 +56,6 @@ switch ($page) {
     case 'statistiques':
         $controller -> statistiquesPage();
         break;
-
-    case 'contact':
-        $controller -> contactPage();
-        break;
     
     case 'avis':
         $controller -> avisPage();
@@ -70,19 +69,81 @@ switch ($page) {
         $controller -> detailOffrePage();
         break;
 
-    case 'profil':
-        $controller -> profilPage();
+    case 'logout':
+        $controller -> logoutPage();
         break;
 
-    case 'logout':
-        $controller->logoutPage();
+    case 'modifier_profil':
+        $controller -> modifierProfilPage();
         break;
     
-    // A rajouter les autres pages apres
-    
+    case 'mon_espace':
+        $controller->mon_espace();
+        break;
+
+    case 'entreprises':
+        $controller -> entreprises();
+        break;
+
+    case 'supprimer-wishlist':
+        $controller -> supprimerWishlist();
+        break;
+
+    case 'supprimer_offre':
+        $controller -> supprimerOffre();
+        break;
+
+    case 'ajouter_wishlist':
+        $controller -> ajouterWishlist();
+        break;
+
+    case 'modifier_offre':
+        $controller -> modifierOffrePage();
+        break;
+
+    case 'ajouter_offre':
+        $controller -> ajouterOffrePage();
+        break;
+
+    case 'modifier_entreprise':
+        $controller -> modifierEntreprisePage();
+        break;
+
+    case 'supprimer_entreprise':
+        $controller -> supprimerEntreprise();
+        break;
+
+    case 'liste_etudiant':
+        $controller -> liste_etudiantPage();
+        break;
+    case 'liste_admin':
+        $controller -> liste_adminPage();
+        break;
+    case 'detail_entreprise':
+        $controller -> detailEntreprisePage();
+        break;
+
+    case 'creer_entreprise':
+        $controller -> creerEntreprisePage();
+        break;
+
+    case 'modifier_etudiant':
+        $controller -> modifierEtudiantPage();
+        break;
+
+    case 'candidatures_etudiant':
+        $controller -> candidaturesEtudiantPage();
+        break;
+
+    case 'supprimer_etudiant':
+        $controller -> supprimerEtudiant();
+        break;
+
     default:
-        http_response_code(404);
+        $controller -> e404Page();
         break;
+
+    
 }
 
 ?>
