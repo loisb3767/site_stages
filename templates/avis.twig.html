@@ -4,8 +4,43 @@
 {% block description %}Déposez un avis sur votre expérience de stage.{% endblock %}
 
 {% block body %}
-<section>
-    <h1 class="text-center">Déposer un avis</h1>
+		<section>
+			<h1 class="text-center">Votre expérience nous intéresse</h1>
+			
+			<article>
+				<h2>Détails de l'avis</h2>
+				<form action="formulaireAvis.php" method="post" enctype="multipart/form-data">
+					<label>Nom complet*<input name="fullname" type="text" size="50" required></label>
+					<label>Courriel académique*<input name="email" type="email" size="30" required></label>
+					
+					<label>Objet de l'avis
+						<select name="subject">
+							<option>Retour sur un stage effectué</option>
+							<option>Utilisation de la plateforme</option>
+							<option>Accompagnement et coaching</option>
+							<option>Signaler un problème avec une offre</option>
+						</select>
+					</label>
+					
+					<label>Domaine du stage</label>
+					<label><input type="checkbox" name="category" value="it">Informatique</label>
+					<label><input type="checkbox" name="category" value="marketing">Marketing / Comm</label>
+					<label><input type="checkbox" name="category" value="finance">Finance / Gestion</label>
+					<label><input type="checkbox" name="category" value="rh">Ressources Humaines</label>
+					<label><input type="checkbox" name="category" value="eng">Ingénierie</label>
+					
+					<label>Attestation ou photo du lieu (optionnel)
+						<input name="document" type="file" accept="image/jpeg,image/png,application/pdf"></label>
+					
+					<label>Recommanderiez-vous ce stage ?</label>
+					<input type="radio" name="satisfaction" value="yes" checked> Oui
+					<input type="radio" name="satisfaction" value="no"> Non
+					
+					<label>Commentaires et conseils pour les futurs stagiaires
+						<textarea name="feedbacks" rows="5" cols="100"></textarea></label>
+					
+					<button type="submit">Publier l'avis</button>
+					<input type="reset" value="Effacer">
 
     {% if status == 'success' %}
         <div class="alert alert-success" role="alert">Avis enregistré avec succès.</div>
