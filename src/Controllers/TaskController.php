@@ -144,12 +144,15 @@ class TaskController extends Controller
 
         $error = $_SESSION['error'] ?? null;
         $success = $_SESSION['success'] ?? null;
+        $pilotes = $this->model->getAllPilote();
+
 
         unset($_SESSION['error'], $_SESSION['success']);
 
         echo $this->templateEngine->render('inscription.twig.html', [
             'user' => $user,
             'roles' => $roles,
+            'pilotes' => $pilotes,
             'error' => $error,
             'success' => $success,
             'session' => $_SESSION
