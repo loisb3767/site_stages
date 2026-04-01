@@ -6,9 +6,9 @@ use App\Models\TaskModel;
 
 class TaskController extends Controller
 {
-    public function __construct($templateEngine)
+    public function __construct($templateEngine, ?TaskModel $model = null)
     {
-        $this->model = new TaskModel();
+        $this->model = $model ?? new TaskModel();
         $this->templateEngine = $templateEngine;
     }
 

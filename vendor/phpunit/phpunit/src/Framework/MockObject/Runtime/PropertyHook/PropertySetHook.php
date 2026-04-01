@@ -7,25 +7,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace PHPUnit\Event\Code\IssueTrigger;
+namespace PHPUnit\Framework\MockObject\Runtime;
+
+use function sprintf;
 
 /**
- * @immutable
- *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final class IndirectTrigger extends IssueTrigger
+final readonly class PropertySetHook extends PropertyHook
 {
     /**
-     * Third-party code triggers an issue either in your own code or in third-party code.
+     * @return non-empty-string
+     *
+     * @internal This method is not covered by the backward compatibility promise for PHPUnit
      */
-    public function isIndirect(): true
-    {
-        return true;
-    }
-
     public function asString(): string
     {
-        return 'issue triggered by third-party code';
+        return sprintf(
+            '$%s::set',
+            $this->propertyName(),
+        );
     }
 }
