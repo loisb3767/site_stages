@@ -626,6 +626,30 @@ class TaskController extends Controller
         exit;
     }
 
+    public function candidaturesEtudiantPage(): void {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $id = (int)($_GET['id'] ?? 0);
+        $etudiant = $this->model->getUserFullById($id);
+
+        if (!$etudiant) {
+            header('Location: index.php?page=liste_admin');
+            exit;
+        }
+
+        $candidatures = $this->model->getCandidaturesByUserId($id);
+
+        echo $this->templateEngine->render('candidaturesEtudiant.twig.html', [
+            'etudiant' => $etudiant,
+            'candidatures' => $candidatures,
+            'user' => $_SESSION['user'] ?? null,
+            'session' => $_SESSION,
+        ]);
+    }
+
 
 }
 

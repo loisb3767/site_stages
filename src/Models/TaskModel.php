@@ -1152,5 +1152,19 @@ class TaskModel extends Model
             $stmt->execute([':role' => $role]);
             return (int) $stmt->fetchColumn();
         }
+
+        public function getCandidaturesByUserId(int $id): array {
+            $sql = "SELECT c.id_offre, c.date_candidature, c.statut,
+                        o.titre, e.nom_entreprise
+                    FROM candidature c
+                    JOIN offre o ON c.id_offre = o.id_offre
+                    JOIN entreprise e ON o.id_entreprise = e.id_entreprise
+                    WHERE c.id_utilisateur = :id
+                    ORDER BY c.date_candidature DESC";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetchAll();
+        }
                 
 }

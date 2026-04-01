@@ -29,6 +29,7 @@
                     {% endif %}
 
                     {% if user.id_role == 1 %}
+                        <a href="index.php?page=candidatures_etudiant&id={{ etudiant.id_utilisateur }}" class="btn-wishlist-offre">Candidatures</a>
                         <form method="POST" action="index.php?page=supprimer_etudiant" style="display:inline;">
                             <input type="hidden" name="id_etudiant" value="{{ etudiant.id_utilisateur }}">
                             <button type="submit" class="btn-deco">SUPPRIMER</button>
@@ -58,7 +59,7 @@
         </div>
 
         {% if session.user is defined and session.user.id_role > 0 %}
-            <a href="index.php?page=inscription" class="btn-creer-entreprise">+ Créer un étudiant</a>
+            <a href="index.php?page=inscription" class="btn-deco">Ajouter un étudiant</a>
         {% endif %}
     </aside>
 </div>
