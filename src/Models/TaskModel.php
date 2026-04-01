@@ -1097,5 +1097,54 @@ class TaskModel extends Model
             return true;
         
         }
+
+        public function getUserFullById(int $id): array|null {
+            $sql = "SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, telephone, id_role
+                    FROM utilisateur WHERE id_utilisateur = :id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            $result = $stmt->fetch();
+            return $result ?: null;
+        }
+
+        public function deleteUser(int $id): bool {
+            // Supprimer la wishlist
+            $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_utilisateur = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer les candidatures
+            $stmt = $this->pdo->prepare("DELETE FROM candidature WHERE id_utilisateur = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer les avis
+            $stmt = $this->pdo->prepare("DELETE FROM avis WHERE id_utilisateur = :id");
+            $stmt->execute([':id' => $id]);
+
+            // Supprimer l'utilisateur
+            $stmt = $this->pdo->prepare("DELETE FROM utilisateur WHERE id_utilisateur = :id");
+            return $stmt->execute([':id' => $id]);
+        }
+
+        public function getPaginatedUsers(int $page, int $parPage, int $role = 0): array {
+            $offset = ($page - 1) * $parPage;
+            $sql = "SELECT id_utilisateur, nom_utilisateur, prenom_utilisateur, email, telephone
+                    FROM utilisateur
+                    WHERE id_role = :role
+                    ORDER BY nom_utilisateur ASC
+                    LIMIT :limit OFFSET :offset";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':role', $role, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $parPage, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+
+        public function getTotalUsers(int $role = 0): int {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM utilisateur WHERE id_role = :role");
+            $stmt->execute([':role' => $role]);
+            return (int) $stmt->fetchColumn();
+        }
                 
 }

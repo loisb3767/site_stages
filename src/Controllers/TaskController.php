@@ -455,6 +455,83 @@ class TaskController extends Controller
         exit;
     }
 
+    public function liste_etudiantPage(): void {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+
+        // Seuls les pilotes ont accès
+        if ($user['id_role'] != 1) {
+            header('Location: index.php?page=accueil');
+            exit;
+        }
+
+        $parPage = 10;
+        $currentPage = isset($_GET['p']) ? (int) $_GET['p'] : 1;
+        if ($currentPage < 1) $currentPage = 1;
+
+        $total = $this->model->getTotalUsers(0);
+        $nbPages = ($total > 0) ? (int) ceil($total / $parPage) : 1;
+        if ($currentPage > $nbPages) $currentPage = $nbPages;
+
+        $etudiants = $this->model->getPaginatedUsers($currentPage, $parPage, 0);
+
+        echo $this->templateEngine->render('liste_etudiant.twig.html', [
+            'etudiants' => $etudiants,
+            'user' => $user,
+            'page' => $currentPage,
+            'nbPages' => $nbPages,
+            'session' => $_SESSION,
+        ]);
+    }
+
+    public function liste_adminPage(): void {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $user = $this->model->getUserById($_SESSION['user']['id_utilisateur']);
+
+        // Seuls les admins ont accès
+        if ($user['id_role'] != 2) {
+            header('Location: index.php?page=accueil');
+            exit;
+        }
+
+        $parPage = 10;
+
+        // Pagination étudiants
+        $pageEtudiants = isset($_GET['pe']) ? (int) $_GET['pe'] : 1;
+        if ($pageEtudiants < 1) $pageEtudiants = 1;
+        $totalEtudiants = $this->model->getTotalUsers(0);
+        $nbPagesEtudiants = ($totalEtudiants > 0) ? (int) ceil($totalEtudiants / $parPage) : 1;
+        if ($pageEtudiants > $nbPagesEtudiants) $pageEtudiants = $nbPagesEtudiants;
+        $etudiants = $this->model->getPaginatedUsers($pageEtudiants, $parPage, 0);
+
+        // Pagination pilotes
+        $pagePilotes = isset($_GET['pp']) ? (int) $_GET['pp'] : 1;
+        if ($pagePilotes < 1) $pagePilotes = 1;
+        $totalPilotes = $this->model->getTotalUsers(1);
+        $nbPagesPilotes = ($totalPilotes > 0) ? (int) ceil($totalPilotes / $parPage) : 1;
+        if ($pagePilotes > $nbPagesPilotes) $pagePilotes = $nbPagesPilotes;
+        $pilotes = $this->model->getPaginatedUsers($pagePilotes, $parPage, 1);
+
+        echo $this->templateEngine->render('liste_admin.twig.html', [
+            'etudiants' => $etudiants,
+            'pilotes' => $pilotes,
+            'user' => $user,
+            'pageEtudiants' => $pageEtudiants,
+            'nbPagesEtudiants' => $nbPagesEtudiants,
+            'pagePilotes' => $pagePilotes,
+            'nbPagesPilotes' => $nbPagesPilotes,
+            'session' => $_SESSION,
+        ]);
+    }
+
     public function detailEntreprisePage(): void
     {
         $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -501,6 +578,49 @@ class TaskController extends Controller
             'error' => $error,
             'success' => $success,
         ]);
+    }
+
+    public function modifierEtudiantPage(): void {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $id = (int)($_GET['id'] ?? 0);
+        $etudiant = $this->model->getUserFullById($id);
+
+        if (!$etudiant) {
+            header('Location: index.php?page=liste_etudiant');
+            exit;
+        }
+
+        $error = $_SESSION['error'] ?? null;
+        $success = $_SESSION['success'] ?? null;
+        unset($_SESSION['error'], $_SESSION['success']);
+
+        echo $this->templateEngine->render('modifierEtudiant.twig.html', [
+            'etudiant' => $etudiant,
+            'user' => $_SESSION['user'] ?? null,
+            'session' => $_SESSION,
+            'error' => $error,
+            'success' => $success,
+        ]);
+    }
+
+    public function supprimerEtudiant(): void {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['id_role'] < 1) {
+            header('Location: index.php?page=connexion');
+            exit;
+        }
+
+        $id = (int)($_POST['id_etudiant'] ?? 0);
+
+        if ($id > 0) {
+            $this->model->deleteUser($id);
+        }
+
+        header('Location: index.php?page=liste_etudiant');
+        exit;
     }
 
 
