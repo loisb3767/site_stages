@@ -165,8 +165,16 @@ class TaskController extends Controller
     }
 
     public function avisPage() {
+        $status = $_GET['status'] ?? null;
+        $error = isset($_GET['error']) ? urldecode($_GET['error']) : null;
 
-        echo $this->templateEngine->render('avis.twig.html');
+        echo $this->templateEngine->render('avis.twig.html', [
+            'entreprises' => $this->model->getAllEntreprises(),
+            'status' => $status,
+            'error' => $error,
+            'session' => $_SESSION,
+            'user' => $_SESSION['user'] ?? null,
+        ]);
     }
 
     public function postulerPage()
