@@ -33,11 +33,12 @@ class TaskModel extends Model
         return $stmt->fetchAll();
     }
 
-    public function getOffreById(int $id): array|null
+   public function getOffreById(int $id): array|null
     {
         $sql = "
             SELECT
                 o.id_offre,
+                o.id_entreprise,
                 o.titre,
                 o.description,
                 o.gratification,
@@ -75,6 +76,7 @@ class TaskModel extends Model
 
         return $this->geocodeAdresseIfNeeded($offre);
     }
+
     public function getTotalCountEntreprises(array $competenceId = []): int{
         if (empty($competenceId)) {
             return (int) $this->pdo->query("SELECT COUNT(*) FROM entreprise")->fetchColumn();
