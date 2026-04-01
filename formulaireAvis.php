@@ -1,47 +1,60 @@
 <?php
 require_once 'vendor/autoload.php';
+require_once 'db.php';
 
 use App\Services\Validator;
-use App\Services\FileUploader;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $fullname = Validator::sanitize($_POST['fullname'] ?? '');
-        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
-        $subject = Validator::sanitize($_POST['subject'] ?? '');
-        $feedback = Validator::sanitize($_POST['feedbacks'] ?? '');
-        $satisfaction = Validator::sanitize($_POST['satisfaction'] ?? '');
+session_start();
 
-        if (!$email) throw new Exception("Email invalide.");
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: index.php?page=avis');
+    exit;
+}
 
-        $filePath = "Aucun fichier";
-        if (isset($_FILES['document']) && $_FILES['document']['error'] !== UPLOAD_ERR_NO_FILE) {
-            $uploader = new FileUploader();
-            $filePath = $uploader->upload($_FILES['document']);
-        }
-
-        $data = [
-            'date' => date('r'),
-            'nom' => $fullname,
-            'email' => $email,
-            'sujet' => $subject,
-            'satisfaction' => $satisfaction,
-            'message' => $feedback,
-            'fichier' => $filePath
-        ];
-
-        $storageDir = 'avisForms/';
-        if (!is_dir($storageDir)) mkdir($storageDir, 755, true);
-        
-        $fileName = $storageDir . 'avis_' . time() . '_' . uniqid() . '.json';
-        file_put_contents($fileName, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-
-        header('Location: index.php?page=avis&status=success');
-        exit;
-
-    } catch (Exception $e) {
-        $errorMsg = urlencode($e->getMessage());
-        header("Location: index.php?page=avis&error=$errorMsg");
-        exit;
+try {
+    if (!isset($_SESSION['user']['id_utilisateur'])) {
+        throw new Exception('Vous devez être connecté pour laisser un avis.');
     }
+
+    $idUtilisateur = (int) $_SESSION['user']['id_utilisateur'];
+    $idEntreprise = (int) ($_POST['id_entreprise'] ?? 0);
+    $note = (int) ($_POST['note'] ?? 0);
+    $commentaire = trim(Validator::sanitize($_POST['commentaire'] ?? ''));
+
+    if ($idEntreprise <= 0) {
+        throw new Exception("Veuillez sélectionner une entreprise.");
+    }
+
+    if ($note < 1 || $note > 5) {
+        throw new Exception("La note doit être comprise entre 1 et 5.");
+    }
+
+    if ($commentaire === '') {
+        throw new Exception("Le commentaire est obligatoire.");
+    }
+
+    $checkEntreprise = $dbh->prepare('SELECT COUNT(*) FROM entreprise WHERE id_entreprise = :id_entreprise');
+    $checkEntreprise->bindValue(':id_entreprise', $idEntreprise, PDO::PARAM_INT);
+    $checkEntreprise->execute();
+
+    if ((int) $checkEntreprise->fetchColumn() === 0) {
+        throw new Exception("Entreprise introuvable.");
+    }
+
+    $sql = 'INSERT INTO avis (commentaire, note, date_avis, id_utilisateur, id_entreprise)
+            VALUES (:commentaire, :note, CURDATE(), :id_utilisateur, :id_entreprise)';
+
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':commentaire', $commentaire, PDO::PARAM_STR);
+    $stmt->bindValue(':note', $note, PDO::PARAM_INT);
+    $stmt->bindValue(':id_utilisateur', $idUtilisateur, PDO::PARAM_INT);
+    $stmt->bindValue(':id_entreprise', $idEntreprise, PDO::PARAM_INT);
+    $stmt->execute();
+
+    header('Location: index.php?page=avis&status=success');
+    exit;
+} catch (Exception $e) {
+    $errorMsg = urlencode($e->getMessage());
+    header("Location: index.php?page=avis&error={$errorMsg}");
+    exit;
 }
