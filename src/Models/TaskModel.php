@@ -1104,6 +1104,13 @@ class TaskModel extends Model
         }
 
         public function deleteUser(int $id): bool {
+            // Si c'est un pilote, supprimer ses étudiants d'abord
+            $etudiants = $this->pdo->prepare("SELECT id_utilisateur FROM utilisateur WHERE referent_id = :id");
+            $etudiants->execute([':id' => $id]);
+            foreach ($etudiants->fetchAll() as $etudiant) {
+                $this->deleteUser($etudiant['id_utilisateur']);
+            }
+
             // Supprimer la wishlist
             $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE id_utilisateur = :id");
             $stmt->execute([':id' => $id]);

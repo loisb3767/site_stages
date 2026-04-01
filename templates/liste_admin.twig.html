@@ -1,57 +1,82 @@
 {% extends "base.twig.html" %}
 
-{% block title %}Parcours des offres - Job2main{% endblock %}
-{% block description %}Parcourez nos offres de stages et trouvez celle qui vous correspond !{% endblock %}
+{% block title %}Administration - Job2main{% endblock %}
+{% block description %}Gestion des pilotes et étudiants{% endblock %}
 
 {% block body %}
-        <div class="mes-offres-container">
-            <div class="flex-item">
-                <h1>Les Pilotes</h1>
-                {% if pilote is empty %}
-                    <p>Vous n'avez aucun Pilote.</p>
-                {% else %}
-                    <div class="wishlist-grid">
-                    {% for pilote in pilote %}
-                        <div class="wishlist-card">
-                            <h2>{{ pilote.nom_utilisateur}} {{ pilote.prenom_utilisateur}}</h2>
-                            <h4>{{pilote.email}}</h4>
-                            <a href="index.php?page=modifier_profil" class="btn-wishlist-offre">
-                                Modifier <!--REVOIR ICI OU LA PAGE RENVOIE-->
-                            </a>
-                            <a href="index.php?page=supprimer-wishlist&id={{ offre.id_offre }}" class="btn-wishlist-supprimer">
-                                Retirer <!--REVOIR ICI OU LA PAGE RENVOIE-->
-                            </a>
-                        </div>
-                    {% endfor %}
+    <div class="mes-offres-container">
+
+        {# SECTION PILOTES #}
+        <div class="flex-item">
+            <h1>Les Pilotes</h1>
+            {% if pilotes is empty %}
+                <p>Aucun pilote.</p>
+            {% else %}
+                <div class="wishlist-grid">
+                {% for pilote in pilotes %}
+                    <div class="wishlist-card">
+                        <h2>{{ pilote.nom_utilisateur }} {{ pilote.prenom_utilisateur }}</h2>
+                        <h4>{{ pilote.email }}</h4>
+                        <a href="index.php?page=modifier_etudiant&id={{ pilote.id_utilisateur }}" class="btn-wishlist-offre">
+                            Modifier
+                        </a>
+                        <form method="POST" action="index.php?page=supprimer_etudiant" style="display:inline;">
+                            <input type="hidden" name="id_etudiant" value="{{ pilote.id_utilisateur }}">
+                            <button type="submit" class="btn-wishlist-supprimer">Supprimer</button>
+                        </form>
                     </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="pagination">
+                {% if pagePilotes > 1 %}
+                    <a href="?page=liste_admin&pp={{ pagePilotes - 1 }}&pe={{ pageEtudiants }}" class="btn-pagination">Précédent</a>
+                {% endif %}
+                <span class="page-info">Page {{ pagePilotes }} sur {{ nbPagesPilotes }}</span>
+                {% if pagePilotes < nbPagesPilotes %}
+                    <a href="?page=liste_admin&pp={{ pagePilotes + 1 }}&pe={{ pageEtudiants }}" class="btn-pagination">Suivant</a>
                 {% endif %}
             </div>
-            <div class="flex-item">
-                <h1>Les Etudiants</h1>
-                {% if etudiants is empty %}
-                    <p>Vous n'avez d'étudiants.</p>
-                {% else %}
-                    <div class="wishlist-grid">
-                    {% for etudiants in etudiants %}
-                        <div class="wishlist-card">
-                            <div class="wishlist-card">
-                                <h2>{{ etudiants.nom_utilisateur}} {{ etudiants.prenom_utilisateur}}</h2>
-                                <h4>{{etudiants.email}}</h4>
-                                <a href="index.php?page=detail-offre&id={{ offre.id_offre }}" class="btn-wishlist-offre">
-                                    Modifier <!--REVOIR ICI OU LA PAGE RENVOIE-->
-                                </a>
-                                <a href="index.php?page=supprimer-wishlist&id={{ offre.id_offre }}" class="btn-wishlist-supprimer">
-                                    Retirer <!--REVOIR ICI OU LA PAGE RENVOIE-->
-                                </a>
-                        </div>
-                    {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
+
+            <a href="index.php?page=inscription" class="btn-deco">+ Ajouter un pilote</a>
         </div>
+
+        {# SECTION ÉTUDIANTS #}
+        <div class="flex-item">
+            <h1>Les Étudiants</h1>
+            {% if etudiants is empty %}
+                <p>Aucun étudiant.</p>
+            {% else %}
+                <div class="wishlist-grid">
+                {% for etudiant in etudiants %}
+                    <div class="wishlist-card">
+                        <h2>{{ etudiant.nom_utilisateur }} {{ etudiant.prenom_utilisateur }}</h2>
+                        <h4>{{ etudiant.email }}</h4>
+                        <a href="index.php?page=modifier_etudiant&id={{ etudiant.id_utilisateur }}" class="btn-wishlist-offre">
+                            Modifier
+                        </a>
+                        <form method="POST" action="index.php?page=supprimer_etudiant" style="display:inline;">
+                            <input type="hidden" name="id_etudiant" value="{{ etudiant.id_utilisateur }}">
+                            <button type="submit" class="btn-wishlist-supprimer">Supprimer</button>
+                        </form>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="pagination">
+                {% if pageEtudiants > 1 %}
+                    <a href="?page=liste_admin&pe={{ pageEtudiants - 1 }}&pp={{ pagePilotes }}" class="btn-pagination">Précédent</a>
+                {% endif %}
+                <span class="page-info">Page {{ pageEtudiants }} sur {{ nbPagesEtudiants }}</span>
+                {% if pageEtudiants < nbPagesEtudiants %}
+                    <a href="?page=liste_admin&pe={{ pageEtudiants + 1 }}&pp={{ pagePilotes }}" class="btn-pagination">Suivant</a>
+                {% endif %}
+            </div>
+
+            <a href="index.php?page=inscription" class="btn-deco">+ Ajouter un étudiant</a>
+        </div>
+
+    </div>
 {% endblock %}
-
-
-
-        
-            
